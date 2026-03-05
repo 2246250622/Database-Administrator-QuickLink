@@ -7,39 +7,54 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     
-    <style>
-    body { background-color: #f8f9fa; }
-    .login-container {
-        max-width: 400px;
-        margin: 100px auto;
-        padding: 30px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    .btn-custom {
-        background-color: #D0A2F7;
-        border-color: #D0A2F7;
-        color: white;
-        transition: all 0.2s ease;
-    }
-    .btn-custom:hover {
-        background-color: #C08AE0;
-        border-color: #C08AE0;
-        color: white;
-    }
-    .btn-custom:focus {
-        background-color: #B078C9 !important;
-        border-color: #B078C9 !important;
-        box-shadow: 0 0 0 0.25rem rgba(208, 162, 247, 0.5);
-        outline: none;
-    }
-    .btn-custom:active {
-        background-color: #A066B3 !important;
-        border-color: #A066B3 !important;
-        transform: translateY(1px);
-    }
-</style>
+<style>
+        body { background-color: #f8f9fa; }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .btn-custom {
+            background-color: #D0A2F7;
+            border-color: #D0A2F7;
+            color: white;
+            transition: all 0.3s ease;
+            opacity: 0.6;           /* 初始暗淡 */
+            cursor: not-allowed;    /* 初始不可點 */
+        }
+        
+        /* 當輸入完整時，按鈕變亮 + 可點擊 */
+        .btn-custom.active {
+            opacity: 1;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(208, 162, 247, 0.6); /* 自動發光效果 */
+            transform: scale(1.02);                        /* 輕微放大 */
+        }
+        
+        .btn-custom:hover {
+            background-color: #C08AE0;
+            border-color: #C08AE0;
+            box-shadow: 0 0 20px rgba(208, 162, 247, 0.8); /* hover 更強光暈 */
+            transform: scale(1.05);
+        }
+        
+        .btn-custom:focus {
+            background-color: #B078C9 !important;
+            border-color: #B078C9 !important;
+            box-shadow: 0 0 0 0.25rem rgba(208, 162, 247, 0.5);
+            outline: none;
+        }
+        
+        .btn-custom:active {
+            background-color: #A066B3 !important;
+            border-color: #A066B3 !important;
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
 
@@ -63,32 +78,51 @@
 </div>
 
 <script>
-    // Change these to your desired credentials
-    const VALID_USERNAME = "root";      // ← Customize this
-    const VALID_PASSWORD = "Gcis12#$";    // ← Customize this (at least change it!)
+    const VALID_USERNAME = "root";
+    const VALID_PASSWORD = "Gcis12#$";
 
+    const loginBtn = document.getElementById('loginBtn');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // 檢查輸入是否完整 → 自動讓按鈕「發光」
+    function checkInputs() {
+        const hasUsername = usernameInput.value.trim() !== '';
+        const hasPassword = passwordInput.value.trim() !== '';
+        
+        if (hasUsername && hasPassword) {
+            loginBtn.classList.add('active');     // 自動變亮 + 可點
+        } else {
+            loginBtn.classList.remove('active');  // 恢復暗淡
+        }
+    }
+
+    // 監聽輸入變化
+    usernameInput.addEventListener('input', checkInputs);
+    passwordInput.addEventListener('input', checkInputs);
+    checkInputs(); // 頁面載入時先檢查一次
+
+    // 表單提交
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const errorMsg = document.getElementById('errorMsg');
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
 
         if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-            // Success → redirect to main page
             localStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'home.html';  // Change to your actual main page
+            window.location.href = 'home.html';
         } else {
             errorMsg.style.display = 'block';
             setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
         }
     });
 
-    // Optional: Auto-redirect if already logged in
+    // 已登入自動跳轉
     if (localStorage.getItem('isLoggedIn') === 'true') {
         window.location.href = 'home.html';
     }
 </script>
-
 </body>
 </html>
