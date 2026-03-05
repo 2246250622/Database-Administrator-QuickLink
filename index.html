@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DBA書簽</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    
+    <style>
+      .btn-outline-custom {
+        --bs-btn-color: #343a40;
+        --bs-btn-bg: #DCBFFF; /* Purple */
+        --bs-btn-border-color: #DCBFFF;
+        --bs-btn-hover-color: #343a40;
+        --bs-btn-hover-bg: #E5D4FF;
+        --bs-btn-hover-border-color: #E5D4FF;
+        --bs-btn-active-color: #343a40;
+        --bs-btn-active-bg: #E5D4FF;
+        --bs-btn-active-border-color: #E5D4FF;
+      }
+            </style>
+   
+</head>
+
+<body>
+
+  <main>
+    <header class="p-3 mb-3 border-bottom" style="background-color: #D0A2F7">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+          </a>
+  
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><b><a href="baby.html" class="nav-link px-2 link-body-emphasis">書簽清單</a></b></li>
+  
+          </ul>
+  
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/mail.google.com/mail/u/0/#inbox", "_blank")' >
+              Gmail
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
+                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q.002-.211-.006-.422A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.32 9.32 0 0 1-6.767-3.429 3.29 3.29 0 0 0 1.018 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115 3 3 0 0 1-.614-.057 3.28 3.28 0 0 0 3.067 2.277A6.6 6.6 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15"/>
+              </svg>
+            </button>
+
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/x.com/home", "_blank")' >
+              Twitter
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q.002-.211-.006-.422A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.32 9.32 0 0 1-6.767-3.429 3.29 3.29 0 0 0 1.018 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115 3 3 0 0 1-.614-.057 3.28 3.28 0 0 0 3.067 2.277A6.6 6.6 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15"/>
+              </svg>
+            </button>
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/discord.com/channels/@me", "_blank")' >
+              Discord
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
+                <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"/>
+              </svg>
+            </button>
+            
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/app.galxe.com/quest/explore/following", "_blank")'>
+              Galxe
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
+                <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5"></path>
+              </svg>
+              <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                <span class="visually-hidden">New alerts</span>
+              </span>
+            </button>
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/zealy.io/my-communities", "_blank")' >
+              Zealy
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
+                <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5"></path>
+              </svg>
+              <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                <span class="visually-hidden">New alerts</span>
+              </span>
+            </button>
+            <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">⛏️</button>
+            <button type="button" class="btn btn-outline-custom" onclick='location.href="Converter.html"'>單位轉換器⚡</button>
+            
+          
+            <!-- Modal -->
+          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel1">⛏️</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="m-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="myTab">
+                                <li class="nav-item">
+                                    <a href="#home" class="nav-link active" data-bs-toggle="tab">1</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#profile" class="nav-link" data-bs-toggle="tab">2</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a href="#stake" class="nav-link" data-bs-toggle="tab">3</a>
+                              </li>
+                
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="home">
+                                  <div class="list-group">
+                                    <a href="https://app.getgrass.io/dashboard" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">GetGrass</a>
+                                    <a href="https://app.gradient.network/signup?code=S3X0IN" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Gradient</a>
+                                    <a href="https://app.nodepay.ai/register?ref=YbfaLiCftloRj6L" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Nodepay</a>
+                                     <a href="https://alphaos.net/point?invite=LSCGXC" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Alphaos Net</a>
+                                    <a href="https://app.chirpwireless.io/devices/tracker-mobile-app" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Chirp</a>
+                                    <a href="https://www.375.ai/products/go" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">375go</a>
+                                    <a href="https://node.hyper.space/" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Hyper Space</a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile">
+                                  <div class="list-group">
+                                     <a href="https://www.gaianet.ai/setting/nodes" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Gaianet</a>
+                                        </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="stake">
+                                  <div class="list-group">
+                                  <a href="https://app.pendle.finance/trade/dashboard/overview/positions?timeframe=allTime" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Pendle</a>
+                                  <a href="https://app.hedgey.finance/" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Gaia 11/6</a>
+                                  <a href="https://app.falcon.finance/account/profile" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Falcon Finance</a>
+                                  <a href="https://web3.okx.com/zh-hans/boost/x-launch" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Boost</a>
+                                  <a href="https://airdrop.walletconnect.network/" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Walletconnect</a>
+                                  <a href="https://app.mmt.finance/portfolio" class="list-group-item list-group-item-action list-group-item-success" target="_blank">MMT</a>
+                                  <a href="https://www.stakeland.com/farming" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Stakeland</a>
+                                  <a href="https://www.cookie.community/multi-airdrop" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Cookie</a>
+				                          <a href="https://app.virtuals.io/dashboard" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Virtuals</a>
+                                    
+                                    
+                                  
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">好的</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">關閉</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </form>
+      
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="May.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            </a>
+            <ul class="dropdown-menu text-small">
+              <li><a class="dropdown-item" href="index.html">Sign out</a></li>
+            </ul>
+          </div>
+            </div>
+          </div>
+        </header>
+      </main>
+      <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+    
+
+
+
+    <h2 class="text-center">
+        書簽清單 
+    </h2>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+  <div class="offcanvas-body">
+    <p>
+      <!DOCTYPE html>
+    </p>
+  </div>
+</div>
+
+    <div class="container mt-5">
+        <div class="accordion" id="ao-accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" 
+                    id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" 
+                            type="button" 
+                            data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapseOne" 
+                            aria-expanded="true"
+                            aria-controls="panelsStayOpen-collapseOne">
+                            每日一擼<span class="badge bg-secondary"> New</span>
+                    </button>
+                </h2>
+
+                <div id="panelsStayOpen-collapseOne" 
+                     class="accordion-collapse collapse show"
+                     aria-labelledby="panelsStayOpen-headingOne">
+                     
+                    <div class="accordion-body">
+
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">普通</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">買粉買號</button>
+                        </li>
+                      </ul>
+                      <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                          <div class="container mt-3">
+                            <table class="table table-bordered">
+                              <tbody>
+
+                                <H4><b><u>擼毛</u></b></H4>
+                                <tr >
+                                  
+                        
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://app.soul.io/?referredBy=F7ZVJ">Soul</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://mindshare.bitdealer.net/home">Bitdealer</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://testnet.pharosnetwork.xyz/experience?inviteCode=TIs2mKa8WBqh3rCn">Pharosnetwork</a>
+                                  </td>
+
+                                   <td>  
+                                    <a style="display:block;" target="_blank" href="https://proving-grounds.brevis.network/A3WibM">Brevis</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://mission.superintent.ai/?referralCode=yScSUqUSv2">Superintent</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://waitlist.kindredlabs.ai/dashboard">Kindredlabs</a>
+                                  </td>
+
+                                  
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://app.wardenprotocol.org/referral?code=R8VYD">Wardenprotocol</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://web3.okx.com/join/BOOSTED">X-launch</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://app.saharaai.com/data-services-platform/#/individualLabeler/sahara-data">saharaAI</a>
+                                  </td>
+
+
+                                  
+                                </tr>
+
+
+                              </tbody>
+                            </table>
+                        </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                          <div class="container mt-3">
+                            <table class="table table-bordered">
+                              <tbody>
+                                <tr >
+                                <td>  
+                                    <a style="display:block;" target="_blank" href="https://gmailbuy.com/home/goods.html?id=7&sid=7">Gmailbuy</a>
+                                </td>
+                                
+                                <td>  
+                                    <a style="display:block;" target="_blank" href="https://crazysmm.com/">Crazysmm</a>
+                                </td>
+
+                                 <td>  
+                                    <a style="display:block;" target="_blank" href="https://gmfensi.net/ref/7g8sr">Gmfensi</a>
+                                </td>
+
+                                <td>  
+                                    <a style="display:block;" target="_blank" href="https://web3chirou.com">Web3chirou</a>
+                                </td>
+
+                                <td>  
+                                    <a style="display:block;" target="_blank" href="https://Web3service.shop">Web3service</a>
+                                </td>
+
+                                <td>  
+                                    <a style="display:block;" target="_blank" href="https://www.addrproof.top?referrerCode=2809594052">Addrproof</a>
+                                </td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                        </div>
+                        </div>
+
+                      </div>
+                       
+                        
+                 
+
+
+
+
+                          <div class="container mt-3">
+                            <table class="table table-bordered">
+                              <tbody>
+                                <H4><b><u>打新</u></b></H4>
+                                <tr>
+                              
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://buidlpad.com/projects">Buidlpad</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://legion.cc?homie=6DOD5MQ8">Legion</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://yaps.kaito.ai/capital-launchpad">Kaito</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://metadao.fi/projects">Metadao</a>
+                                  </td>
+
+                                  <td>  
+                                    <a style="display:block;" target="_blank" href="https://token.megaeth.com/">Megaeth</a>
+                                  </td>
+                                
+
+                
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div class="container mt-3">
+                            <table class="table table-bordered">
+                              <tbody>
+                                <H4><b><u>KOL项目</u></b></H4>
+                                <tr>
+                              
+
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://app.virtuals.io/points">Virtuals</a>
+                                </td>
+
+                              
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://app.wallchain.xyz/app/profile">Wallchain</a>
+                                </td>
+                
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://yaps.kaito.ai/leaderboard">Kaito</a>
+                                </td>
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://bantr.fun?ic=486GSIB">Bantr</a>
+                                </td>
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://waitlist.kindredlabs.ai/dashboard">Kindred</a>
+                                </td>
+                 
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://giverep.com/">Giverep</a>
+                                </td>
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://www.cookie.fun/">Cookie</a>
+                                </td>
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://cysic.xyz/leaderboard">Cysic</a>
+                                </td>
+                                </tr>
+
+                                <tr>
+
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://www.notion.so/arbitrumfoundation/Arbitrum-1dc90457c32680b198f7f2e6211f07ab?p=1dc90457c32681f39176d7b42ffaf984&pm=c">Arb</a>
+                                </td>
+                                
+                                <td>
+                                  <a style="display:block;" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdBX0LayzxVhWlbNkU5-Ze3XtDJr_TuvWbxPkcyjmJyGZbHDQ/viewform?usp=send_form">Arb Submittion form</a>
+                                </td>
+
+
+
+                           
+
+                                
+
+                                
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" 
+                    id="panelsStayOpen-headingTwo">
+                    <button class="accordion-button collapsed" 
+                            type="button" 
+                            data-bs-toggle="collapse"
+                            data-bs-target="#panelsStayOpen-collapseTwo" 
+                            aria-expanded="false"
+                            aria-controls="panelsStayOpen-collapseTwo">
+                            測試網
+                    </button>
+                </h2>
+
+                <div id="panelsStayOpen-collapseTwo" 
+                     class="accordion-collapse collapse"
+                     aria-labelledby="panelsStayOpen-headingTwo">
+                    <div class="accordion-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                            
+                              <tr>
+                                <td>Agentcoin</td>
+                                <td>  
+                                  <a style="display:block;" href="https://www.agentcoin.tv/waitlist" target="_blank">https://www.agentcoin.tv/waitlist</a>
+                              </td>
+                              </tr>
+
+
+                              <tr>
+                                <td>Spore</td>
+                                <td>  
+                                  <a style="display:block;" href="https://spore.ooo/mint" target="_blank">https://spore.ooo/mint</a>
+                              </td>
+                              </tr>
+
+                          
+                                <tr>
+                                  <td>Castile</td>
+                                  <td>  
+                                    <a style="display:block;" href="https://castile.world/#/task" target="_blank">https://castile.world/#/task</a>
+                                </td>
+                                </tr>
+             
+
+                              <tr>
+                                <td>Turnkey</td>
+                                <td>  
+                                  <a style="display:block;" href="https://app.turnkey.com/dashboard/welcome" target="_blank">https://app.turnkey.com/dashboard/welcome</a>
+                              </td>
+                              </tr>
+
+                              <tr>
+                                <td>Ordzaar</td>
+                                <td>  
+                                  <a style="display:block;" href="https://ordzaar.com/rewards/s01p1" target="_blank">https://ordzaar.com/rewards/s01p1</a>
+                              </td>
+                              </tr>
+
+
+
+                            <tr>
+                              <td>Matr1x</td>
+                              <td>  
+                                <a style="display:block;" href="https://matr1x.io/max-event" target="_blank">https://matr1x.io/max-event</a>
+                            </td>
+                            </tr>
+
+
+                       
+                            <tr>
+                              <td>Lingoislands</td>
+                              <td>  
+                                <a style="display:block;" href="https://lingoislands.com/degen-island" target="_blank">https://lingoislands.com/degen-island</a>
+                            </td>
+                            </tr>
+
+            
+                             
+                           
+                                    
+                                <tr>
+                                    <td>Tea</td>
+                                    <td>  
+                                      <a style="display:block;" href="https://app.tea.xyz/" target="_blank">https://app.tea.xyz/</a>
+                                  </td>
+                                  </tr>
+                              
+
+                                    <tr>
+                                        <td>Tabi</td>
+                                        <td>  
+                                          <a style="display:block;" href="https://tabi.lol/" target="_blank">https://tabi.lol/</a>
+                                      </td>
+                                      </tr>
+                                 
+
+                                        <tr>
+                                            <td>Parallel testnet</td>
+                                            <td>  
+                                              <a style="display:block;" href="https://app-staging.parallel.fi/parallel_testnet/apps/airdrop" target="_blank">https://app-staging.parallel.fi/parallel_testnet/apps/airdrop</a>
+                                          </td>
+                                          </tr>
+                               
+
+
+                                        
+
+                                                <tr>
+                                                    <td>Aiarena</td>
+                                                    <td>  
+                                                      <a style="display:block;" href="https://hub.aiarena.io/modules/refer" target="_blank">https://hub.aiarena.io/modules/refer</a>
+                                                  </td>
+                                                  </tr>
+                                             
+
+                                                              
+
+                                                                <tr>
+                                                                    <td>Curvance</td>
+                                                                    <td>  
+                                                                      <a style="display:block;" href="https://app.curvance.com/dashboard" target="_blank">https://app.curvance.com/dashboard</a>
+                                                                  </td>
+                                                                  </tr>
+                                                         
+
+                                                      
+                                                                  
+
+                                                                        <tr>
+                                                                            <td>Nubit</td>
+                                                                            <td>  
+                                                                              <a style="display:block;" href="https://alpha.nubit.org/#/" target="_blank">https://alpha.nubit.org/#/</a>
+                                                                          </td>
+                                                                          </tr>
+                                                                      
+
+                                                                            <tr>
+                                                                              <td>Cyclenetwork</td>
+                                                                              <td>  
+                                                                                <a style="display:block;" href="https://points.cyclenetwork.io/airdrop" target="_blank">https://points.cyclenetwork.io/airdrop</a>
+                                                                            </td>
+                                                                            </tr>
+
+                                                              
+
+                                                                  
+                                                                            <tr>
+                                                                              <td>Fhenix</td>
+                                                                              <td>  
+                                                                                <a style="display:block;" href="https://docs.fhenix.zone/" target="_blank">https://docs.fhenix.zone/</a>
+                                                                            </td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                              <td>Circuit</td>
+                                                                              <td>  
+                                                                                <a style="display:block;" href="https://testnet.circuit.money/kibble?code=ZlWaL" target="_blank">https://testnet.circuit.money/kibble?code=ZlWaL</a>
+                                                                            </td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                              <td>Nesa</td>
+                                                                              <td>  
+                                                                                <a style="display:block;" href="https://beta.nesa.ai/" target="_blank">https://beta.nesa.ai/</a>
+                                                                            </td>
+                                                                            </tr>
+
+
+                                                                   
+
+                                                                            <tr>
+                                                                              <td>Aidx</td>
+                                                                              <td>  
+                                                                                <a style="display:block;" href="https://aidx.exchange/#/perpetual_trading" target="_blank">https://aidx.exchange/#/perpetual_trading</a>
+                                                                            </td>
+                                                                            </tr>
+                                                                         
+                        
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        
+
+        </div>
+    </div>
+
+
+
+    <script>
+      // Get all the rows in the table
+  const rows = document.querySelectorAll('td');
+  
+  // Add a click event listener to each row
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      // Change the background color of the row to green
+      row.style.backgroundColor = 'LightGreen';
+    });
+  });
+  
+  // Add a click event listener to each row
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      // Add a class to the row to indicate that it has been clicked
+      row.classList.add('clicked');
+    });
+  });
+  
+  </script>
+       <script>
+          function sendMessage() {
+              const webhookUrl = 'https://discord.com/api/webhooks/1104429694356557925/HJj5bgAGMmtvr6QbZP-kYKFCGbaoDc2x5gQL2n6E-dd_m-WaJ5S9PXf4yb6kL7mqelQh'; // Replace with your actual webhook URL
+  
+              const data = {
+                  content: '<@582642394428866647> 滾出來!', // Your message here
+                  username: 'Luckydog', // Optional: Set a custom username
+                  avatar_url: 'https://cdn.discordapp.com/attachments/1114568807588057280/1249414047896440883/2hYJiL9S_400x400.png?ex=66673702&is=6665e582&hm=69b8e259e904bcd2e091f1864116d4a77d2e595b8de81957e4cf87ffb09899e1&', // Optional: Set a custom avatar image
+              };
+  
+              fetch(webhookUrl, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data),
+              })
+              .then(response => {
+                  if (response.ok) {
+                      console.log('Message sent successfully!');
+                  } else {
+                      console.error('Error sending message:', response.statusText);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error sending message:', error);
+              });
+          }
+      </script>
+
+      <script>
+const toastTrigger = document.getElementById('staticBackdropLabel')
+const toastLiveExample = document.getElementById('liveToast')
+
+if (toastTrigger) {
+const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+toastTrigger.addEventListener('click', () => {
+  toastBootstrap.show()
+})
+}
+        </script>
+    
+</body>
+
+</html>
