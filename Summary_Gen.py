@@ -1,23 +1,20 @@
 import pandas as pd
 
 # ==================== 設定區 ====================
-EXCEL_FILE = 'GCIS DBaaS Summary2_0123.xls'          # ← 你的 Excel 檔名
-OUTPUT_HTML = 'dbaas_list.html'                       # 輸出的完整 HTML 檔名
+EXCEL_FILE = 'GCIS DBaaS Summary2_0123.xls'          # ← 改成你的實際檔名
+OUTPUT_HTML = 'dbaas_list.html'                       # 輸出的完整網頁檔名
 SHEET_NAME = 'adhoc_list_table'
 
 # ==================== 讀取 Excel ====================
 df = pd.read_excel(EXCEL_FILE,
                    sheet_name=SHEET_NAME,
-                   skiprows=0,                        # 重要：不要跳過標題行
+                   skiprows=0,
                    engine='xlrd')
 
-# 清除欄位名稱前後空格
 df.columns = df.columns.str.strip()
 
-# 選需要的欄位（根據你實際欄位名稱調整，如果有空格也要加）
 columns_needed = ['GCISID', 'Site', 'VMName', 'DBaaSType', 'DBaaSStatus', 'MgtIP of VM']
 
-# 檢查欄位是否存在
 missing = [col for col in columns_needed if col not in df.columns]
 if missing:
     print("缺少欄位，請檢查 Excel 標題：", missing)
@@ -26,26 +23,24 @@ if missing:
 
 df = df[columns_needed].dropna(subset=['GCISID', 'MgtIP of VM'])
 
-# 按 GCISID 分組，並排序 Site (P1→P2→T1→T2)
 sort_order = {'P1': 0, 'P2': 1, 'T1': 2, 'T2': 3}
 df['sort_key'] = df['Site'].map(sort_order).fillna(999)
 grouped = df.sort_values(['GCISID', 'sort_key']).groupby('GCISID')
 
-# ==================== 產生 HTML 內容 ====================
+# ==================== 產生 accordion HTML（全部預設關閉） ====================
 accordion_html = ''
-for idx, (gcisid, group) in enumerate(grouped):
+for gcisid, group in grouped:
     collapse_id = gcisid.lower().replace(' ', '-').replace('_', '-')
-    is_first = idx == 0
 
     accordion_html += f'''
 <div class="accordion-item">
     <h2 class="accordion-header">
-        <button class="accordion-button {'collapsed' if not is_first else ''}" type="button" 
+        <button class="accordion-button collapsed" type="button" 
                 data-bs-toggle="collapse" data-bs-target="#collapse-{collapse_id}">
             {gcisid}
         </button>
     </h2>
-    <div id="collapse-{collapse_id}" class="accordion-collapse collapse {'show' if is_first else ''}">
+    <div id="collapse-{collapse_id}" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -107,6 +102,15 @@ full_html = f'''<!DOCTYPE html>
         .ip-cell:hover {{ background-color: #f0e8ff; }}
         .status-active {{ color: #198754; font-weight: bold; }}
         .text-danger {{ color: #dc3545 !important; }}
+        
+        /* 高亮樣式 */
+        .highlight {{
+            background-color: #fff3cd !important;
+            transition: background-color 1.5s ease;
+        }}
+        .highlight.fade {{
+            background-color: transparent !important;
+        }}
     </style>
 </head>
 <body>
@@ -139,23 +143,50 @@ full_html = f'''<!DOCTYPE html>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// 簡單搜尋功能
+// 順暢版搜尋：過濾 → 展開 → 滾動 → 高亮
 document.getElementById('searchInput').addEventListener('input', function(e) {{
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.accordion-item').forEach(item => {{
+    const term = e.target.value.toLowerCase().trim();
+    const items = document.querySelectorAll('.accordion-item');
+    let firstMatch = null;
+
+    items.forEach(item => {{
         const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(term) ? '' : 'none';
+        const isMatch = term === '' || text.includes(term);
+
+        item.style.display = isMatch ? '' : 'none';
+        if (isMatch && !firstMatch) firstMatch = item;
     }});
+
+    if (firstMatch && term !== '') {{
+        const collapse = firstMatch.querySelector('.accordion-collapse');
+
+        // 立刻展開
+        if (collapse && !collapse.classList.contains('show')) {{
+            new bootstrap.Collapse(collapse, {{ toggle: true }});
+        }}
+
+        // 稍等展開開始後滾動 + 高亮
+        setTimeout(() => {{
+            firstMatch.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+
+            firstMatch.classList.add('highlight');
+            setTimeout(() => {{
+                firstMatch.classList.add('fade');
+                setTimeout(() => {{
+                    firstMatch.classList.remove('highlight', 'fade');
+                }}, 1500);
+            }}, 50);
+        }}, 50);  // 極短延遲，讓展開動畫先啟動
+    }}
 }});
 </script>
 
 </body>
 </html>'''
 
-# 寫入完整 HTML 檔案
+# 寫入檔案
 with open(OUTPUT_HTML, 'w', encoding='utf-8') as f:
     f.write(full_html)
 
-print(f"完成！已產生完整頁面：{OUTPUT_HTML}")
-print("你可以直接用瀏覽器開啟這個檔案使用。")
-print("每月只要更新 Excel 檔名一致 → 重新執行腳本 → 完成！")
+print(f"完成！已產生：{OUTPUT_HTML}")
+print("現在：全部預設關閉 + 搜尋超順暢，無明顯空白")

@@ -21,6 +21,15 @@
         .ip-cell:hover { background-color: #f0e8ff; }
         .status-active { color: #198754; font-weight: bold; }
         .text-danger { color: #dc3545 !important; }
+        
+        /* 高亮樣式 */
+        .highlight {
+            background-color: #fff3cd !important;
+            transition: background-color 1.5s ease;
+        }
+        .highlight.fade {
+            background-color: transparent !important;
+        }
     </style>
 </head>
 <body>
@@ -50,12 +59,12 @@
         
 <div class="accordion-item">
     <h2 class="accordion-header">
-        <button class="accordion-button " type="button" 
+        <button class="accordion-button collapsed" type="button" 
                 data-bs-toggle="collapse" data-bs-target="#collapse-bdacas">
             BDACAS
         </button>
     </h2>
-    <div id="collapse-bdacas" class="accordion-collapse collapse show">
+    <div id="collapse-bdacas" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -116,7 +125,7 @@
             BDBRAVO
         </button>
     </h2>
-    <div id="collapse-bdbravo" class="accordion-collapse collapse ">
+    <div id="collapse-bdbravo" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -177,7 +186,7 @@
             BDCMRP
         </button>
     </h2>
-    <div id="collapse-bdcmrp" class="accordion-collapse collapse ">
+    <div id="collapse-bdcmrp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -238,7 +247,7 @@
             BDESHUB
         </button>
     </h2>
-    <div id="collapse-bdeshub" class="accordion-collapse collapse ">
+    <div id="collapse-bdeshub" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -331,7 +340,7 @@
             BDMDPF
         </button>
     </h2>
-    <div id="collapse-bdmdpf" class="accordion-collapse collapse ">
+    <div id="collapse-bdmdpf" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -392,7 +401,7 @@
             BDMWMS3
         </button>
     </h2>
-    <div id="collapse-bdmwms3" class="accordion-collapse collapse ">
+    <div id="collapse-bdmwms3" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -453,7 +462,7 @@
             BDTWCYB
         </button>
     </h2>
-    <div id="collapse-bdtwcyb" class="accordion-collapse collapse ">
+    <div id="collapse-bdtwcyb" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -514,7 +523,7 @@
             CASERHUB
         </button>
     </h2>
-    <div id="collapse-caserhub" class="accordion-collapse collapse ">
+    <div id="collapse-caserhub" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -575,7 +584,7 @@
             CASIMGTS
         </button>
     </h2>
-    <div id="collapse-casimgts" class="accordion-collapse collapse ">
+    <div id="collapse-casimgts" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -636,7 +645,7 @@
             CCDCELAP
         </button>
     </h2>
-    <div id="collapse-ccdcelap" class="accordion-collapse collapse ">
+    <div id="collapse-ccdcelap" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -713,7 +722,7 @@
             CDDEIS
         </button>
     </h2>
-    <div id="collapse-cddeis" class="accordion-collapse collapse ">
+    <div id="collapse-cddeis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -774,7 +783,7 @@
             CEDTSWP2
         </button>
     </h2>
-    <div id="collapse-cedtswp2" class="accordion-collapse collapse ">
+    <div id="collapse-cedtswp2" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -835,7 +844,7 @@
             CEDVAP
         </button>
     </h2>
-    <div id="collapse-cedvap" class="accordion-collapse collapse ">
+    <div id="collapse-cedvap" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -896,7 +905,7 @@
             CEONSED
         </button>
     </h2>
-    <div id="collapse-ceonsed" class="accordion-collapse collapse ">
+    <div id="collapse-ceonsed" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -957,7 +966,7 @@
             CMADASHB
         </button>
     </h2>
-    <div id="collapse-cmadashb" class="accordion-collapse collapse ">
+    <div id="collapse-cmadashb" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1018,7 +1027,7 @@
             CRSIDB
         </button>
     </h2>
-    <div id="collapse-crsidb" class="accordion-collapse collapse ">
+    <div id="collapse-crsidb" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1063,7 +1072,7 @@
             CRTCSPL
         </button>
     </h2>
-    <div id="collapse-crtcspl" class="accordion-collapse collapse ">
+    <div id="collapse-crtcspl" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1140,7 +1149,7 @@
             CSBBLNST
         </button>
     </h2>
-    <div id="collapse-csbblnst" class="accordion-collapse collapse ">
+    <div id="collapse-csbblnst" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1201,7 +1210,7 @@
             CSBCSRIS
         </button>
     </h2>
-    <div id="collapse-csbcsris" class="accordion-collapse collapse ">
+    <div id="collapse-csbcsris" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1262,7 +1271,7 @@
             CSBEMAT
         </button>
     </h2>
-    <div id="collapse-csbemat" class="accordion-collapse collapse ">
+    <div id="collapse-csbemat" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1307,7 +1316,7 @@
             CSBEOPMS
         </button>
     </h2>
-    <div id="collapse-csbeopms" class="accordion-collapse collapse ">
+    <div id="collapse-csbeopms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1368,7 +1377,7 @@
             CSBEPROF
         </button>
     </h2>
-    <div id="collapse-csbeprof" class="accordion-collapse collapse ">
+    <div id="collapse-csbeprof" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1445,7 +1454,7 @@
             CSBGBOBS
         </button>
     </h2>
-    <div id="collapse-csbgbobs" class="accordion-collapse collapse ">
+    <div id="collapse-csbgbobs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1506,7 +1515,7 @@
             CSBGHRDP
         </button>
     </h2>
-    <div id="collapse-csbghrdp" class="accordion-collapse collapse ">
+    <div id="collapse-csbghrdp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1567,7 +1576,7 @@
             CSDDIPS
         </button>
     </h2>
-    <div id="collapse-csddips" class="accordion-collapse collapse ">
+    <div id="collapse-csddips" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1628,7 +1637,7 @@
             CSDMMCS3
         </button>
     </h2>
-    <div id="collapse-csdmmcs3" class="accordion-collapse collapse ">
+    <div id="collapse-csdmmcs3" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1689,7 +1698,7 @@
             CSTOFP
         </button>
     </h2>
-    <div id="collapse-cstofp" class="accordion-collapse collapse ">
+    <div id="collapse-cstofp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1766,7 +1775,7 @@
             DEVCMSP
         </button>
     </h2>
-    <div id="collapse-devcmsp" class="accordion-collapse collapse ">
+    <div id="collapse-devcmsp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -1843,7 +1852,7 @@
             DEVEPPCS
         </button>
     </h2>
-    <div id="collapse-deveppcs" class="accordion-collapse collapse ">
+    <div id="collapse-deveppcs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2000,7 +2009,7 @@
             DEVHPMDS
         </button>
     </h2>
-    <div id="collapse-devhpmds" class="accordion-collapse collapse ">
+    <div id="collapse-devhpmds" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2061,7 +2070,7 @@
             DHAHTBS
         </button>
     </h2>
-    <div id="collapse-dhahtbs" class="accordion-collapse collapse ">
+    <div id="collapse-dhahtbs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2122,7 +2131,7 @@
             DHCDSS
         </button>
     </h2>
-    <div id="collapse-dhcdss" class="accordion-collapse collapse ">
+    <div id="collapse-dhcdss" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2183,7 +2192,7 @@
             DHCODR
         </button>
     </h2>
-    <div id="collapse-dhcodr" class="accordion-collapse collapse ">
+    <div id="collapse-dhcodr" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2244,7 +2253,7 @@
             DHCPDIS
         </button>
     </h2>
-    <div id="collapse-dhcpdis" class="accordion-collapse collapse ">
+    <div id="collapse-dhcpdis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2289,7 +2298,7 @@
             DHEPPOP
         </button>
     </h2>
-    <div id="collapse-dheppop" class="accordion-collapse collapse ">
+    <div id="collapse-dheppop" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2350,7 +2359,7 @@
             DHMDIS
         </button>
     </h2>
-    <div id="collapse-dhmdis" class="accordion-collapse collapse ">
+    <div id="collapse-dhmdis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2427,7 +2436,7 @@
             DHMFPNS
         </button>
     </h2>
-    <div id="collapse-dhmfpns" class="accordion-collapse collapse ">
+    <div id="collapse-dhmfpns" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2488,7 +2497,7 @@
             DHSLMSR
         </button>
     </h2>
-    <div id="collapse-dhslmsr" class="accordion-collapse collapse ">
+    <div id="collapse-dhslmsr" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2549,7 +2558,7 @@
             DHSMOP
         </button>
     </h2>
-    <div id="collapse-dhsmop" class="accordion-collapse collapse ">
+    <div id="collapse-dhsmop" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2626,7 +2635,7 @@
             DHWSHP
         </button>
     </h2>
-    <div id="collapse-dhwshp" class="accordion-collapse collapse ">
+    <div id="collapse-dhwshp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2687,7 +2696,7 @@
             DPOCBPS
         </button>
     </h2>
-    <div id="collapse-dpocbps" class="accordion-collapse collapse ">
+    <div id="collapse-dpocbps" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2748,7 +2757,7 @@
             DPOCMEAS
         </button>
     </h2>
-    <div id="collapse-dpocmeas" class="accordion-collapse collapse ">
+    <div id="collapse-dpocmeas" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2793,7 +2802,7 @@
             DPOEACPC
         </button>
     </h2>
-    <div id="collapse-dpoeacpc" class="accordion-collapse collapse ">
+    <div id="collapse-dpoeacpc" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2846,7 +2855,7 @@
             DPOSIEDF
         </button>
     </h2>
-    <div id="collapse-dposiedf" class="accordion-collapse collapse ">
+    <div id="collapse-dposiedf" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2907,7 +2916,7 @@
             DSDRAMIS
         </button>
     </h2>
-    <div id="collapse-dsdramis" class="accordion-collapse collapse ">
+    <div id="collapse-dsdramis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -2968,7 +2977,7 @@
             DSDSRRTW
         </button>
     </h2>
-    <div id="collapse-dsdsrrtw" class="accordion-collapse collapse ">
+    <div id="collapse-dsdsrrtw" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3029,7 +3038,7 @@
             EDBCOTAP
         </button>
     </h2>
-    <div id="collapse-edbcotap" class="accordion-collapse collapse ">
+    <div id="collapse-edbcotap" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3074,7 +3083,7 @@
             EDBEAPP
         </button>
     </h2>
-    <div id="collapse-edbeapp" class="accordion-collapse collapse ">
+    <div id="collapse-edbeapp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3135,7 +3144,7 @@
             EDBSMRP
         </button>
     </h2>
-    <div id="collapse-edbsmrp" class="accordion-collapse collapse ">
+    <div id="collapse-edbsmrp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3180,7 +3189,7 @@
             EPD23239
         </button>
     </h2>
-    <div id="collapse-epd23239" class="accordion-collapse collapse ">
+    <div id="collapse-epd23239" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3241,7 +3250,7 @@
             EPDBWQFD
         </button>
     </h2>
-    <div id="collapse-epdbwqfd" class="accordion-collapse collapse ">
+    <div id="collapse-epdbwqfd" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3302,7 +3311,7 @@
             EPDCWDCM
         </button>
     </h2>
-    <div id="collapse-epdcwdcm" class="accordion-collapse collapse ">
+    <div id="collapse-epdcwdcm" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3395,7 +3404,7 @@
             EPDCWECS
         </button>
     </h2>
-    <div id="collapse-epdcwecs" class="accordion-collapse collapse ">
+    <div id="collapse-epdcwecs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3456,7 +3465,7 @@
             EPDEIAO
         </button>
     </h2>
-    <div id="collapse-epdeiao" class="accordion-collapse collapse ">
+    <div id="collapse-epdeiao" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3549,7 +3558,7 @@
             EPDEMAP
         </button>
     </h2>
-    <div id="collapse-epdemap" class="accordion-collapse collapse ">
+    <div id="collapse-epdemap" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3610,7 +3619,7 @@
             EPDEVCSS
         </button>
     </h2>
-    <div id="collapse-epdevcss" class="accordion-collapse collapse ">
+    <div id="collapse-epdevcss" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3703,7 +3712,7 @@
             EPDGPSP
         </button>
     </h2>
-    <div id="collapse-epdgpsp" class="accordion-collapse collapse ">
+    <div id="collapse-epdgpsp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3764,7 +3773,7 @@
             EPDIWMIS
         </button>
     </h2>
-    <div id="collapse-epdiwmis" class="accordion-collapse collapse ">
+    <div id="collapse-epdiwmis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3825,7 +3834,7 @@
             EPDMVFPS
         </button>
     </h2>
-    <div id="collapse-epdmvfps" class="accordion-collapse collapse ">
+    <div id="collapse-epdmvfps" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3886,7 +3895,7 @@
             EPDOPK1
         </button>
     </h2>
-    <div id="collapse-epdopk1" class="accordion-collapse collapse ">
+    <div id="collapse-epdopk1" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -3947,7 +3956,7 @@
             EPDRTTMV
         </button>
     </h2>
-    <div id="collapse-epdrttmv" class="accordion-collapse collapse ">
+    <div id="collapse-epdrttmv" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4008,7 +4017,7 @@
             EPDTPBS
         </button>
     </h2>
-    <div id="collapse-epdtpbs" class="accordion-collapse collapse ">
+    <div id="collapse-epdtpbs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4069,7 +4078,7 @@
             EPDWPBS
         </button>
     </h2>
-    <div id="collapse-epdwpbs" class="accordion-collapse collapse ">
+    <div id="collapse-epdwpbs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4114,7 +4123,7 @@
             FEHEASY2
         </button>
     </h2>
-    <div id="collapse-feheasy2" class="accordion-collapse collapse ">
+    <div id="collapse-feheasy2" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4175,7 +4184,7 @@
             FEHFCS
         </button>
     </h2>
-    <div id="collapse-fehfcs" class="accordion-collapse collapse ">
+    <div id="collapse-fehfcs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4236,7 +4245,7 @@
             FEHFIPMS
         </button>
     </h2>
-    <div id="collapse-fehfipms" class="accordion-collapse collapse ">
+    <div id="collapse-fehfipms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4329,7 +4338,7 @@
             FEHFLMS
         </button>
     </h2>
-    <div id="collapse-fehflms" class="accordion-collapse collapse ">
+    <div id="collapse-fehflms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4390,7 +4399,7 @@
             FSBPAMD
         </button>
     </h2>
-    <div id="collapse-fsbpamd" class="accordion-collapse collapse ">
+    <div id="collapse-fsbpamd" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4451,7 +4460,7 @@
             FSDFHCP
         </button>
     </h2>
-    <div id="collapse-fsdfhcp" class="accordion-collapse collapse ">
+    <div id="collapse-fsdfhcp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4512,7 +4521,7 @@
             GCICAAS
         </button>
     </h2>
-    <div id="collapse-gcicaas" class="accordion-collapse collapse ">
+    <div id="collapse-gcicaas" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4589,7 +4598,7 @@
             GCISDBA
         </button>
     </h2>
-    <div id="collapse-gcisdba" class="accordion-collapse collapse ">
+    <div id="collapse-gcisdba" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4746,7 +4755,7 @@
             GCISDBTS
         </button>
     </h2>
-    <div id="collapse-gcisdbts" class="accordion-collapse collapse ">
+    <div id="collapse-gcisdbts" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4847,7 +4856,7 @@
             GCISSM
         </button>
     </h2>
-    <div id="collapse-gcissm" class="accordion-collapse collapse ">
+    <div id="collapse-gcissm" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -4892,7 +4901,7 @@
             GCISSS
         </button>
     </h2>
-    <div id="collapse-gcisss" class="accordion-collapse collapse ">
+    <div id="collapse-gcisss" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5017,7 +5026,7 @@
             GLDGAZET
         </button>
     </h2>
-    <div id="collapse-gldgazet" class="accordion-collapse collapse ">
+    <div id="collapse-gldgazet" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5078,7 +5087,7 @@
             GLDGGAPN
         </button>
     </h2>
-    <div id="collapse-gldggapn" class="accordion-collapse collapse ">
+    <div id="collapse-gldggapn" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5203,7 +5212,7 @@
             GLDSMTWH
         </button>
     </h2>
-    <div id="collapse-gldsmtwh" class="accordion-collapse collapse ">
+    <div id="collapse-gldsmtwh" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5264,7 +5273,7 @@
             GPACPTP
         </button>
     </h2>
-    <div id="collapse-gpacptp" class="accordion-collapse collapse ">
+    <div id="collapse-gpacptp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5325,7 +5334,7 @@
             GPAMSIS
         </button>
     </h2>
-    <div id="collapse-gpamsis" class="accordion-collapse collapse ">
+    <div id="collapse-gpamsis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5402,7 +5411,7 @@
             GPAPUBP
         </button>
     </h2>
-    <div id="collapse-gpapubp" class="accordion-collapse collapse ">
+    <div id="collapse-gpapubp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5495,7 +5504,7 @@
             HABRUYPS
         </button>
     </h2>
-    <div id="collapse-habruyps" class="accordion-collapse collapse ">
+    <div id="collapse-habruyps" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5556,7 +5565,7 @@
             HABWFP
         </button>
     </h2>
-    <div id="collapse-habwfp" class="accordion-collapse collapse ">
+    <div id="collapse-habwfp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5617,7 +5626,7 @@
             HABYAPP
         </button>
     </h2>
-    <div id="collapse-habyapp" class="accordion-collapse collapse ">
+    <div id="collapse-habyapp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5710,7 +5719,7 @@
             HADBMIS
         </button>
     </h2>
-    <div id="collapse-hadbmis" class="accordion-collapse collapse ">
+    <div id="collapse-hadbmis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5771,7 +5780,7 @@
             HADDCWEB
         </button>
     </h2>
-    <div id="collapse-haddcweb" class="accordion-collapse collapse ">
+    <div id="collapse-haddcweb" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5864,7 +5873,7 @@
             HADMISDP
         </button>
     </h2>
-    <div id="collapse-hadmisdp" class="accordion-collapse collapse ">
+    <div id="collapse-hadmisdp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5909,7 +5918,7 @@
             HADREIS
         </button>
     </h2>
-    <div id="collapse-hadreis" class="accordion-collapse collapse ">
+    <div id="collapse-hadreis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -5970,7 +5979,7 @@
             HADRREPR
         </button>
     </h2>
-    <div id="collapse-hadrrepr" class="accordion-collapse collapse ">
+    <div id="collapse-hadrrepr" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6031,7 +6040,7 @@
             HBBHUMS
         </button>
     </h2>
-    <div id="collapse-hbbhums" class="accordion-collapse collapse ">
+    <div id="collapse-hbbhums" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6092,7 +6101,7 @@
             HBSRPE
         </button>
     </h2>
-    <div id="collapse-hbsrpe" class="accordion-collapse collapse ">
+    <div id="collapse-hbsrpe" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6153,7 +6162,7 @@
             HHBEGMS
         </button>
     </h2>
-    <div id="collapse-hhbegms" class="accordion-collapse collapse ">
+    <div id="collapse-hhbegms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6198,7 +6207,7 @@
             HPFCREP
         </button>
     </h2>
-    <div id="collapse-hpfcrep" class="accordion-collapse collapse ">
+    <div id="collapse-hpfcrep" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6259,7 +6268,7 @@
             HPFDRP
         </button>
     </h2>
-    <div id="collapse-hpfdrp" class="accordion-collapse collapse ">
+    <div id="collapse-hpfdrp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6336,7 +6345,7 @@
             HPFESERV
         </button>
     </h2>
-    <div id="collapse-hpfeserv" class="accordion-collapse collapse ">
+    <div id="collapse-hpfeserv" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6413,7 +6422,7 @@
             HPFFCSVW
         </button>
     </h2>
-    <div id="collapse-hpffcsvw" class="accordion-collapse collapse ">
+    <div id="collapse-hpffcsvw" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6474,7 +6483,7 @@
             HPFHKSOS
         </button>
     </h2>
-    <div id="collapse-hpfhksos" class="accordion-collapse collapse ">
+    <div id="collapse-hpfhksos" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6535,7 +6544,7 @@
             HPFOBS
         </button>
     </h2>
-    <div id="collapse-hpfobs" class="accordion-collapse collapse ">
+    <div id="collapse-hpfobs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6596,7 +6605,7 @@
             HPFRMAPL
         </button>
     </h2>
-    <div id="collapse-hpfrmapl" class="accordion-collapse collapse ">
+    <div id="collapse-hpfrmapl" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6657,7 +6666,7 @@
             HPFTES
         </button>
     </h2>
-    <div id="collapse-hpftes" class="accordion-collapse collapse ">
+    <div id="collapse-hpftes" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6734,7 +6743,7 @@
             HPFVPR
         </button>
     </h2>
-    <div id="collapse-hpfvpr" class="accordion-collapse collapse ">
+    <div id="collapse-hpfvpr" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6795,7 +6804,7 @@
             IRDTAXP
         </button>
     </h2>
-    <div id="collapse-irdtaxp" class="accordion-collapse collapse ">
+    <div id="collapse-irdtaxp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6856,7 +6865,7 @@
             ISSTGC
         </button>
     </h2>
-    <div id="collapse-isstgc" class="accordion-collapse collapse ">
+    <div id="collapse-isstgc" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6901,7 +6910,7 @@
             ITCTTASS
         </button>
     </h2>
-    <div id="collapse-itcttass" class="accordion-collapse collapse ">
+    <div id="collapse-itcttass" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -6962,7 +6971,7 @@
             LABDAS
         </button>
     </h2>
-    <div id="collapse-labdas" class="accordion-collapse collapse ">
+    <div id="collapse-labdas" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7023,7 +7032,7 @@
             LABDIS
         </button>
     </h2>
-    <div id="collapse-labdis" class="accordion-collapse collapse ">
+    <div id="collapse-labdis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7100,7 +7109,7 @@
             LABEMRS
         </button>
     </h2>
-    <div id="collapse-labemrs" class="accordion-collapse collapse ">
+    <div id="collapse-labemrs" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7161,7 +7170,7 @@
             LABGSSS
         </button>
     </h2>
-    <div id="collapse-labgsss" class="accordion-collapse collapse ">
+    <div id="collapse-labgsss" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7238,7 +7247,7 @@
             LABRCMS
         </button>
     </h2>
-    <div id="collapse-labrcms" class="accordion-collapse collapse ">
+    <div id="collapse-labrcms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7299,7 +7308,7 @@
             LABWCMS
         </button>
     </h2>
-    <div id="collapse-labwcms" class="accordion-collapse collapse ">
+    <div id="collapse-labwcms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7360,7 +7369,7 @@
             LCSHKPP
         </button>
     </h2>
-    <div id="collapse-lcshkpp" class="accordion-collapse collapse ">
+    <div id="collapse-lcshkpp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7421,7 +7430,7 @@
             LNDCSDI
         </button>
     </h2>
-    <div id="collapse-lndcsdi" class="accordion-collapse collapse ">
+    <div id="collapse-lndcsdi" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7482,7 +7491,7 @@
             LWBGTSW
         </button>
     </h2>
-    <div id="collapse-lwbgtsw" class="accordion-collapse collapse ">
+    <div id="collapse-lwbgtsw" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7575,7 +7584,7 @@
             OGCADI
         </button>
     </h2>
-    <div id="collapse-ogcadi" class="accordion-collapse collapse ">
+    <div id="collapse-ogcadi" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7636,7 +7645,7 @@
             OGCCCGOP
         </button>
     </h2>
-    <div id="collapse-ogcccgop" class="accordion-collapse collapse ">
+    <div id="collapse-ogcccgop" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7809,7 +7818,7 @@
             OGCCDEG
         </button>
     </h2>
-    <div id="collapse-ogccdeg" class="accordion-collapse collapse ">
+    <div id="collapse-ogccdeg" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7870,7 +7879,7 @@
             OGCDMDS
         </button>
     </h2>
-    <div id="collapse-ogcdmds" class="accordion-collapse collapse ">
+    <div id="collapse-ogcdmds" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -7931,7 +7940,7 @@
             OGCEFORM
         </button>
     </h2>
-    <div id="collapse-ogceform" class="accordion-collapse collapse ">
+    <div id="collapse-ogceform" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8040,7 +8049,7 @@
             OGCEPROF
         </button>
     </h2>
-    <div id="collapse-ogceprof" class="accordion-collapse collapse ">
+    <div id="collapse-ogceprof" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8133,7 +8142,7 @@
             OGCETEND
         </button>
     </h2>
-    <div id="collapse-ogcetend" class="accordion-collapse collapse ">
+    <div id="collapse-ogcetend" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8242,7 +8251,7 @@
             OGCIAMS
         </button>
     </h2>
-    <div id="collapse-ogciams" class="accordion-collapse collapse ">
+    <div id="collapse-ogciams" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8495,7 +8504,7 @@
             OGCSGIL
         </button>
     </h2>
-    <div id="collapse-ogcsgil" class="accordion-collapse collapse ">
+    <div id="collapse-ogcsgil" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8556,7 +8565,7 @@
             OGCSSMS
         </button>
     </h2>
-    <div id="collapse-ogcssms" class="accordion-collapse collapse ">
+    <div id="collapse-ogcssms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8617,7 +8626,7 @@
             OGCUSP
         </button>
     </h2>
-    <div id="collapse-ogcusp" class="accordion-collapse collapse ">
+    <div id="collapse-ogcusp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8678,7 +8687,7 @@
             OGCWFIIS
         </button>
     </h2>
-    <div id="collapse-ogcwfiis" class="accordion-collapse collapse ">
+    <div id="collapse-ogcwfiis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8739,7 +8748,7 @@
             OROESS
         </button>
     </h2>
-    <div id="collapse-oroess" class="accordion-collapse collapse ">
+    <div id="collapse-oroess" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8800,7 +8809,7 @@
             PICVIMIS
         </button>
     </h2>
-    <div id="collapse-picvimis" class="accordion-collapse collapse ">
+    <div id="collapse-picvimis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8861,7 +8870,7 @@
             PLDMAPW2
         </button>
     </h2>
-    <div id="collapse-pldmapw2" class="accordion-collapse collapse ">
+    <div id="collapse-pldmapw2" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8922,7 +8931,7 @@
             REOEFUP
         </button>
     </h2>
-    <div id="collapse-reoefup" class="accordion-collapse collapse ">
+    <div id="collapse-reoefup" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -8983,7 +8992,7 @@
             REOEPR
         </button>
     </h2>
-    <div id="collapse-reoepr" class="accordion-collapse collapse ">
+    <div id="collapse-reoepr" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9124,7 +9133,7 @@
             REOPSMS
         </button>
     </h2>
-    <div id="collapse-reopsms" class="accordion-collapse collapse ">
+    <div id="collapse-reopsms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9185,7 +9194,7 @@
             SBMOAP
         </button>
     </h2>
-    <div id="collapse-sbmoap" class="accordion-collapse collapse ">
+    <div id="collapse-sbmoap" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9358,7 +9367,7 @@
             SWDCASSS
         </button>
     </h2>
-    <div id="collapse-swdcasss" class="accordion-collapse collapse ">
+    <div id="collapse-swdcasss" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9451,7 +9460,7 @@
             SWDCIS
         </button>
     </h2>
-    <div id="collapse-swdcis" class="accordion-collapse collapse ">
+    <div id="collapse-swdcis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9528,7 +9537,7 @@
             SWDDELS
         </button>
     </h2>
-    <div id="collapse-swddels" class="accordion-collapse collapse ">
+    <div id="collapse-swddels" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9573,7 +9582,7 @@
             SWDRCHED
         </button>
     </h2>
-    <div id="collapse-swdrched" class="accordion-collapse collapse ">
+    <div id="collapse-swdrched" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9666,7 +9675,7 @@
             SWDSDMI
         </button>
     </h2>
-    <div id="collapse-swdsdmi" class="accordion-collapse collapse ">
+    <div id="collapse-swdsdmi" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -9727,7 +9736,7 @@
             SWDSPMIS
         </button>
     </h2>
-    <div id="collapse-swdspmis" class="accordion-collapse collapse ">
+    <div id="collapse-swdspmis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10044,7 +10053,7 @@
             SWDVISE
         </button>
     </h2>
-    <div id="collapse-swdvise" class="accordion-collapse collapse ">
+    <div id="collapse-swdvise" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10201,7 +10210,7 @@
             TDCDIS
         </button>
     </h2>
-    <div id="collapse-tdcdis" class="accordion-collapse collapse ">
+    <div id="collapse-tdcdis" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10262,7 +10271,7 @@
             TDDLPS
         </button>
     </h2>
-    <div id="collapse-tddlps" class="accordion-collapse collapse ">
+    <div id="collapse-tddlps" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10355,7 +10364,7 @@
             TDDVRMS
         </button>
     </h2>
-    <div id="collapse-tddvrms" class="accordion-collapse collapse ">
+    <div id="collapse-tddvrms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10448,7 +10457,7 @@
             TDELICP
         </button>
     </h2>
-    <div id="collapse-tdelicp" class="accordion-collapse collapse ">
+    <div id="collapse-tdelicp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10509,7 +10518,7 @@
             TDFFSBE
         </button>
     </h2>
-    <div id="collapse-tdffsbe" class="accordion-collapse collapse ">
+    <div id="collapse-tdffsbe" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10730,7 +10739,7 @@
             TDFFSTS
         </button>
     </h2>
-    <div id="collapse-tdffsts" class="accordion-collapse collapse ">
+    <div id="collapse-tdffsts" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -10951,7 +10960,7 @@
             TDIDPOA
         </button>
     </h2>
-    <div id="collapse-tdidpoa" class="accordion-collapse collapse ">
+    <div id="collapse-tdidpoa" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11012,7 +11021,7 @@
             TDIDPSK
         </button>
     </h2>
-    <div id="collapse-tdidpsk" class="accordion-collapse collapse ">
+    <div id="collapse-tdidpsk" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11105,7 +11114,7 @@
             TDOAVRM
         </button>
     </h2>
-    <div id="collapse-tdoavrm" class="accordion-collapse collapse ">
+    <div id="collapse-tdoavrm" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11198,7 +11207,7 @@
             TDOCRAI
         </button>
     </h2>
-    <div id="collapse-tdocrai" class="accordion-collapse collapse ">
+    <div id="collapse-tdocrai" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11259,7 +11268,7 @@
             TDPTMDP
         </button>
     </h2>
-    <div id="collapse-tdptmdp" class="accordion-collapse collapse ">
+    <div id="collapse-tdptmdp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11320,7 +11329,7 @@
             TDQFSAI
         </button>
     </h2>
-    <div id="collapse-tdqfsai" class="accordion-collapse collapse ">
+    <div id="collapse-tdqfsai" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11381,7 +11390,7 @@
             TIDBUDEF
         </button>
     </h2>
-    <div id="collapse-tidbudef" class="accordion-collapse collapse ">
+    <div id="collapse-tidbudef" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11442,7 +11451,7 @@
             TIDBUDWB
         </button>
     </h2>
-    <div id="collapse-tidbudwb" class="accordion-collapse collapse ">
+    <div id="collapse-tidbudwb" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11487,7 +11496,7 @@
             TLBEMATF
         </button>
     </h2>
-    <div id="collapse-tlbematf" class="accordion-collapse collapse ">
+    <div id="collapse-tlbematf" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11548,7 +11557,7 @@
             TYBMGTD
         </button>
     </h2>
-    <div id="collapse-tybmgtd" class="accordion-collapse collapse ">
+    <div id="collapse-tybmgtd" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11609,7 +11618,7 @@
             WFSCESP
         </button>
     </h2>
-    <div id="collapse-wfscesp" class="accordion-collapse collapse ">
+    <div id="collapse-wfscesp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11670,7 +11679,7 @@
             WFSECP
         </button>
     </h2>
-    <div id="collapse-wfsecp" class="accordion-collapse collapse ">
+    <div id="collapse-wfsecp" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11747,7 +11756,7 @@
             WFSELINK
         </button>
     </h2>
-    <div id="collapse-wfselink" class="accordion-collapse collapse ">
+    <div id="collapse-wfselink" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11808,7 +11817,7 @@
             WFSESS
         </button>
     </h2>
-    <div id="collapse-wfsess" class="accordion-collapse collapse ">
+    <div id="collapse-wfsess" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11869,7 +11878,7 @@
             WFSESUB
         </button>
     </h2>
-    <div id="collapse-wfsesub" class="accordion-collapse collapse ">
+    <div id="collapse-wfsesub" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -11946,7 +11955,7 @@
             WFSWFAS
         </button>
     </h2>
-    <div id="collapse-wfswfas" class="accordion-collapse collapse ">
+    <div id="collapse-wfswfas" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -12023,7 +12032,7 @@
             WSDWQMS
         </button>
     </h2>
-    <div id="collapse-wsdwqms" class="accordion-collapse collapse ">
+    <div id="collapse-wsdwqms" class="accordion-collapse collapse">
         <div class="accordion-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-bordered mb-0 text-center align-middle">
@@ -12082,28 +12091,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// 簡單搜尋功能
+// 順暢版搜尋：過濾 → 展開 → 滾動 → 高亮
 document.getElementById('searchInput').addEventListener('input', function(e) {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.accordion-item').forEach(item => {
+    const term = e.target.value.toLowerCase().trim();
+    const items = document.querySelectorAll('.accordion-item');
+    let firstMatch = null;
+
+    items.forEach(item => {
         const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(term) ? '' : 'none';
+        const isMatch = term === '' || text.includes(term);
+
+        item.style.display = isMatch ? '' : 'none';
+        if (isMatch && !firstMatch) firstMatch = item;
     });
+
+    if (firstMatch && term !== '') {
+        const collapse = firstMatch.querySelector('.accordion-collapse');
+
+        // 立刻展開
+        if (collapse && !collapse.classList.contains('show')) {
+            new bootstrap.Collapse(collapse, { toggle: true });
+        }
+
+        // 稍等展開開始後滾動 + 高亮
+        setTimeout(() => {
+            firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            firstMatch.classList.add('highlight');
+            setTimeout(() => {
+                firstMatch.classList.add('fade');
+                setTimeout(() => {
+                    firstMatch.classList.remove('highlight', 'fade');
+                }, 1500);
+            }, 50);
+        }, 50);  // 極短延遲，讓展開動畫先啟動
+    }
 });
-</script>
-
-<script>
-    // Check login status
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
-        alert('Please log in first!');
-        window.location.href = 'index.html';
-    }
-
-    // Optional: Logout function (add a button in your header)
-    function logout() {
-        localStorage.removeItem('isLoggedIn');
-        window.location.href = 'index.html';
-    }
 </script>
 
 </body>
