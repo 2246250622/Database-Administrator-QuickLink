@@ -367,6 +367,22 @@ toastTrigger.addEventListener('click', () => {
 }
         </script>
     
+    <script>
+    // Check login status
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        alert('Please log in first!');
+        window.location.href = 'index.html';
+    }
+
+    // Optional: Logout function (add a button in your header)
+    function logout() {
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = 'index.html';
+    }
+</script>
+
 </body>
+
+
 
 </html>
