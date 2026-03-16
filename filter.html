@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Filter DB List - DBA Bookmarks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
+
+    <style>
+        .btn-outline-custom {
+            --bs-btn-color: #343a40;
+            --bs-btn-bg: #DCBFFF; /* Purple */
+            --bs-btn-border-color: #DCBFFF;
+            --bs-btn-hover-color: #343a40;
+            --bs-btn-hover-bg: #E5D4FF;
+            --bs-btn-hover-border-color: #E5D4FF;
+            --bs-btn-active-color: #343a40;
+            --bs-btn-active-bg: #E5D4FF;
+            --bs-btn-active-border-color: #E5D4FF;
+        }
+        body { background-color: #f8f9fa; }
+        pre {
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 13px;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .section-title { color: #6c757d; margin-bottom: 8px; font-weight: 500; }
+        .filter-container {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<header class="p-3 mb-3 border-bottom" style="background-color: #D0A2F7">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><b><a href="index.html" class="nav-link px-2 link-body-emphasis">Database Administrator</a></b></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <button type="button" class="btn btn-outline-custom position-relative me-2" onclick='window.open("https://mail.21cn.net/", "_blank")'>
+                    Webmail
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope ms-1" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                    </svg>
+                </button>
+
+                <button type="button" class="btn btn-outline-custom me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
+                <button type="button" class="btn btn-outline-custom me-2" onclick='location.href="dbaas_list.html"'>Summary</button>
+                <button type="button" class="btn btn-outline-custom" onclick='location.href="filter.html"'>T0P0 Filter</button>
+           
+                <button type="button" class="btn btn-outline-custom" onclick='location.href="Converter.html"'>Unit Converter⚡</button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">⛏️ Server List</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="m-4">
+                                    <div class="card text-center">
+                                        <div class="card-header">
+                                            <ul class="nav nav-tabs card-header-tabs" id="myTab">
+                                                <li class="nav-item"><a href="#home" class="nav-link active" data-bs-toggle="tab">Server List</a></li>
+                                                <li class="nav-item"><a href="#profile" class="nav-link" data-bs-toggle="tab">2</a></li>
+                                                <li class="nav-item"><a href="#stake" class="nav-link" data-bs-toggle="tab">3</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade show active" id="home">
+                                                    <div class="list-group">
+                                                        <a href="dbaas_list.html" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Summary</a>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="profile">
+                                                    <div class="list-group">
+                                                        <a href="" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Empty</a>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="stake">
+                                                    <div class="list-group">
+                                                        <a href="" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Empty</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">好的</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">關閉</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="dropdown text-end">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu text-small">
+                    <li><a class="dropdown-item" href="index.html" onclick="logout()">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="filter-container">
+    <h3 class="text-center mb-4">Filter Database List</h3>
+    <p class="text-center text-muted mb-4">貼上主機清單 → 只保留完整成對的主機（p1/p2 或 t1/t2 都要有）</p>
+
+    <div class="mb-4">
+        <label class="form-label fw-bold">主機清單（支援空格、換行、逗號）</label>
+        <textarea id="inputData" class="form-control" rows="10" placeholder="p1vdbs-bdacas-pdb1-1-01 p2vdbs-bdacas-pdb1-2-01 ..."></textarea>
+    </div>
+
+    <div class="text-center mb-4">
+        <button id="filterBtn" class="btn btn-outline-custom px-5 py-2">開始過濾</button>
+    </div>
+
+    <div id="resultArea" style="display:none;">
+        <div class="mb-4">
+            <h5 class="section-title">保留的完整 pair（共 <span id="keptCount">0</span> 對）</h5>
+            <pre id="keptPairs"></pre>
+            <button id="copyKept" class="btn btn-outline-custom mt-2">📋 複製保留的（每行一個）</button>
+        </div>
+
+        <div class="mb-4">
+            <h5 class="section-title text-danger">被排除的項目（共 <span id="excludedCount">0</span> 個）</h5>
+            <pre id="excludedItems"></pre>
+        </div>
+
+        <button id="copyAll" class="btn btn-outline-custom">複製全部結果（保留＋排除）</button>
+    </div>
+</div>
+
+<script>
+    const filterBtn       = document.getElementById('filterBtn');
+    const inputData       = document.getElementById('inputData');
+    const resultArea      = document.getElementById('resultArea');
+    const keptPairsEl     = document.getElementById('keptPairs');
+    const excludedItemsEl = document.getElementById('excludedItems');
+    const keptCountEl     = document.getElementById('keptCount');
+    const excludedCountEl = document.getElementById('excludedCount');
+    const copyKept        = document.getElementById('copyKept');
+    const copyAll         = document.getElementById('copyAll');
+
+    let lastKeptText = '';
+    let lastAllText  = '';
+
+    function getPairKey(host) {
+        const match = host.match(/^([pt][12])vdbs-(.+)-([12])-\d{2}$/i);
+        if (!match) return null;
+        return `${match[1][0].toLowerCase()}_${match[2]}`;
+    }
+
+    function getPairSide(host) {
+        const match = host.match(/-([12])-\d{2}$/i);
+        return match ? match[1] : null;
+    }
+
+    filterBtn.addEventListener('click', () => {
+        const text = inputData.value.trim();
+        if (!text) {
+            alert('請先輸入主機名稱清單');
+            return;
+        }
+
+        const hosts = text.replace(/[\n,，;]+/g, ' ').split(/\s+/).map(s => s.trim()).filter(Boolean);
+
+        const groups = new Map();
+        const excluded = [];
+
+        hosts.forEach(host => {
+            const key = getPairKey(host);
+            const side = getPairSide(host);
+            if (key && side) {
+                if (!groups.has(key)) groups.set(key, {});
+                groups.get(key)[side] = host;
+            } else {
+                excluded.push({host, reason: '格式不符合 p/t + 1/2-XX 規則'});
+            }
+        });
+
+        const kept = [];
+
+        groups.forEach((sides, key) => {
+            if (sides['1'] && sides['2']) {
+                const pair = [sides['1'], sides['2']].sort((a,b) => a.localeCompare(b));
+                kept.push(pair);
+            } else {
+                if (sides['1']) excluded.push({host: sides['1'], reason: '缺少對應的 p2/t2'});
+                if (sides['2']) excluded.push({host: sides['2'], reason: '缺少對應的 p1/t1'});
+            }
+        });
+
+        kept.sort((a,b) => {
+            const pa = a[0].startsWith('p') ? -1 : 1;
+            const pb = b[0].startsWith('p') ? -1 : 1;
+            if (pa !== pb) return pa - pb;
+            return a[0].localeCompare(b[0]);
+        });
+
+        keptPairsEl.textContent = kept.length > 0 
+            ? kept.map(pair => `${pair[0].padEnd(50)}${pair[1]}`).join('\n')
+            : '(沒有找到完整的 pair)';
+        keptCountEl.textContent = kept.length;
+
+        excludedItemsEl.textContent = excluded.length > 0 
+            ? excluded.map(item => `${item.host.padEnd(50)}${item.reason}`).join('\n')
+            : '(沒有被排除的項目)';
+        excludedCountEl.textContent = excluded.length;
+
+        lastKeptText = kept.flat().join('\n');
+        lastAllText  = `保留的主機（每行一個）:\n${lastKeptText || '(無)'}\n\n排除的 (${excluded.length} 個):\n${excluded.map(e => `${e.host}  ${e.reason}`).join('\n') || '(無)'}`;
+
+        resultArea.style.display = 'block';
+    });
+
+    copyKept.addEventListener('click', async () => {
+        if (lastKeptText) {
+            await navigator.clipboard.writeText(lastKeptText);
+            copyKept.textContent = '已複製 ✓';
+            setTimeout(() => copyKept.textContent = '📋 複製保留的（每行一個）', 1800);
+        }
+    });
+
+    copyAll.addEventListener('click', async () => {
+        if (lastAllText) {
+            await navigator.clipboard.writeText(lastAllText);
+            copyAll.textContent = '已複製 ✓';
+            setTimeout(() => copyAll.textContent = '複製全部結果', 1800);
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = 'index.html';
+    }
+</script>
+
+<script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
