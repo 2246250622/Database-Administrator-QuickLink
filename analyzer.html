@@ -112,7 +112,26 @@
                 body: JSON.stringify({
                     model: "deepseek-chat",
                     messages: [
-                        { role: "system", content: "You are a Senior GCIS MariaDB DBA with 15+ years experience..." },
+                        { role: "system", content: 
+                            "You are a Senior GCIS MariaDB DBA with 15+ years experience. " +
+"Analyze the logs and INC information provided. Output STRICTLY in the following format:\n" +
+"Message: [full error message from INC]\n"+
+"-------\n" +
+"1. Time: [Timeline of events leading to the issue, based on log timestamps]\n"+
+"-------\n"+
+"2. [CPU status during the issue, based on cpu_status_history.txt]\n"+
+"3. [Root cause based on actual logs at log snapshots]\n"+
+"-------\n"+
+"4. [Observation about the WriteTest timeout]\n"+
+"5. [Critical SQL Discovery: Perform exhaustive inspection of list_mariadb_session_*.log snapshots]\n"+
+"+/- 10 mins of INC]\n"+
+"6. [Cluster/Resource status at that time]\n"+
+"7. [Any other important findings]\n"+
+"-------\n"+
+"Current cluster status: [one short and accurate sentence]\n"+
+""+
+"Be concise, factual, and direct. Do not add extra headings or polite words.\n"
+                         },
                         { role: "user", content: `INC INFORMATION:\n${incText}\n\nLOG DATA:\n${allLogData}` }
                     ]
                 })
