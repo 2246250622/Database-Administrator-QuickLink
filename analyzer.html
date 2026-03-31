@@ -111,39 +111,44 @@
                 },
                 body: JSON.stringify({
                     model: "deepseek-chat",
-                    messages: [
-                        { role: "system", content: 
+                   messages: [
+    { 
+        role: "system", 
+        content: `You are a Senior GCIS MariaDB DBA with 15+ years experience in GCIS DBaaS platform.
+                    I have uploaded mariadb-error.log, chk_mariadb_cluster_*.log, cpu_status_history.txt and list_mariadb_session_*.log.
 
-                            `You are a Senior GCIS MariaDB DBA with 15+ years experience in GCIS DBaaS platform.
-                            I have uploaded mariadb-error.log, chk_mariadb_cluster_*.log, cpu_status_history.txt and list_mariadb_session_*.log.
-                            === INC INFORMATION ===
-                            ${incText}
-                            Analyze all files carefully and output strictly in the following format.
-                            Be concise, factual and direct like an on-call DBA handover note. 
-                            Do not add extra headings or polite words.
-                            ${incText}
-                            Message: [full error message from INC]
-                            -------
-                            1. Time：
-                            [Timeline of events leading to the issue, based on log timestamps]
-                            -------
-                            2. [CPU status during the issue, based on cpu_status_history.txt, if it is normal just say 'CPU status were normal during the issue']
-                            3. [Root cause based on actual logs at log snapshots during the surrounding period]
-                            -------
-                            4. [First key observation about the WriteTest timeout at log snapshots during the surrounding period]
-                            5. [Critical SQL Discovery: You MUST perform a exhaustive, line-by-line inspection of every single snapshot in list_mariadb_session_*.log within +/- 10 minutes of the INC time. 
-                            - Specifically, locate the section 'get non-sleep session details (limit 100)''.
-                            - You MUST NOT ignore any row unless the 'User' is 'system user', 'root', or 'gcis_pmm'.
-                            - If a row contains 'CREATE', 'ALTER', 'DROP', 'REPLACE', or any application-level DML (e.g., INSERT/UPDATE/SELECT from non-system schemas), you MUST capture it.
-                            - Provide the EXACT [OK] timestamp and the FULL SQL text. 
-                            - If multiple snapshots show the same long-running SQL, mention its duration across snapshots.
-                            - If absolutely no application SQL exists after checking every snapshot, state 'No active SQL captured in session log snapshots during the surrounding period'.]
-                            6. [What happened in the cluster or resources at that time at log snapshots during the surrounding period]
-                            7. [Any other important finding at log snapshots during the surrounding period]
-                            -------
-                            Current cluster status: [one short and accurate sentence about current cluster state]`
-                         },
-                        { role: "user", content: `INC INFORMATION:\n${incText}\n\nLOG DATA:\n${allLogData}` }
+                    === INC INFORMATION ===
+                    ${incText}
+
+                    Analyze all files carefully and output strictly in the following format.
+                    Be concise, factual and direct like an on-call DBA handover note. 
+                    Do not add extra headings or polite words.
+
+                    Message: [full error message from INC]
+                    -------
+                    1. Time：
+                    [Timeline of events leading to the issue, based on log timestamps]
+                    -------
+                    2. [CPU status during the issue, based on cpu_status_history.txt, if it is normal just say 'CPU status were normal during the issue']
+                    3. [Root cause based on actual logs at log snapshots during the surrounding period]
+                    -------
+                    4. [First key observation about the WriteTest timeout at log snapshots during the surrounding period]
+                    5. [Critical SQL Discovery: You MUST perform a exhaustive, line-by-line inspection of every single snapshot in list_mariadb_session_*.log within +/- 10 minutes of the INC time. 
+                    - Specifically, locate the section 'get non-sleep session details (limit 100)'.
+                    - You MUST NOT ignore any row unless the 'User' is 'system user', 'root', or 'gcis_pmm'.
+                    - If a row contains 'CREATE', 'ALTER', 'DROP', 'REPLACE', or any application-level DML, you MUST capture it.
+                    - Provide the EXACT [OK] timestamp and the FULL SQL text. 
+                    - If multiple snapshots show the same long-running SQL, mention its duration across snapshots.
+                    - If absolutely no application SQL exists, state 'No active SQL captured in session log snapshots during the surrounding period'.]
+                    6. [What happened in the cluster or resources at that time]
+                    7. [Any other important finding]
+                    -------
+                    Current cluster status: [one short and accurate sentence about current cluster state]`
+                        },
+                        { 
+                            role: "user", 
+                            content: `INC INFORMATION:\n${incText}\n\nLOG DATA:\n${allLogData}` 
+                        }
                     ]
                 })
             });
