@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCIS DBaaS Management Console</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        .btn-outline-custom {
+            --bs-btn-color: #343a40;
+            --bs-btn-bg: #DCBFFF; /* Purple */
+            --bs-btn-border-color: #DCBFFF;
+            --bs-btn-hover-color: #343a40;
+            --bs-btn-hover-bg: #E5D4FF;
+            --bs-btn-hover-border-color: #E5D4FF;
+            --bs-btn-active-color: #343a40;
+            --bs-btn-active-bg: #E5D4FF;
+            --bs-btn-active-border-color: #E5D4FF;
+        }
+
+        /* 系統核心控制區樣式 */
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .console-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .console-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        textarea.code-area {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            width: 100%;
+            height: 380px;
+            padding: 10px;
+            resize: vertical;
+        }
+        .nav-tabs .nav-link {
+            font-weight: 600;
+            color: #64748b;
+        }
+        .nav-tabs .nav-link.active {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <!-- 頂部 Header (包含傳入之前端樣式) -->
+    <header class="p-3 mb-3 border-bottom" style="background-color: #D0A2F7">
+      <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+          </a> 
+
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><b><a href="index.html" class="nav-link px-2 link-body-emphasis">GCIS DBaaS Platform Console</a></b></li>
+          </ul>
+
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex gap-2" role="search">
+            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/mail.21cn.net/", "_blank")'>
+              Webmail
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+              </svg>
+            </button>
+            
+            <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">⛏️</button>
+            <button type="button" class="btn btn-outline-custom" onclick='location.href="analyzer.html"'>Troubleshooting</button>
+            <button type="button" class="btn btn-outline-custom active" onclick='location.href="DBaaS_Summary.html"'>GCIS DBaaS Summary</button>
+            <button type="button" class="btn btn-outline-custom" onclick='location.href="filter.html"'>T0P0 Filter</button>
+            <button type="button" class="btn btn-outline-custom" onclick='location.href="Converter.html"'>Unit Converter⚡</button>
+          </form>
+
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle" onerror="this.src='https://via.placeholder.com/32'">
+            </a>
+            <ul class="dropdown-menu text-small">
+              <li><a class="dropdown-item" href="index.html" onclick="logout()">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 工具 Modal 視窗 -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel1">⛏️ DBA Quick Shortcuts</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card text-center">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab">
+                        <li class="nav-item"><a href="#home" class="nav-link active" data-bs-toggle="tab">Production</a></li>
+                        <li class="nav-item"><a href="#profile" class="nav-link" data-bs-toggle="tab">Testing</a></li>
+                        <li class="nav-item"><a href="#stake" class="nav-link" data-bs-toggle="tab">Witness / Infra</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="home">
+                          <div class="list-group text-start fs-7">
+                            <span class="list-group-item list-group-item-action list-group-item-danger"><b>Jumphost:</b> p1vmgt-stage01 / p2vmgt-stage01</span>
+                            <span class="list-group-item list-group-item-action"><b>PMM Server:</b> p1vdbs-gcissc-pmm01</span>
+                            <span class="list-group-item list-group-item-action"><b>Binlog Server:</b> p1vdbs-gcissc-binlog01</span>
+                          </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile">
+                          <div class="list-group text-start">
+                            <span class="list-group-item list-group-item-action list-group-item-info"><b>Testing Stage:</b> t1vmgt-stage01</span>
+                            <span class="list-group-item list-group-item-action"><b>PowerDNS:</b> t1vmgt-pwrdns01</span>
+                          </div>
+                        </div>
+                        <div class="tab-pane fade" id="stake">
+                          <div class="list-group text-start">
+                            <span class="list-group-item list-group-item-action list-group-item-success"><b>SKDC Witness:</b> w1vdbs-gcissc-witness0Xd</span>
+                            <span class="list-group-item list-group-item-action list-group-item-success"><b>WCDC Witness:</b> p2vdbs-gcissc-witness0Xd</span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
+
+<!-- 主工作區：PowerDNS 5-Mode 腳本自動生成器 -->
+<div class="container-fluid px-4">
+    <div class="row">
+        <!-- 左側：清單輸入區 -->
+        <div class="col-lg-5">
+            <div class="console-card">
+                <div class="console-title">1. 輸入 DBaaS Full List (FQDN & VIP)</div>
+                <textarea id="inputText" class="code-area" placeholder="請貼上 DBaaS DNS 清單 (支援 T1/T2 或 P1/P2)&#10;範例：&#10;t1vdbs-bdacas-udb1-ha1.dbaas.gcisdctr.hksarg 172.25.230.66&#10;t1vdbs-bdacas-udb1-ha2.dbaas.gcisdctr.hksarg 172.25.230.67&#10;t1vdbs-bdacas-udb1-rpt.dbaas.gcisdctr.hksarg 172.25.230.68&#10;t2vdbs-bdacas-udb1-ha1.dbaas.gcisdctr.hksarg 172.25.240.66&#10;t2vdbs-bdacas-udb1-ha2.dbaas.gcisdctr.hksarg 172.25.240.67&#10;t2vdbs-bdacas-udb1-rpt.dbaas.gcisdctr.hksarg 172.25.240.68"></textarea>
+                <div class="mt-3 d-flex gap-2">
+                    <button class="btn btn-primary fw-bold" onclick="generate5ModeScripts()">生成 5 種切換模式腳本</button>
+                    <button class="btn btn-outline-secondary" onclick="clearInput()">清空</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：5 模式腳本輸出區 -->
+        <div class="col-lg-7">
+            <div class="console-card position-relative">
+                <div class="console-title">2. PowerDNS pdnsutil 批次腳本輸出</div>
+                
+                <ul class="nav nav-tabs mb-3" id="modeTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" id="m1-tab" data-bs-toggle="tab" data-bs-target="#m1">1. T1 -> T2</button></li>
+                    <li class="nav-item"><button class="nav-link" id="m2-tab" data-bs-toggle="tab" data-bs-target="#m2">2. T1 -> T1</button></li>
+                    <li class="nav-item"><button class="nav-link" id="m3-tab" data-bs-toggle="tab" data-bs-target="#m3">3. T2 -> T1</button></li>
+                    <li class="nav-item"><button class="nav-link" id="m4-tab" data-bs-toggle="tab" data-bs-target="#m4">4. T2 -> T2</button></li>
+                    <li class="nav-item"><button class="nav-link text-danger fw-bold" id="m5-tab" data-bs-toggle="tab" data-bs-target="#m5">5. Rollback</button></li>
+                </ul>
+
+                <div class="tab-content" id="modeTabsContent">
+                    <div class="tab-pane fade show active" id="m1">
+                        <button class="btn btn-sm btn-outline-primary copy-btn" onclick="copyScript('outM1')">複製腳本</button>
+                        <textarea id="outM1" class="code-area" readonly placeholder="Mode 1: 僅將 T1 域名 A Record 指向 T2 VIP (T2 不動)..."></textarea>
+                    </div>
+                    <div class="tab-pane fade" id="m2">
+                        <button class="btn btn-sm btn-outline-primary copy-btn" onclick="copyScript('outM2')">複製腳本</button>
+                        <textarea id="outM2" class="code-area" readonly placeholder="Mode 2: 僅將 T1 域名 A Record 指向 T1 VIP (T2 不動)..."></textarea>
+                    </div>
+                    <div class="tab-pane fade" id="m3">
+                        <button class="btn btn-sm btn-outline-primary copy-btn" onclick="copyScript('outM3')">複製腳本</button>
+                        <textarea id="outM3" class="code-area" readonly placeholder="Mode 3: 僅將 T2 域名 A Record 指向 T1 VIP (T1 不動)..."></textarea>
+                    </div>
+                    <div class="tab-pane fade" id="m4">
+                        <button class="btn btn-sm btn-outline-primary copy-btn" onclick="copyScript('outM4')">複製腳本</button>
+                        <textarea id="outM4" class="code-area" readonly placeholder="Mode 4: 僅將 T2 域名 A Record 指向 T2 VIP (T1 不動)..."></textarea>
+                    </div>
+                    <div class="tab-pane fade" id="m5">
+                        <button class="btn btn-sm btn-outline-danger copy-btn" onclick="copyScript('outM5')">複製腳本</button>
+                        <textarea id="outM5" class="code-area" readonly placeholder="Mode 5: Full Rollback (恢復預設：T1 -> T1 VIP, T2 -> T2 VIP)..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// 驗證登入狀態
+if (localStorage.getItem('isLoggedIn') !== 'true') {
+    // 若尚未登入，取消註解下行可啟用跳轉
+    // window.location.href = 'index.html';
+}
+
+function logout() {
+    localStorage.removeItem('isLoggedIn');
+    window.location.href = 'index.html';
+}
+
+// 根據 GCIS 子網段自動推導對應 Peer IP
+function inferPeerIp(ip, direction) {
+    const parts = ip.split('.');
+    if (parts.length !== 4) return ip;
+    let octet3 = parseInt(parts[2], 10);
+
+    if (direction === 'T1_TO_T2') {
+        if (octet3 === 230) octet3 = 240;
+        else if (octet3 === 130) octet3 = 240;
+        else if (octet3 === 150) octet3 = 250;
+        else if (octet3 === 41)  octet3 = 51;
+        else if (octet3 === 210) octet3 = 220;
+        else if (octet3 === 140) octet3 = 150;
+        else if (octet3 === 141) octet3 = 151;
+        else if (octet3 === 40)  octet3 = 50;
+        else octet3 += 10;
+    } else if (direction === 'T2_TO_T1') {
+        if (octet3 === 240) octet3 = 230;
+        else if (octet3 === 250) octet3 = 150;
+        else if (octet3 === 51)  octet3 = 41;
+        else if (octet3 === 220) octet3 = 210;
+        else if (octet3 === 150) octet3 = 140;
+        else if (octet3 === 151) octet3 = 141;
+        else if (octet3 === 50)  octet3 = 40;
+        else octet3 -= 10;
+    }
+
+    parts[2] = octet3.toString();
+    return parts.join('.');
+}
+
+// 解析輸入列
+function parseLines(rawText) {
+    const lines = rawText.split('\n');
+    const records = [];
+
+    lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+        
+        const tokens = trimmed.split(/\s+/);
+        if (tokens.length >= 2) {
+            const fqdn = tokens[0];
+            const ip = tokens[1];
+
+            const firstDot = fqdn.indexOf('.');
+            if (firstDot !== -1) {
+                const recordName = fqdn.substring(0, firstDot);
+                const zoneName = fqdn.substring(firstDot + 1);
+                
+                let site = 'unknown';
+                if (recordName.startsWith('t1vdbs') || recordName.startsWith('p1vdbs')) site = 'T1';
+                else if (recordName.startsWith('t2vdbs') || recordName.startsWith('p2vdbs')) site = 'T2';
+
+                records.push({ fqdn, recordName, zoneName, ip, site });
+            }
+        }
+    });
+
+    return records;
+}
+
+// 核心 5-Mode 腳本生成邏輯
+function generate5ModeScripts() {
+    const input = document.getElementById('inputText').value;
+    const records = parseLines(input);
+
+    if (records.length === 0) {
+        alert('請先輸入有效的 DBaaS DNS 與 IP 清單！');
+        return;
+    }
+
+    const map = {};
+    records.forEach(r => {
+        map[r.recordName] = { zone: r.zoneName, ip: r.ip, site: r.site };
+    });
+
+    // 雙向補充缺漏的配對點
+    Object.keys(map).forEach(key => {
+        const item = map[key];
+        if (item.site === 'T1') {
+            const peerKey = key.replace(/^(t1vdbs|p1vdbs)/, (m) => m.startsWith('t') ? 't2vdbs' : 'p2vdbs');
+            if (!map[peerKey]) {
+                map[peerKey] = { zone: item.zone, ip: inferPeerIp(item.ip, 'T1_TO_T2'), site: 'T2' };
+            }
+        } else if (item.site === 'T2') {
+            const peerKey = key.replace(/^(t2vdbs|p2vdbs)/, (m) => m.startsWith('t') ? 't1vdbs' : 'p1vdbs');
+            if (!map[peerKey]) {
+                map[peerKey] = { zone: item.zone, ip: inferPeerIp(item.ip, 'T2_TO_T1'), site: 'T1' };
+            }
+        }
+    });
+
+    const t1Keys = Object.keys(map).filter(k => map[k].site === 'T1').sort();
+
+    let m1 = "#!/bin/bash\n# Mode 1: Update T1 DNS to point to T2 VIP (T2 Unchanged)\n\n";
+    let m2 = "#!/bin/bash\n# Mode 2: Update T1 DNS to point to T1 VIP (T2 Unchanged)\n\n";
+    let m3 = "#!/bin/bash\n# Mode 3: Update T2 DNS to point to T1 VIP (T1 Unchanged)\n\n";
+    let m4 = "#!/bin/bash\n# Mode 4: Update T2 DNS to point to T2 VIP (T1 Unchanged)\n\n";
+    let m5 = "#!/bin/bash\n# Mode 5: Full Rollback (T1 -> T1 VIP, T2 -> T2 VIP)\n\n";
+
+    t1Keys.forEach(t1Key => {
+        const t2Key = t1Key.replace(/^(t1vdbs|p1vdbs)/, (m) => m.startsWith('t') ? 't2vdbs' : 'p2vdbs');
+        const t1Obj = map[t1Key];
+        const t2Obj = map[t2Key];
+
+        // Mode 1: T1 改成 T2 VIP
+        m1 += `pdnsutil delete-rrset ${t1Obj.zone} ${t1Key} A\n`;
+        m1 += `pdnsutil add-record ${t1Obj.zone} ${t1Key} A ${t2Obj.ip}\n`;
+        m1 += `sleep 0.1\n`;
+
+        // Mode 2: T1 改成 T1 VIP
+        m2 += `pdnsutil delete-rrset ${t1Obj.zone} ${t1Key} A\n`;
+        m2 += `pdnsutil add-record ${t1Obj.zone} ${t1Key} A ${t1Obj.ip}\n`;
+        m2 += `sleep 0.1\n`;
+
+        // Mode 3: T2 改成 T1 VIP
+        m3 += `pdnsutil delete-rrset ${t2Obj.zone} ${t2Key} A\n`;
+        m3 += `pdnsutil add-record ${t2Obj.zone} ${t2Key} A ${t1Obj.ip}\n`;
+        m3 += `sleep 0.1\n`;
+
+        // Mode 4: T2 改成 T2 VIP
+        m4 += `pdnsutil delete-rrset ${t2Obj.zone} ${t2Key} A\n`;
+        m4 += `pdnsutil add-record ${t2Obj.zone} ${t2Key} A ${t2Obj.ip}\n`;
+        m4 += `sleep 0.1\n`;
+
+        // Mode 5: Rollback
+        m5 += `# Restore ${t1Key}\n`;
+        m5 += `pdnsutil delete-rrset ${t1Obj.zone} ${t1Key} A\n`;
+        m5 += `pdnsutil add-record ${t1Obj.zone} ${t1Key} A ${t1Obj.ip}\n`;
+        m5 += `sleep 0.1\n`;
+        m5 += `# Restore ${t2Key}\n`;
+        m5 += `pdnsutil delete-rrset ${t2Obj.zone} ${t2Key} A\n`;
+        m5 += `pdnsutil add-record ${t2Obj.zone} ${t2Key} A ${t2Obj.ip}\n`;
+        m5 += `sleep 0.1\n`;
+    });
+
+    document.getElementById('outM1').value = m1;
+    document.getElementById('outM2').value = m2;
+    document.getElementById('outM3').value = m3;
+    document.getElementById('outM4').value = m4;
+    document.getElementById('outM5').value = m5;
+}
+
+function copyScript(id) {
+    const el = document.getElementById(id);
+    if (!el.value) return;
+    el.select();
+    document.execCommand('copy');
+    alert('已成功複製批次腳本至剪貼簿！');
+}
+
+function clearInput() {
+    document.getElementById('inputText').value = '';
+    ['outM1', 'outM2', 'outM3', 'outM4', 'outM5'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+}
+</script>
+</body>
+</html>
