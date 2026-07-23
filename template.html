@@ -1,5 +1,5 @@
 <head>
-    <title>單位轉換器</title>
+    <title>template</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -134,116 +134,15 @@
         </header>
       </main>
     
+
+
+      
       <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
     
 
-<!-- 儲存單位轉換器 ⚡ -->
-<br><br><br>
-<center>
-  <div style="width: 60%; max-width: 500px; background: #f8f9fa; padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-    <h4 style="color: #6f42c1; margin-bottom: 1.5rem;">儲存單位轉換器 (Byte 系列)</h4>
-    
-    <div class="input-group mb-3">
-      <input type="number" id="inputValue" class="form-control" placeholder="輸入數值" min="0" step="any" value="1" style="font-size: 1.1rem;">
-      
-      <select id="fromUnit" class="form-select" style="max-width: 130px;">
-        <option value="B">Byte (B)</option>
-        <option value="KB" selected>KB</option>
-        <option value="MB">MB</option>
-        <option value="GB">GB</option>
-      </select>
-    </div>
-
-    <div class="text-center my-3">
-      <button class="btn btn-outline-custom" onclick="convertStorage()">轉換</button>
-      <button class="btn btn-outline-secondary ms-2" onclick="swapUnits()">↔ 交換</button>
-    </div>
-
-    <div class="input-group mb-3">
-      <input type="text" id="result" class="form-control" readonly placeholder="結果" style="font-size: 1.3rem; background: white; font-weight: bold; color: #343a40;">
-      
-      <select id="toUnit" class="form-select" style="max-width: 130px;">
-        <option value="B">Byte (B)</option>
-        <option value="KB">KB</option>
-        <option value="MB" selected>MB</option>
-        <option value="GB">GB</option>
-      </select>
-    </div>
-
-    <small class="text-muted">使用 1024 進位（1 KB = 1024 B），電腦常見標準</small>
-  </div>
-</center>
-
-<script>
-// 單位對應的指數 (以 Byte 為基準)
-const units = {
-  'B':  0,
-  'KB': 1,
-  'MB': 2,
-  'GB': 3
-};
-
-function convertStorage() {
-  const input = parseFloat(document.getElementById('inputValue').value);
-  if (isNaN(input) || input < 0) {
-    document.getElementById('result').value = "請輸入有效數字";
-    return;
-  }
-
-  const from = document.getElementById('fromUnit').value;
-  const to   = document.getElementById('toUnit').value;
-
-  // 先轉成 Byte，再轉成目標單位
-  const inBytes = input * Math.pow(1024, units[from]);
-  const result  = inBytes / Math.pow(1024, units[to]);
-
-  // 顯示結果（保留 4 位小數，自動去掉尾隨 0）
-  document.getElementById('result').value = result.toFixed(4).replace(/\.?0+$/, "");
-}
-
-function swapUnits() {
-  const fromSelect = document.getElementById('fromUnit');
-  const toSelect   = document.getElementById('toUnit');
-  
-  const temp = fromSelect.value;
-  fromSelect.value = toSelect.value;
-  toSelect.value = temp;
-  
-  // 順便轉換一次
-  convertStorage();
-}
-
-// 輸入框直接按 Enter 也轉換 + 即時監聽（可選）
-document.getElementById('inputValue').addEventListener('input', convertStorage);
-document.getElementById('fromUnit').addEventListener('change', convertStorage);
-document.getElementById('toUnit').addEventListener('change', convertStorage);
-
-// 頁面載入時先轉一次（預設值）
-window.addEventListener('load', convertStorage);
-</script>
 
 
-<script>
-    // Get all the rows in the table
-const rows = document.querySelectorAll('td');
 
-// Add a click event listener to each row
-rows.forEach(row => {
-  row.addEventListener('click', () => {
-    // Change the background color of the row to green
-    row.style.backgroundColor = 'LightGreen';
-  });
-});
-
-// Add a click event listener to each row
-rows.forEach(row => {
-  row.addEventListener('click', () => {
-    // Add a class to the row to indicate that it has been clicked
-    row.classList.add('clicked');
-  });
-});
-
-</script>
    
 
     <script>
