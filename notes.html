@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <title>GCIS DBA Master Toolkit v9 - PRODUCTION ULTIMATE</title>
+    <style>
+        :root { 
+            --p1: #d32f2f; --p2: #ef6c00; --t1: #2e7d32; --lab: #7b4fbf; --bsa: #0277bd; --code-bg: #1a1d23; 
+            --nav-bg: #1b2838; --nav-hover: #2c3e50; --accent: #4fc3f7;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.06); --card-shadow-hover: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        * { scrollbar-width: thin; scrollbar-color: #37474f transparent; }
+        body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: #eef2f5; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* 側邊導航 */
+        nav { width: 240px; background: var(--nav-bg); color: #b0bec5; display: flex; flex-direction: column; box-shadow: 2px 0 12px rgba(0,0,0,0.25); overflow-y: auto; flex-shrink: 0; }
+        nav .nav-header { padding: 22px 18px; background: #14222e; color: var(--accent); font-weight: 700; text-align: center; font-size: 0.9em; letter-spacing: 1px; border-bottom: 1px solid #20303e; }
+        nav a { padding: 10px 20px; color: #90a4ae; text-decoration: none; border-bottom: 1px solid #20303e; font-size: 0.8em; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        nav a::before { content: ">"; color: var(--accent); opacity: 0.4; font-size: 0.7em; }
+        nav a:hover { background: var(--nav-hover); color: #eceff1; padding-left: 28px; }
+        nav a:hover::before { opacity: 1; }
+
+        /* 主內容區 */
+        main { flex: 1; padding: 24px 28px; overflow-y: auto; box-sizing: border-box; }
+        .section-header { 
+            border-left: 5px solid var(--accent); padding-left: 14px; margin: 28px 0 14px; 
+            font-size: 1.15em; color: #37474f; font-weight: 700; letter-spacing: 0.5px;
+            background: linear-gradient(to right, rgba(79,195,247,0.06), transparent);
+        }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
+        .card { 
+            background: white; border-radius: 10px; padding: 12px 14px; 
+            box-shadow: var(--card-shadow); border-top: 3px solid #cfd8dc;
+            transition: box-shadow 0.2s, transform 0.15s;
+        }
+        .card:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-1px); }
+        
+        .sop-card { padding: 14px; }
+        .sop-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .sop-col { display: flex; flex-direction: column; gap: 6px; }
+        .sop-col .cmd-group { margin-bottom: 4px; }
+        
+        .card.p1 { border-top-color: var(--p1); }
+        .card.p2 { border-top-color: var(--p2); }
+        .card.t1 { border-top-color: var(--t1); }
+        .card.lab { border-top-color: var(--lab); background: #f8f4ff; }
+        .card.bsa { border-top-color: var(--bsa); background: #eef7fd; }
+
+        h3 { margin: 0 0 7px 0; font-size: 0.92em; color: #455a64; 
+            border-bottom: 1px solid #eceff1; padding-bottom: 6px; 
+            display: flex; align-items: center; gap: 6px; }
+        h3::before { content: "#"; color: var(--accent); font-size: 0.8em; opacity: 0.5; }
+        
+        .cmd-group { margin-bottom: 7px; }
+        .cmd-label { 
+            display: inline-block; font-size: 0.72em; color: #78909c; margin-bottom: 4px; 
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;
+            background: #f0f4f7; padding: 2px 10px; border-radius: 3px;
+        }
+        .code-box { 
+            background: var(--code-bg); color: #e2e8f0; padding: 10px 14px; 
+            border-radius: 6px; font-family: 'Consolas', 'Fira Code', monospace; 
+            font-size: 0.78em; cursor: pointer; position: relative; 
+            white-space: pre-wrap; word-break: break-all; 
+            border: 1px solid #2a2d35; transition: all 0.2s; 
+            line-height: 1.45; 
+        }
+        .code-box:hover { background: #22262e; border-color: var(--accent); }
+        .code-box::after { 
+            content: "COPY"; position: absolute; right: 8px; top: 6px; 
+            color: #555; font-size: 0.6em; letter-spacing: 1px;
+            background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 3px;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .code-box:hover::after { opacity: 1; }
+        .code-box.copied::after { content: "COPIED!"; color: #a6e22e; opacity: 1; }
+        .code-box.copied { background: #1b3a1b !important; border-color: #4caf50 !important; }
+        
+        /* 搜尋框 */
+        #toolSearch { 
+            width: calc(100% - 32px); margin: 12px 16px; padding: 8px 12px; 
+            border-radius: 6px; border: 1px solid #2a3a4a; outline: none; 
+            background: #0f1a24; color: #eceff1; font-size: 0.85em; box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        #toolSearch:focus { border-color: var(--accent); }
+        #toolSearch::placeholder { color: #546e7a; }
+        
+        /* NSH 表格卡片 */
+        .card.nsh { grid-column: 1 / -1; }
+        
+        /* SQL 表格容器 */
+        .sql-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 18px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.76em; margin-bottom: 6px; border-radius: 6px; overflow: hidden; }
+        th, td { border: 1px solid #e4e8ec; padding: 7px 8px; text-align: left; }
+        th { background: #f5f7f8; color: #546e7a; font-weight: 600; letter-spacing: 0.3px; }
+        tr:hover td { background: #f8fafb; }
+        .secret { color: #d32f2f; font-weight: bold; }
+        .mgt-ip { color: #0277bd; font-weight: bold; font-family: 'Consolas', monospace; }
+        
+        /* Node 標籤 */
+        .node-label { display: inline-block; font-size: 0.7em; padding: 1px 8px; border-radius: 3px; margin-right: 4px; }
+        .node-p1 { background: #ffebee; color: var(--p1); }
+        .node-p2 { background: #fff3e0; color: var(--p2); }
+        .node-t1 { background: #e8f5e9; color: var(--t1); }
+        
+        /* 到頂按鈕 */
+        #backToTop { 
+            position: fixed; bottom: 20px; right: 20px; width: 36px; height: 36px;
+            background: #37474f; color: white; border: none; border-radius: 50%;
+            cursor: pointer; font-size: 1.1em; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            opacity: 0; transition: opacity 0.3s, transform 0.2s; transform: translateY(10px);
+            z-index: 999;
+        }
+        #backToTop.show { opacity: 1; transform: translateY(0); }
+        #backToTop:hover { background: #455a64; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-header">GCIS DBA v9 ULTIMATE</div>
+    <div style="padding: 10px 20px;">
+        <input type="text" id="toolSearch" placeholder="🔍 搜尋指令或主機...">
+    </div>
+    <a href="#jump">🚀 跳板機 & BSA (Full List)</a>
+    <a href="#mgt-nodes">🖥 監控與管理節點 (PMM/DNS)</a>
+    <a href="#haproxy">⚖️ HAProxy Group 1-8</a>
+    <a href="#galera">🛠 Galera 修復 SOP</a>
+    <a href="#check">🔍 巡檢、磁碟與效能</a>
+    <a href="#sql">📊 運維 SQL 指令集</a>
+    <a href="#sys">⚙️ 系統、Git & Vi</a>
+    <a href="#upgrade">🔄 MariaDB 升級 SOP (AP/AA)</a>
+    <a href="#nsh-table">🛠 NSH / NEXEC 遠程工具箱</a>
+    
+</nav>
+
+<main>
+    <div id="jump" class="section-header">🚀 跳板機與 BSA 接入點</div>
+    <div class="grid">
+        <div class="card bsa">
+            <h3>BSA 管理節點 (Business Support)</h3>
+            <p>Linux BSA: <span class="mgt-ip">p0vmgt-btssa01 (172.21.100.89)</span></p>
+            <table>
+                <tr><th>Windows Host</th><th>IP Address</th><th>Port</th><th>Status</th></tr>
+                <tr><td>p0vmgt-cmpc01</td><td>172.21.100.129</td><td>39833</td><td>Active</td></tr>
+                <tr><td>p0vmgt-cmpc02</td><td>172.21.100.130</td><td>39833</td><td>Active</td></tr>
+                <tr><td>p0vmgt-cmpc03</td><td>172.21.100.131</td><td>39833</td><td>Active</td></tr>
+            </table>
+        </div>
+        <div class="card p1">
+            <h3>Production & Testing Stage</h3>
+            <table>
+                <tr><th>Env</th><th>Linux MGT IP</th><th>Windows Jumpbox (39833)</th></tr>
+                <tr><td>P1 (Primary)</td><td class="mgt-ip">172.16.112.132/133</td><td>172.16.112.134/135</td></tr>
+                <tr><td>P2 (DR Site)</td><td class="mgt-ip">172.20.112.132/133</td><td>172.20.112.134/135</td></tr>
+                <tr><td>Testing TT</td><td class="mgt-ip">172.24.112.132/133</td><td>172.24.112.134/135</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="mgt-nodes" class="section-header">🖥 監控與管理節點 (PMM / Binlog / DNS)</div>
+    <div class="grid">
+        <div class="card p1">
+            <h3>P1 管理節點</h3>
+            <table>
+                <tr><th>Purpose</th><th>Hostname</th><th>IP Address</th></tr>
+                <tr><td>PMM Server</td><td>p1vdbs-gcissc-pmm01</td><td>172.17.102.9</td></tr>
+                <tr><td>Binlog Server</td><td>p1vdbs-gcissc-binlog01</td><td>172.17.102.11</td></tr>
+                <tr><td>PowerDNS 1/2</td><td>p1vmgt-pwrdns01/02</td><td>172.17.100.51/52</td></tr>
+            </table>
+        </div>
+        <div class="card p2">
+            <h3>P2 管理節點</h3>
+            <table>
+                <tr><th>Purpose</th><th>Hostname</th><th>IP Address</th></tr>
+                <tr><td>PMM Server</td><td>p2vdbs-gcissc-pmm01</td><td>172.21.102.9</td></tr>
+                <tr><td>Binlog Server</td><td>p2vdbs-gcissc-binlog01</td><td>172.21.102.11</td></tr>
+                <tr><td>PowerDNS 1/2</td><td>p2vmgt-pwrdns01/02</td><td>172.21.100.51/52</td></tr>
+            </table>
+        </div>
+    
+        <div class="card">
+            <h3>HAProxy Cluster Nodes</h3>
+            <table>
+                <tr><th>Group</th><th>P1 Nodes (d/e/f)</th><th>P2 Nodes (d/e/f)</th></tr>
+                <tr><td>Group 1-2</td><td>haproxy01d-02f</td><td>haproxy01d-02f</td></tr>
+                <tr><td>Group 3-4</td><td>haproxy03d-04f</td><td>haproxy03d-04f</td></tr>
+                <tr><td>Group 5-6</td><td>haproxy05d-06f</td><td>haproxy05d-06f</td></tr>
+                <tr><td>Group 7-8</td><td>haproxy07d-08f</td><td>haproxy07d-08f</td></tr>
+            </table>
+            <p style="font-size: 0.75em; color: #666;">* P1 IP Range: 172.17.2XX.X | P2 IP Range: 172.21.2XX.X</p>
+        </div>
+
+        <div class="card lab">
+            <h3>🧪 Lab 測試環境 (Experimental)</h3>
+            <table>
+                <tr><th>Hostname</th><th>IP Address</th><th>User</th><th>Password</th><th>Note</th></tr>
+                <tr><td>ttua-dba01</td><td>172.25.101.121</td><td rowspan="3">.\gcisadm</td><td rowspan="3" class="secret">P@ssw0rd</td><td>Simulation Server 01</td></tr>
+                <tr><td>ttua-dba02</td><td>172.25.101.122</td><td>Simulation Server 02</td></tr>
+                <tr><td>ttua-dba03</td><td>172.25.101.123</td><td>Simulation Server 03</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="galera" class="section-header">🛠 Galera Cluster 故障修復 SOP</div>
+    <div class="grid">
+        <div class="card sop-card" style="grid-column: 1 / -1;">
+            <h3>Bootstrap a Galera DB Cluster (SOP)</h3>
+            <div class="sop-grid">
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Set mariadb Environment Variable</span>
+                        <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}</div>
+                        </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 0: Stop DB service</span>
+                        <div class="code-box" onclick="copy(this)">systemctl stop mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 1: Find which node is most recent node by checking their Galera seqno</span>
+                        <div class="code-box" onclick="copy(this)">/bin/galera_recovery --defaults-file=/u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/mariadb.cnf</div>
+                    </div>
+                
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 2: Ensure New Cluster environment variable is not set</span>
+                        <div class="code-box" onclick="copy(this)">systemctl unset-environment _WSREP_NEW_CLUSTER</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 3A: Verify</span>
+                        <div class="code-box" onclick="copy(this)">grep safe_to_bootstrap /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/grastate.dat
+# should return "safe_to_bootstrap: 0"</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 3B: Start DB (wsrep new cluster)</span>
+                        <div class="code-box" onclick="copy(this)">systemctl unset-environment _WSREP_NEW_CLUSTER
+systemctl start mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 1 - Step 4: Monitor cluster</span>
+                        <div class="code-box" onclick="copy(this)">watch -n 5 "mysql --defaults-file=/u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/mariadb.cnf -e \"SHOW GLOBAL STATUS LIKE 'wsrep_%'\""</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Set mariadb Environment Variable</span>
+                        <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}</div>
+                        </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Step 0: Stop DB service</span>
+                        <div class="code-box" onclick="copy(this)">systemctl stop mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Step 1: Find which node is most recent node by checking their Galera seqno</span>
+                        <div class="code-box" onclick="copy(this)">/bin/galera_recovery --defaults-file=/u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/mariadb.cnf</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Step 2: Check seqno (grastate.dat)</span>
+                        <div class="code-box" onclick="copy(this)">#Change value “safe_to_bootstrap” to 1 in file 
+vi /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/grastate.dat</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Step 3: Join cluster (after Node 1 is up)</span>
+                        <div class="code-box" onclick="copy(this)"># Ensure safe_to_bootstrap: 1 on Node 2
+grep safe_to_bootstrap /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/grastate.dat
+# >>> should return "safe_to_bootstrap: 1"
+
+systemctl set-environment _WSREP_NEW_CLUSTER='--wsrep-new-cluster'
+systemctl start mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Node 2 - Step 4: Turn off New Cluster environment variable</span>
+                        <div class="code-box" onclick="copy(this)">systemctl unset-environment _WSREP_NEW_CLUSTER</div>
+                    </div>
+                </div>
+                    
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">Witness - Step 1: Stop garbd</span>
+                        <div class="code-box" onclick="copy(this)">#systemctl stop galera-garbd-${GCIS_ID}_${DBAAS_NAME}
+systemctl stop galera-garbd-
+                        </div>
+                    </div>
+                    <div class="cmd-group">
+                        <span class="cmd-label">Witness - Step 2: Start garbd (after Node 1 & 2 are up)</span>
+                        <div class="code-box" onclick="copy(this)">#systemctl start galera-garbd-${GCIS_ID}_${DBAAS_NAME}
+systemctl start galera-garbd-
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card sop-card" style="grid-column: 1 / -1; margin-top: 10px;">
+            <h3>Manual SST (for Node 2 if join fails)</h3>
+            <div class="sop-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">Step 1: Stop the issue node</span>
+                        <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+systemctl stop mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">Step 2: Run SST for full sync data</span>
+                        <div class="code-box" onclick="copy(this)">du -sh /u01/mydata/${GCIS_ID}_${DBAAS_NAME}
+rm -rf /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/*
+systemctl unset-environment _WSREP_NEW_CLUSTER
+systemctl start mariadb-${GCIS_ID}_${DBAAS_NAME}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="check" class="section-header">🔍 巡檢、磁碟與效能</div>
+    <div class="grid">
+        <div class="card">
+            <h3>Firefight 巡檢工具</h3>
+            <div class="code-box" onclick="copy(this)">/var/opt/mariadb_monitor/firefight/checkmon.last.sh -show-all
+/var/opt/mariadb_monitor/firefight/checkclustersync.last.sh -show-all
+/var/opt/mariadb_monitor/firefight/checkclustersize.last.sh -show-all  </div>
+        </div>
+        <div class="card">
+            <h3>磁碟與 CPU 追蹤</h3>
+            <div class="cmd-group">
+                <span class="cmd-label">設置 mariadb 環境變數</span>
+                <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}</div>
+                        </div>
+            <div class="cmd-group">
+                <span class="cmd-label">MariaDB Data 佔用空間</span>
+                <div class="code-box" onclick="copy(this)">du -sh /u01/mydata/${GCIS_ID}_${DBAAS_NAME}</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">列出 MariaDB 資料目錄下的所有文件，查看文件大小和修改時間</span>
+                <div class="code-box" onclick="copy(this)">sudo ls -ltr /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">列出 MariaDB .ibd 文件</span>
+                <div class="code-box" onclick="copy(this)">sudo ls -ltr /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/*/ | grep .ibd</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">歷史 CPU 狀態回溯 (以 02 號為例)</span>
+                <div class="code-box" onclick="copy(this)">sar -f /var/log/sa/sa02 | more</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">歷史效能數據分析</span>
+                <div class="code-box" onclick="copy(this)">sar -u -f /var/log/sa/sa30 > /home/si00shc/sar.cpu.out
+sar -r -f /var/log/sa/sa30 > /home/si00shc/sar.memory.out
+sar -S -f /var/log/sa/sa30 > /home/si00shc/sar.swap.out
+sar -d -p -f /var/log/sa/sa30 > /home/si00shc/sar.io.out
+sar -n DEV -f /var/log/sa/sa30 > /home/si00shc/sar.network.out
+sar -q -f /var/log/sa/sa30 > /home/si00shc/sar.runqueue.out
+sar -w -f /var/log/sa/sa30 > /home/si00shc/sar.cont_switch.out</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">列出CPU</span>
+                <div class="code-box" onclick="copy(this)">sar -P ALL</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">查看系統內存使用情況</span>
+                <div class="code-box" onclick="copy(this)">free -h</div>
+            </div>
+        </div>
+        
+        <div class="card p2">
+            <h3>🔍 OS 現地即時效能診斷 (Live Triage - 不留髒檔案)</h3>
+            <div class="cmd-group">
+                <span class="cmd-label">A1. 初始化環境變數 (查當天用)</span>
+                <div class="code-box" onclick="copy(this)">export LC_TIME="POSIX"; SARFILE="sa$(date +%d)"</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">A2. 初始化環境變數 (查指定歷史日期，例如 22 號)</span>
+                <div class="code-box" onclick="copy(this)">export LC_TIME="POSIX"; SARFILE="sa22"</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">1. CPU 總體趨勢即時查 (排除單核雜訊)</span>
+                <div class="code-box" onclick="copy(this)">sar -P ALL -f /var/log/sa/${SARFILE} | grep -E 'all|usr|system' | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">2. Context Switch 執行緒鎖競爭排查</span>
+                <div class="code-box" onclick="copy(this)">sar -w -f /var/log/sa/${SARFILE} | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">3. 記憶體與 Swap 換頁風險交叉檢視</span>
+                <div class="code-box" onclick="copy(this)">echo "=== [Memory Usage] ===" && sar -r -f /var/log/sa/${SARFILE} | less
+echo "=== [Swap Usage] ==="   && sar -S -f /var/log/sa/${SARFILE} | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">4. Disk I/O 吞吐與延遲 (自動轉設備名 -p)</span>
+                <div class="code-box" onclick="copy(this)">sar -d -p -f /var/log/sa/${SARFILE} | grep -v -E '0.00      0.00      0.00' | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">5. Run Queue 與系統 Load Average 趨勢</span>
+                <div class="code-box" onclick="copy(this)">sar -q -f /var/log/sa/${SARFILE} | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">6. 網路流量即時查 (看 Galera 複製/備份頻寬)</span>
+                <div class="code-box" onclick="copy(this)">sar -n DEV -f /var/log/sa/${SARFILE} | grep -E 'IFACE|eth|bond' | less</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">🔥 終極：指定歷史故障時間點精準打擊 (範例: 14:10-14:40)</span>
+                <div class="code-box" onclick="copy(this)">sar -P ALL -f /var/log/sa/${SARFILE} -s 14:10:00 -e 14:40:00 | grep 'all'
+sar -d -p -f /var/log/sa/${SARFILE} -s 14:10:00 -e 14:40:00 | grep -v '0.00'
+sar -q    -f /var/log/sa/${SARFILE} -s 14:10:00 -e 14:40:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sql" class="section-header">📊 運維 SQL 指令集</div>
+    <div class="grid sql-grid">
+        <div>
+           <div class="card" >
+                <h3>🔑 進入資料庫 Check Status<</h3>
+                <div class="cmd-group">
+                    <span class="cmd-label">进入DB (Command)</span>
+                    <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}
+mysql --defaults-file=/u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/mariadb.cnf -ugcis_dbmon -p --ssl</div>
+                </div>
+                <div class="cmd-group">
+                    <span class="cmd-label">进入DB (Password)</span>
+                    <div class="code-box" onclick="copy(this)">mon4%GCIS</div>
+                </div>
+        
+
+               <div class="cmd-group">
+    <span class="cmd-label">Check Status</span>
+    <div class="code-box" onclick="copy(this)">show processlist ;
+select * from gcis_schema.write_test order by time desc limit 5;
+select * from mysql.wsrep_cluster_members;
+show status like 'wsrep_local_state_comment';
+show status like 'wsrep_ready';</div>
+</div>
+
+   </div>
+
+<div class="card" style="margin-top: 12px;">
+    <h3>🔐 SSL 證書有效期檢查</h3>
+    <div class="code-box" onclick="copy(this)">show status like '%Ssl_server_not_before%';
+show status like '%Ssl_server_not_after%';</div>
+</div>
+
+         
+           
+        </div>
+        <div>
+            <div class="card">
+                <h3>⚖️ 合規審查：揪出非 InnoDB 引擎表 (避免 Galera 同步丟失)</h3>
+                <div class="code-box" onclick="copy(this)">SELECT TABLE_SCHEMA, TABLE_NAME, ENGINE 
+FROM information_schema.TABLES 
+WHERE ENGINE != 'InnoDB' 
+AND TABLE_SCHEMA NOT IN ('information_schema', 'performance_schema', 'mysql', 'sys', 'gcis_schema');</div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+                <h3>💾 V-Center 熱加磁碟後，操作系統容量擴充 (LVM + XFS)</h3>
+                <div class="cmd-group">
+                    <span class="cmd-label">1. 初始化與儲存層重新掃描</span>
+                    <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}
+echo 1 > /sys/block/sdb/device/rescan
+pvresize /dev/sdb</div>
+                </div>
+                <div class="cmd-group">
+                    <span class="cmd-label">2. 擴容 Data 卷 (MariaDB 專用)</span>
+                    <div class="code-box" onclick="copy(this)">lvextend -r -L +100G /dev/mapper/vg_${GCIS_ID}_${DBAAS_NAME}-lv_data
+# 提示：-r 參數會自動執行 xfs_growfs，雙重保險</div>
+                </div>
+                <div class="cmd-group">
+                    <span class="cmd-label">3. 擴容 Archive / Binlog 卷</span>
+                    <div class="code-box" onclick="copy(this)">lvextend -r -L +100G /dev/mapper/vg_${GCIS_ID}_${DBAAS_NAME}-lv_arch</div>
+                </div>
+                <div class="cmd-group">
+                    <span class="cmd-label">4. 生產環境容量擴容後覆核驗收</span>
+                    <div class="code-box" onclick="copy(this)">lsblk
+df -Ph /u01/mydata
+df -Ph /u01/myarch</div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 12px;">
+                <h3>PostgreSQL Archive Cleanup</h3>
+                <div class="cmd-group">
+                    <span class="cmd-label">取得變數</span>
+                    <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname | cut -d'-' -f2)
+DBAAS_NAME=$(hostname | cut -d'-' -f3)
+echo ${GCIS_ID}_${DBAAS_NAME}</div>
+                </div>
+                <div class="cmd-group">
+                    <span class="cmd-label">Archive Cleanup</span>
+                    <div class="code-box" onclick="copy(this)">/usr/pgsql-15/bin/pg_archivecleanup -d -x .gz /u01/pgwal/${GCIS_ID}_${DBAAS_NAME} 00000001000032780000003E.gz</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sys" class="section-header">⚙️ 系統、Git 與 Vi 技巧</div>
+    <div class="grid">
+        <div class="card">
+            <h3>Git Config (jasoncheuk)</h3>
+            <div class="code-box" onclick="copy(this)">git config --global user.name "jasoncheuk"
+git config --global user.email "systemsupportmember6@chinatelecomglobal.com"
+git config --global http.sslVerify false
+git config --global core.eol lf
+git config --global core.autocrlf input
+====(Git Pull)====
+git stash 
+git pull --verbose
+chmod 750 /var/opt/gcis/*/*sh /var/opt/gcis/*/*/*sh /var/opt/gcis/*/*/*/*/*sh
+semanage fcontext -a -t bin_t       "/var/opt/gcis/systemd(/.*)?"
+restorecon -Rv  /var/opt/gcis</div>
+        </div>
+        <div class="card">
+            <h3>Vi 實戰技巧</h3>
+            <div class="cmd-group"><span class="cmd-label">全域替換</span>
+            <div class="code-box" onclick="copy(this)">:%s/($old)/($new)/g</div></div>
+            <div class="cmd-group"><span class="cmd-label">設置自動換行</span>
+            <div class="code-box" onclick="copy(this)">:set nowrap</div></div>
+            <div class="cmd-group"><span class="cmd-label">顯示行號</span>
+            <div class="code-box" onclick="copy(this)">:set nu</div></div>
+            <div class="cmd-group"><span class="cmd-label">保存選定行到文件</span>
+            <div class="code-box" onclick="copy(this)">:(firstline),(lastline) w! >> /home/notes.txt</div></div>
+        </div>
+        <div class="card">
+            <h3>Connect vCenter (PowerShell)</h3>
+            <div class="cmd-group">
+                <span class="cmd-label">T1 Admin (t1wlvcadmin)</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server t1vmgt-wlvc001.mgt.gcisdctr.hksarg -User t1wlvcadmin@mgt.gcisdctr.hksarg -Password 'XXXXXXXX'</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">T1 Admin (administrator@vsphere.local)</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server t1vmgt-wlvc001.mgt.gcisdctr.hksarg -User administrator@vsphere.local -Password 'XXXXXXXX'</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">P1 Admin</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server p1vmgt-wlvc001.mgt.gcis.hksarg -User administrator@vsphere.local -Password 'XXXXXXXX'</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">P2 Admin</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server p2vmgt-wlvc001.mgt.gcis.hksarg -User administrator@vsphere.local -Password 'XXXXXXXX'</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">P1 User</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server p1vmgt-wlvc001.mgt.gcis.hksarg -User p1wlvcadmin@mgt.gcis.hksarg -Password 'XXXXXXXX'</div>
+            </div>
+            <div class="cmd-group">
+                <span class="cmd-label">P2 User</span>
+                <div class="code-box" onclick="copy(this)">Connect-VIServer -Server p2vmgt-wlvc001.mgt.gcis.hksarg -User p2wlvcadmin@mgt.gcis.hksarg -Password 'XXXXXXXX'</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="upgrade" class="section-header">🔄 MariaDB 版本升級 SOP (AP / AA)</div>
+    <div class="grid">
+        <div class="card sop-card" style="grid-column: 1 / -1;">
+            <h3>變數初始化</h3>
+            <div class="code-box" onclick="copy(this)">GCIS_ID=$(hostname -s | awk -F'-' '{ print $2 }')
+DBAAS_NAME=$(hostname -s | awk -F'-' '{ print $3 }')
+old_version=10.11.15
+new_version=10.11.17</div>
+            
+            <h3 style="margin-top: 20px;">📌 AP 節點升級流程</h3>
+            <div class="sop-grid">
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">1. Pre-check</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -precheck -function upg_mariadb_ap -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">2. Upgrade</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -upgrade -function upg_mariadb_ap -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">3. Post-check</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -postcheck -function upg_mariadb_ap -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 20px; color: #d32f2f;">⚠️ AA 節點升級流程（需特別注意順序）</h3>
+            <div class="sop-grid">
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">1. Pre-check (AA)</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -precheck -function upg_mariadb_aa -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">2. Upgrade (AA)</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -upgrade -function upg_mariadb_aa -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+                <div class="sop-col">
+                    <div class="cmd-group">
+                        <span class="cmd-label">3. Post-check (AA)</span>
+                        <div class="code-box" onclick="copy(this)">/var/opt/gcis/upgrade/main.upgrade.sh -postcheck -function upg_mariadb_aa -prop /u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/operation.properties -cfg /tmp/dbaas_mariadb_${old_version}_to_${new_version}_upgrade.cfg -hosttype db</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 12px; font-size: 0.78em; color: #d32f2f; background: #fff3e0; padding: 8px 12px; border-radius: 6px;">
+                <strong>⚠️ 注意：</strong> AA 節點必須先執行完前一步（尤其是 Pre-check）才能執行 Upgrade！
+            </p>
+        </div>
+    </div>
+
+    <div id="nsh-table" class="section-header">🛠 NSH / NEXEC 遠程管理工具箱</div>
+    <div class="grid">
+                <div class="card nsh">
+            <h3>常用遠程批量指令 (NSH 環境)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">功能分類</th>
+                        <th>指令 (點擊複制)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>遠程 SQL 查詢</strong><br>(Count 統計範例)</td>
+                        <td><div class="code-box" onclick="copy(this)">nexec p1vdbs-${GCIS_ID}-${DBAAS_NAME}-1-01-mgt "mysql --defaults-file=/u01/mycnf/${GCIS_ID}_${DBAAS_NAME}/mariadb.cnf -e \"select count(*) from XXX.XXXX;\""</div></td>
+                    </tr>
+                    <tr>
+                        <td><strong>查看遠程日誌</strong><br>(Error Log 最後 50 行)</td>
+                        <td><div class="code-box" onclick="copy(this)">nexec p1vdbs-${GCIS_ID}-${DBAAS_NAME}-1-01-mgt "tail -n 50 /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/mariadb.err"</div></td>
+                    </tr>
+                    <tr>
+                        <td><strong>檢查遠程服務狀態</strong></td>
+                        <td><div class="code-box" onclick="copy(this)">nexec p1vdbs-${GCIS_ID}-${DBAAS_NAME}-1-01-mgt "systemctl status mariadb-${GCIS_ID}_${DBAAS_NAME}"</div></td>
+                    </tr>
+                    <tr>
+                        <td><strong>遠程文件查找</strong></td>
+                        <td><div class="code-box" onclick="copy(this)">nexec p1vdbs-${GCIS_ID}-${DBAAS_NAME}-1-01-mgt "ls -ltr /u01/mydata/${GCIS_ID}_${DBAAS_NAME}/"</div></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.8em; color: #00796b;">* 提示：在 Stage 機器輸入 <code>nsh</code> 進入環境後，方可執行以上指令。</p>
+        </div>
+    </div>
+
+        
+
+</main>
+
+<script>
+    function copy(el) {
+        if (el.classList.contains('copied')) return;
+        const text = el.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            el.classList.add('copied');
+            setTimeout(() => {
+                el.classList.remove('copied');
+            }, 1000);
+        }).catch(err => {
+            console.error('複製失敗:', err);
+        });
+    }
+
+    const searchInput = document.getElementById('toolSearch');
+    const allCards = document.querySelectorAll('.card');
+    const allHeaders = document.querySelectorAll('.section-header');
+    let searchTimeout;
+    
+    function performSearch(term) {
+        allCards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            const matches = text.includes(term);
+            card.style.display = matches ? "block" : "none";
+            
+            const rows = card.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const rowMatches = row.innerText.toLowerCase().includes(term);
+                row.style.display = term && rowMatches ? "" : (term ? "none" : "");
+            });
+        });
+
+        allHeaders.forEach(h => {
+            h.style.display = term === "" ? "block" : "none";
+        });
+    }
+    
+    searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        const term = e.target.value.toLowerCase();
+        searchTimeout = setTimeout(() => performSearch(term), 100);
+    });
+</script>
+    
+    <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+    <script>
+        window.addEventListener('scroll', function() {
+            var btn = document.getElementById('backToTop');
+            if (btn) btn.classList.toggle('show', window.scrollY > 400);
+        });
+    </script>
+</body>
+</html>
