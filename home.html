@@ -6,6 +6,7 @@
     <title>Login - DBA Bookmarks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background-color: #f8f9fa; }
         .login-container {
@@ -21,10 +22,7 @@
             border-color: #D0A2F7;
             color: white;
         }
-        .btn-custom:hover {
-            background-color: #C08AE0;
-            border-color: #C08AE0;
-        }
+        .btn-custom:hover { background-color: #C08AE0; }
     </style>
 </head>
 <body>
@@ -35,8 +33,8 @@
     
     <form id="loginForm">
         <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
@@ -45,75 +43,42 @@
         <button type="submit" class="btn btn-custom w-100">Login</button>
     </form>
 
-    <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;">Incorrect username or password</p>
+    <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;"></p>
 </div>
 
 <script>
-// SHA-256 hash of password (不是明文)
-// 原始密碼: Gcis12#$
-const VALID_USERNAME = "root";
-const VALID_PASSWORD_HASH = "a1b2c3d4e5f6..."; // 下面會教你產生
+// 替換成你的 Supabase 資訊
+const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 
-const SESSION_KEY = "dba_session";
-const SESSION_HOURS = 8;
-
-// 產生 SHA-256
-async function sha256(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-}
-
-// 檢查 Session 是否有效
-function isSessionValid() {
-    try {
-        const raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
-        const session = JSON.parse(raw);
-        if (!session.expiry || Date.now() > session.expiry) {
-            localStorage.removeItem(SESSION_KEY);
-            return false;
-        }
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-// 建立 Session
-function createSession() {
-    const session = {
-        user: VALID_USERNAME,
-        expiry: Date.now() + SESSION_HOURS * 60 * 60 * 1000
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    // 相容舊版
-    localStorage.setItem("isLoggedIn", "true");
-}
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
-    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const errorMsg = document.getElementById("errorMsg");
 
-    const passwordHash = await sha256(password);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (username === VALID_USERNAME && passwordHash === VALID_PASSWORD_HASH) {
-        createSession();
-        window.location.href = "home.html";
-    } else {
+    if (error) {
+        errorMsg.textContent = error.message;
         errorMsg.style.display = "block";
-        setTimeout(() => errorMsg.style.display = "none", 3000);
+        setTimeout(() => errorMsg.style.display = "none", 4000);
+    } else {
+        // 登入成功
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "home.html";
     }
 });
 
-// 已有有效 Session 就直接跳轉
-if (isSessionValid()) {
-    window.location.href = "home.html";
-}
+// 已登入就跳轉
+supabase.auth.getSession().then(({ data }) => {
+    if (data.session) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "home.html";
+    }
+});
 </script>
 </body>
 </html>

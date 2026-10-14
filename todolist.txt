@@ -3,3 +3,11 @@
 3. Add Session
 4. Add Inventory List
 5. Real Time Chatroom
+
+
+
+API:
+https://fyrzooerrrmkwrbjapoa.supabase.co
+
+Key:
+sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0

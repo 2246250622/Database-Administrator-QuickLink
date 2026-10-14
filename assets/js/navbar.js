@@ -86,6 +86,28 @@
 </header>
   `;
 
+
+function isSessionValid() {
+    try {
+        const raw = localStorage.getItem("dba_session");
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        return s.expiry && Date.now() < s.expiry;
+    } catch { return false; }
+}
+if (!isSessionValid()) {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("dba_session");
+    alert("Please log in first!");
+    location.href = "index.html";
+}
+
+function logout() {
+    localStorage.removeItem("dba_session");
+    localStorage.removeItem("isLoggedIn");
+    location.href = "index.html";
+}
+
 function injectNavbar() {
   const placeholder = document.getElementById('navbar-placeholder');
   if (!placeholder) return;
