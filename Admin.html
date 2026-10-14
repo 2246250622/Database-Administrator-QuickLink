@@ -37,7 +37,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 async function loadPending() {
     const { data, error } = await supabaseClient
-        .from('pending_users')
+        .from('pending_user')
         .select('*')
         .eq('status', 'pending')
         .order('created_at', { ascending: false });
