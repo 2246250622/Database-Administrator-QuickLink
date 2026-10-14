@@ -29,18 +29,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// 替換成你的 Supabase 資訊
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
-
-// Edge Function 的完整網址（部署後會有）
 const APPROVE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/approve-user";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function loadPending() {
-    const { data, error } = await supabase
-        .from('pending_user')
+    const { data, error } = await supabaseClient
+        .from('pending_users')
         .select('*')
         .eq('status', 'pending')
         .order('created_at', { ascending: false });
@@ -50,6 +47,7 @@ async function loadPending() {
 
     if (error) {
         loadingEl.textContent = 'Error: ' + error.message;
+        console.error(error);
         return;
     }
 
@@ -72,7 +70,6 @@ async function loadPending() {
         </div>
     `).join('');
 
-    // 綁定 Approve 按鈕
     document.querySelectorAll('.approve-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const email = btn.dataset.email;
@@ -88,12 +85,11 @@ async function loadPending() {
                 });
 
                 const result = await res.json();
-                if (!res.ok) throw new Error(result.error || 'Failed');
+                if (!res.ok) throw new Error(result.error || JSON.stringify(result));
 
                 btn.classList.remove('btn-primary');
                 btn.classList.add('btn-success');
                 btn.textContent = 'Approved';
-                // 可選：重新載入列表
                 setTimeout(loadPending, 800);
             } catch (e) {
                 alert('Approve failed: ' + e.message);
