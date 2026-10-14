@@ -51,7 +51,7 @@
 const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -59,8 +59,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const password = document.getElementById("password").value;
     const errorMsg = document.getElementById("errorMsg");
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
+const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) {
         errorMsg.textContent = error.message;
         errorMsg.style.display = "block";
@@ -73,7 +72,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 });
 
 // 已登入就跳轉
-supabase.auth.getSession().then(({ data }) => {
+supabaseClient.auth.getSession().then(({ data }) => {
     if (data.session) {
         localStorage.setItem("isLoggedIn", "true");
         window.location.href = "home.html";
