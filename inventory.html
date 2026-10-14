@@ -62,6 +62,12 @@
 <script>
 let allRows = [];
 
+function isHeaderRow(row) {
+    const cells = (row || []).map(c => String(c || '').trim().toLowerCase());
+    return cells.some(c => c === 'purpose' || c.includes('purpose')) &&
+           cells.some(c => c === 'vm' || c.includes('vm'));
+}
+
 async function autoLoad() {
     try {
         const res = await fetch('./Inventory.xlsx');
@@ -69,32 +75,31 @@ async function autoLoad() {
         const buf = await res.arrayBuffer();
         const wb = XLSX.read(buf, { type: 'array' });
 
+        console.log('[Inventory] Sheets:', wb.SheetNames);
         allRows = [];
 
-        wb.SheetNames.forEach(name => {
-            const sheet = wb.Sheets[name];
-            const json = XLSX.utils.sheet_to_json(sheet, { defval: '', header: 1 });
+        wb.SheetNames.forEach(sheetName => {
+            const sheet = wb.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(sheet, { defval: '', header: 1, raw: false });
+            const env = /prd|prod/i.test(sheetName) ? 'Production' : 'Testing';
 
-            let headerIdx = -1;
-            for (let i = 0; i < Math.min(json.length, 15); i++) {
+            let headers = null;
+
+            for (let i = 0; i < json.length; i++) {
                 const row = json[i] || [];
-                if (row.some(c => String(c).includes('Purpose') || String(c).includes('VM'))) {
-                    headerIdx = i;
-                    break;
+
+                // 遇到新的 header 就更新欄位名稱
+                if (isHeaderRow(row)) {
+                    headers = row.map(h => String(h || '').trim());
+                    continue;
                 }
-            }
-            if (headerIdx === -1) return;
 
-            const headers = json[headerIdx].map(h => String(h || '').trim());
-            const env = /prd|prod/i.test(name) ? 'Production' : 'Testing';
-
-            for (let i = headerIdx + 1; i < json.length; i++) {
-                const row = json[i] || [];
-                if (!row.some(c => c)) continue;
+                if (!headers) continue;
+                if (!row.some(c => String(c || '').trim())) continue;
 
                 const obj = { Environment: env };
                 headers.forEach((h, idx) => {
-                    if (h) obj[h] = row[idx] !== undefined ? String(row[idx]) : '';
+                    if (h) obj[h] = row[idx] !== undefined ? String(row[idx]).trim() : '';
                 });
 
                 obj.Purpose = obj.Purpose || '';
@@ -104,74 +109,15 @@ async function autoLoad() {
                 obj.Group = obj['NSX-T T1 Gateway Group'] || '';
                 obj.Site = obj.Site || '';
 
-                if (obj.VM || obj.Purpose) allRows.push(obj);
+                if (obj.VM || obj.Purpose) {
+                    allRows.push(obj);
+                }
             }
         });
 
+        console.log('[Inventory] Loaded:', allRows.length, 'rows');
         populatePurpose();
         document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
         renderList();
     } catch (e) {
-        document.getElementById('stats').textContent = '載入失敗，請確認 Inventory.xlsx 在根目錄（需用 GitHub Pages 或本地伺服器開啟）';
-        console.error(e);
-    }
-}
-
-function populatePurpose() {
-    const purposes = [...new Set(allRows.map(r => r.Purpose).filter(Boolean))].sort();
-    const sel = document.getElementById('purposeFilter');
-    sel.innerHTML = `<option value="">全部 Purpose</option>` +
-        purposes.map(p => `<option value="${p}">${p}</option>`).join('');
-}
-
-function renderList() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const env = document.getElementById('envFilter').value;
-    const group = document.getElementById('groupFilter').value;
-    const purpose = document.getElementById('purposeFilter').value;
-
-    const filtered = allRows.filter(r => {
-        const text = `${r.Purpose} ${r.VM} ${r.IP} ${r.MgtIP} ${r.Site}`.toLowerCase();
-        if (q && !text.includes(q)) return false;
-        if (env && r.Environment !== env) return false;
-        if (group && r.Group !== group) return false;
-        if (purpose && r.Purpose !== purpose) return false;
-        return true;
-    });
-
-    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allRows.length} 筆`;
-
-    const html = filtered.map(r => `
-        <div class="list-group-item inv-item">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <strong>${r.VM || '-'}</strong>
-                    <span class="text-muted"> · ${r.Purpose || '-'}</span>
-                    <div class="small mt-1">
-                        <span class="badge bg-secondary">${r.Environment}</span>
-                        ${r.Site ? `<span class="badge bg-dark">${r.Site}</span>` : ''}
-                        ${r.Group ? `<span class="badge bg-info text-dark">${r.Group}</span>` : ''}
-                    </div>
-                </div>
-                <div class="text-end small">
-                    <div>eth0: ${r.IP || '-'}</div>
-                    <div>Mgt: ${r.MgtIP && r.MgtIP !== 'n/a' ? r.MgtIP : '-'}</div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-
-    document.getElementById('invList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
-}
-
-['searchInput', 'envFilter', 'groupFilter', 'purposeFilter'].forEach(id => {
-    document.getElementById(id).addEventListener('input', renderList);
-    document.getElementById(id).addEventListener('change', renderList);
-});
-
-
-autoLoad();
-
-</script>
-</body>
-</html>
+        document.getElementById('stats').textContent =
