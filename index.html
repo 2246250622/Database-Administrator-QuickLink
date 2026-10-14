@@ -6,8 +6,8 @@
     <title>Login - DBA Bookmarks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
-    
-<style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
         body { background-color: #f8f9fa; }
         .login-container {
             max-width: 400px;
@@ -17,43 +17,12 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
-        
         .btn-custom {
-        background-color: #D0A2F7;
-        border-color: #D0A2F7;
-        color: white;
-        transition: all 0.2s ease;
+            background-color: #D0A2F7;
+            border-color: #D0A2F7;
+            color: white;
         }
-        
-        /* 當輸入完整時，按鈕變亮 + 可點擊 */
-        .btn-custom.active {
-            opacity: 1;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(208, 162, 247, 0.6); /* 自動發光效果 */
-            transform: scale(1.02);                        /* 輕微放大 */
-        }
-        
-        .btn-custom:hover {
-            background-color: #C08AE0;
-            border-color: #C08AE0;
-            box-shadow: 0 0 20px rgba(208, 162, 247, 0.8); /* hover 更強光暈 */
-            transform: scale(1.05);
-        }
-        
-        .btn-custom:focus {
-            background-color: #B078C9 !important;
-            border-color: #B078C9 !important;
-            box-shadow: 0 0 0 0.25rem rgba(208, 162, 247, 0.5);
-            outline: none;
-        }
-        
-        .btn-custom:active {
-            background-color: #A066B3 !important;
-            border-color: #A066B3 !important;
-            transform: scale(0.98);
-
-            
-        }
+        .btn-custom:hover { background-color: #C08AE0; }
     </style>
 </head>
 <body>
@@ -64,8 +33,8 @@
     
     <form id="loginForm">
         <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
@@ -74,36 +43,42 @@
         <button type="submit" class="btn btn-custom w-100">Login</button>
     </form>
 
-    <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;">Incorrect username or password</p>
+    <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;"></p>
 </div>
 
 <script>
-    // Change these to your desired credentials
-    const VALID_USERNAME = "root";      // ← Customize this
-    const VALID_PASSWORD = "Gcis12#$";    // ← Customize this (at least change it!)
+// 替換成你的 Supabase 資訊
+const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
+const SUPABASE_ANON_KEY = "你的_anon_key_貼這裡";
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const errorMsg = document.getElementById('errorMsg');
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-            // Success → redirect to main page
-            localStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'home.html';  // Change to your actual main page
-        } else {
-            errorMsg.style.display = 'block';
-            setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
-        }
-    });
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const errorMsg = document.getElementById("errorMsg");
 
-    // Optional: Auto-redirect if already logged in
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-        window.location.href = 'home.html';
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        errorMsg.textContent = error.message;
+        errorMsg.style.display = "block";
+        setTimeout(() => errorMsg.style.display = "none", 4000);
+    } else {
+        // 登入成功
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "home.html";
     }
-</script>
+});
 
+// 已登入就跳轉
+supabase.auth.getSession().then(({ data }) => {
+    if (data.session) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "home.html";
+    }
+});
+</script>
 </body>
 </html>
