@@ -11,7 +11,7 @@
         body { background-color: #f8f9fa; }
         .login-container {
             max-width: 400px;
-            margin: 100px auto;
+            margin: 80px auto;
             padding: 30px;
             background: white;
             border-radius: 10px;
@@ -23,52 +23,135 @@
             color: white;
         }
         .btn-custom:hover { background-color: #C08AE0; }
+        .extra-links { font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <div class="login-container">
     <h3 class="text-center mb-4">Database Administrator</h3>
-    <p class="text-center text-muted mb-4">Please enter your credentials to log in</p>
+    <p class="text-center text-muted mb-4" id="formTitle">Please enter your credentials to log in</p>
     
     <form id="loginForm">
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" placeholder="Enter email" required>
         </div>
-        <div class="mb-3">
+        <div class="mb-3" id="passwordGroup">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn btn-custom w-100">Login</button>
+        <button type="submit" class="btn btn-custom w-100" id="submitBtn">Login</button>
     </form>
 
+    <div class="text-center mt-3 extra-links">
+        <a href="#" id="toggleSignup" class="text-decoration-none">Create Account</a>
+        <span class="mx-2 text-muted">|</span>
+        <a href="#" id="forgotPassword" class="text-decoration-none">Forgot Password</a>
+    </div>
+
     <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;"></p>
+    <p class="text-center mt-3 text-success" id="successMsg" style="display:none;"></p>
 </div>
 
 <script>
-// 替換成你的 Supabase 資訊
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
+let isSignupMode = false;
+
+const form = document.getElementById("loginForm");
+const formTitle = document.getElementById("formTitle");
+const submitBtn = document.getElementById("submitBtn");
+const passwordGroup = document.getElementById("passwordGroup");
+const toggleSignup = document.getElementById("toggleSignup");
+const forgotPassword = document.getElementById("forgotPassword");
+const errorMsg = document.getElementById("errorMsg");
+const successMsg = document.getElementById("successMsg");
+
+function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.style.display = "block";
+    successMsg.style.display = "none";
+    setTimeout(() => errorMsg.style.display = "none", 5000);
+}
+
+function showSuccess(msg) {
+    successMsg.textContent = msg;
+    successMsg.style.display = "block";
+    errorMsg.style.display = "none";
+    setTimeout(() => successMsg.style.display = "none", 5000);
+}
+
+// 切換 Login / Signup
+toggleSignup.addEventListener("click", function(e) {
+    e.preventDefault();
+    isSignupMode = !isSignupMode;
+    if (isSignupMode) {
+        formTitle.textContent = "Create a new account";
+        submitBtn.textContent = "Sign Up";
+        toggleSignup.textContent = "Already have an account? Login";
+        passwordGroup.style.display = "block";
+    } else {
+        formTitle.textContent = "Please enter your credentials to log in";
+        submitBtn.textContent = "Login";
+        toggleSignup.textContent = "Create Account";
+        passwordGroup.style.display = "block";
+    }
+});
+
+// Forgot Password
+forgotPassword.addEventListener("click", async function(e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    if (!email) {
+        showError("Please enter your email first");
+        return;
+    }
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + "/index.html"
+    });
+    if (error) {
+        showError(error.message);
+    } else {
+        showSuccess("Password reset email sent. Please check your inbox.");
+    }
+});
+
+// Login / Signup
+form.addEventListener("submit", async function(e) {
     e.preventDefault();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
-    const errorMsg = document.getElementById("errorMsg");
 
-const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
- if (error) {
-    errorMsg.textContent = error.message;
-    errorMsg.style.display = "block";
-    setTimeout(() => errorMsg.style.display = "none", 4000);
-} else {
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("lastActivity", Date.now().toString());
-    window.location.href = "home.html";
-}
+    if (isSignupMode) {
+        // Create Account
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess("Account created! Please check your email to confirm.");
+            // 可選：自動切回登入模式
+            setTimeout(() => {
+                isSignupMode = false;
+                formTitle.textContent = "Please enter your credentials to log in";
+                submitBtn.textContent = "Login";
+                toggleSignup.textContent = "Create Account";
+            }, 2000);
+        }
+    } else {
+        // Login
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+            showError(error.message);
+        } else {
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("lastActivity", Date.now().toString());
+            window.location.href = "home.html";
+        }
+    }
 });
 
 // 已登入就跳轉
@@ -78,9 +161,6 @@ supabaseClient.auth.getSession().then(({ data }) => {
         window.location.href = "home.html";
     }
 });
-
-
 </script>
 </body>
 </html>
-
