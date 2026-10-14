@@ -88,7 +88,7 @@
 
   // ===== Supabase + Session =====
   const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
-  const SUPABASE_ANON_KEY = "你的_anon_key_貼這裡";
+  const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
   const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 小時
 
   function loadSupabase(callback) {
