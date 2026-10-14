@@ -91,14 +91,12 @@ toggleSignup.addEventListener("click", function(e) {
     isSignupMode = !isSignupMode;
     if (isSignupMode) {
         formTitle.textContent = "Create a new account";
-        submitBtn.textContent = "Sign Up";
+        submitBtn.textContent = "Submit Request";
         toggleSignup.textContent = "Already have an account? Login";
-        passwordGroup.style.display = "block";
     } else {
         formTitle.textContent = "Please enter your credentials to log in";
         submitBtn.textContent = "Login";
         toggleSignup.textContent = "Create Account";
-        passwordGroup.style.display = "block";
     }
 });
 
@@ -127,19 +125,23 @@ form.addEventListener("submit", async function(e) {
     const password = document.getElementById("password").value;
 
     if (isSignupMode) {
-        // Create Account
-        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        // 寫入 pending_users，不直接建立帳號
+        const { error } = await supabaseClient
+            .from('pending_users')
+            .insert({ email, password, status: 'pending' });
+
         if (error) {
             showError(error.message);
         } else {
-            showSuccess("Account created! Please check your email to confirm.");
-            // 可選：自動切回登入模式
+            showSuccess("申請已送出，請等待管理員批准。");
+            // 自動切回登入模式
             setTimeout(() => {
                 isSignupMode = false;
                 formTitle.textContent = "Please enter your credentials to log in";
                 submitBtn.textContent = "Login";
                 toggleSignup.textContent = "Create Account";
-            }, 2000);
+                document.getElementById("password").value = "";
+            }, 2500);
         }
     } else {
         // Login

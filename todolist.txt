@@ -1,9 +1,6 @@
-1. Hidden Login Password
-2. Encryption Password
-3. Add Session
-4. Add Inventory List
-5. Real Time Chatroom
-
+1. Real Time Chatroom
+2. Fix reset Password and Create account => email link are localhost:3000
+3. Translate ENG/繁/簡
 
 
 API:
@@ -11,3 +8,6 @@ https://fyrzooerrrmkwrbjapoa.supabase.co
 
 Key:
 sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0
+
+SignUP API:
+https://fyrzooerrrmkwrbjapoa.supabase.co/rest/v1/pending_user

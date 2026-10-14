@@ -1,0 +1,27 @@
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";.
+
+serve(async (req) => {
+    const { email, password } = await req.json();
+    const supabaseAdmin = createClient(
+        Deno.env.get("SUPABASE_URL")!, 
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    )
+
+    // Check if the user exists in the pending_users table
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true
+    })
+
+    if (error) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 400 })
+        
+        await supabaseAdmin.from('pending_users').update({
+            status: 'approved'
+        }).eq('email', email)
+
+        return new Response(JSON.stringify({ success: true, user: data.user }), { status: 200 })
+
+    })
