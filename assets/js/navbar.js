@@ -102,8 +102,8 @@ if (!isSessionValid()) {
     location.href = "index.html";
 }
 
-function logout() {
-    localStorage.removeItem("dba_session");
+async function logout() {
+    await supabase.auth.signOut();
     localStorage.removeItem("isLoggedIn");
     location.href = "index.html";
 }
