@@ -24,12 +24,7 @@
 <div class="container py-4">
     <div class="list-card p-4 mb-4">
         <h4 class="mb-1">Inventory List</h4>
-        <p class="text-muted small mb-3">MGT VM（Testing / Production）</p>
-
-        <div class="mb-3">
-            <input type="file" id="excelFile" accept=".xls,.xlsx" class="form-control form-control-sm" style="max-width:360px">
-            <div class="form-text">選擇 Inventory.xlsx</div>
-        </div>
+        <p class="text-muted small mb-3">自動載入 Inventory.xlsx</p>
 
         <div class="d-flex gap-2 flex-wrap mb-3">
             <input type="text" id="searchInput" class="form-control form-control-sm search-box" placeholder="搜尋 VM / IP / Purpose...">
@@ -57,7 +52,7 @@
             </select>
         </div>
 
-        <div id="stats" class="small text-muted mb-2">請上傳 Inventory.xlsx</div>
+        <div id="stats" class="small text-muted mb-2">載入中...</div>
         <div id="invList" class="list-group"></div>
     </div>
 </div>
@@ -65,44 +60,21 @@
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-const STORAGE_KEY = 'inventory_data_v1';
 let allRows = [];
 
-function saveData(rows) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch(e) {}
-}
-
-function loadSaved() {
+async function autoLoad() {
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-            allRows = JSON.parse(raw);
-            populatePurpose();
-            document.getElementById('stats').textContent = `已載入上次資料（${allRows.length} 筆）`;
-            renderList();
-            return true;
-        }
-    } catch(e) {}
-    return false;
-}
-
-document.getElementById('excelFile').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-        const data = new Uint8Array(ev.target.result);
-        const wb = XLSX.read(data, { type: 'array' });
+        const res = await fetch('./Inventory.xlsx');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const buf = await res.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
 
         allRows = [];
 
-        // 讀取兩個 sheet
         wb.SheetNames.forEach(name => {
             const sheet = wb.Sheets[name];
             const json = XLSX.utils.sheet_to_json(sheet, { defval: '', header: 1 });
 
-            // 找 header 行
             let headerIdx = -1;
             for (let i = 0; i < Math.min(json.length, 15); i++) {
                 const row = json[i] || [];
@@ -114,7 +86,7 @@ document.getElementById('excelFile').addEventListener('change', function(e) {
             if (headerIdx === -1) return;
 
             const headers = json[headerIdx].map(h => String(h || '').trim());
-            const env = name.toLowerCase().includes('prd') || name.toLowerCase().includes('prod') ? 'Production' : 'Testing';
+            const env = /prd|prod/i.test(name) ? 'Production' : 'Testing';
 
             for (let i = headerIdx + 1; i < json.length; i++) {
                 const row = json[i] || [];
@@ -125,27 +97,25 @@ document.getElementById('excelFile').addEventListener('change', function(e) {
                     if (h) obj[h] = row[idx] !== undefined ? String(row[idx]) : '';
                 });
 
-                // 統一欄位名稱
-                obj.Purpose = obj.Purpose || obj['Purpose '] || '';
+                obj.Purpose = obj.Purpose || '';
                 obj.VM = obj.VM || '';
-                obj.IP = obj['IP Address (eth0)'] || obj['IP Address (eth0) '] || '';
-                obj.MgtIP = obj['IP Address (eth1) MGT NIC'] || obj['IP Address (eth1) MGT NIC '] || '';
-                obj.Group = obj['NSX-T T1 Gateway Group'] || obj['NSX-T T1 Gateway Group '] || '';
+                obj.IP = obj['IP Address (eth0)'] || '';
+                obj.MgtIP = obj['IP Address (eth1) MGT NIC'] || '';
+                obj.Group = obj['NSX-T T1 Gateway Group'] || '';
                 obj.Site = obj.Site || '';
 
-                if (obj.VM || obj.Purpose) {
-                    allRows.push(obj);
-                }
+                if (obj.VM || obj.Purpose) allRows.push(obj);
             }
         });
 
-        saveData(allRows);
         populatePurpose();
-        document.getElementById('stats').textContent = `已載入 ${allRows.length} 筆`;
+        document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
         renderList();
-    };
-    reader.readAsArrayBuffer(file);
-});
+    } catch (e) {
+        document.getElementById('stats').textContent = '載入失敗，請確認 Inventory.xlsx 在根目錄（需用 GitHub Pages 或本地伺服器開啟）';
+        console.error(e);
+    }
+}
 
 function populatePurpose() {
     const purposes = [...new Set(allRows.map(r => r.Purpose).filter(Boolean))].sort();
@@ -203,7 +173,7 @@ if (localStorage.getItem('isLoggedIn') !== 'true') {
     alert('Please log in first!');
     location.href = 'index.html';
 } else {
-    loadSaved();
+    autoLoad();
 }
 </script>
 </body>
