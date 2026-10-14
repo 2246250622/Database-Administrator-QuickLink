@@ -1,335 +1,324 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <title>DBA書簽</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
-    
-       <style>
-      .btn-outline-custom {
-        --bs-btn-color: #343a40;
-        --bs-btn-bg: #DCBFFF; /* Purple */
-        --bs-btn-border-color: #DCBFFF;
-        --bs-btn-hover-color: #343a40;
-        --bs-btn-hover-bg: #E5D4FF;
-        --bs-btn-hover-border-color: #E5D4FF;
-        --bs-btn-active-color: #343a40;
-        --bs-btn-active-bg: #E5D4FF;
-        --bs-btn-active-border-color: #E5D4FF;
-      }
-            </style>
-   
-</head>
-<main>
-    <header class="p-3 mb-3 border-bottom" style="background-color: #D0A2F7">
-      <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-          </a>
-  
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><b><a href="index.html" class="nav-link px-2 link-body-emphasis">Database Administrator</a></b></li>
-  
-          </ul>
-  
-          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-            <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https:\/\/mail.21cn.net/", "_blank")' >
-              Webmail
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-</svg>
-            </button>
-           
- 
-            
-          
-          
-            <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
-            <button type="button" class="btn btn-outline-custom" onclick='location.href="analyzer.html"'>Troubleshooting</button>
-            <button type="button" class="btn btn-outline-custom" onclick='location.href="DBaaS_Summary.html"'>GCIS DBaaS Summary</button>
-            <button type="button" class="btn btn-outline-custom" onclick='location.href="filter.html"'>T0P0 Filter</button>
-            <button type="button" class="btn btn-outline-custom" onclick='location.href="Converter.html"'>Unit Converter⚡</button>
-            <button type="button" class="btn btn-outline-custom" onclick='location.href="pdns_5modes_generator.html"'>PowerDNS Scripts</button>
-          
-            
-         
-          
-            <!-- Modal -->
-          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel1">⛏️</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="m-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs" id="myTab">
-                                <li class="nav-item">
-                                    <a href="#home" class="nav-link active" data-bs-toggle="tab">Sevrer List</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#profile" class="nav-link" data-bs-toggle="tab">2</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a href="#stake" class="nav-link" data-bs-toggle="tab">3</a>
-                              </li>
-                
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active" id="home">
-                                  <div class="list-group">
-                                    <a href="dbaas_list.html" class="list-group-item list-group-item-action list-group-item-danger" target="_blank">Summary</a>
-                                      
-                                    
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="profile">
-                                  <div class="list-group">
-                                    <a href="" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Empty</a>
-                                     </div>
-                                </div>
-
-                                <div class="tab-pane fade" id="stake">
-                                  <div class="list-group">
-                                  <a href="" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Empty</a>
-                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">好的</button>
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">關閉</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          </form>
-          
-          
-          <div class="dropdown text-end">
-            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
-            </a>
-            <ul class="dropdown-menu text-small">
-              <li><a class="dropdown-item" href="index.html" onclick="logout()">Sign out</a></li>
-            </ul>
-          </div>
-            </div>
-          </div>
-        </header>
-      </main>
-    
-      <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
-    
-
-<!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <title>GCIS DBaaS Summary - Fixed Rows & Deduplication</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GCIS DBaaS Summary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        body { font-family: "Segoe UI", Arial, sans-serif; background: #828282; color: #ffffff; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { color: #00ccff; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
-        table { width: 100%; border-collapse: collapse; background: #424242; border: 1px solid #444; margin-top: 20px; }
-        th, td { border: 1px solid #ffffff; padding: 12px; text-align: center; }
-        th { background: #006600; color: rgb(2, 2, 2); }
-        .subheader { background: #004d00; color: #afffaf; font-size: 0.9em; }
-        .total-row { background: #003366; font-weight: bold; color: #ffff99; }
-        .positive { color: #00ff00; font-weight: bold; }
-        .date { text-align: right; color: #888; margin-top: 10px; font-size: 0.9em; }
-        .upload-box { text-align: center; padding: 20px; background: #868686; border-radius: 8px; border: 1px dashed #555; }
-        input[type="file"] { background: #333; color: #00ffcc; padding: 10px; border: 1px solid #555; cursor: pointer; }
+        .btn-outline-custom {
+            --bs-btn-color: #343a40;
+            --bs-btn-bg: #DCBFFF;
+            --bs-btn-border-color: #DCBFFF;
+            --bs-btn-hover-color: #343a40;
+            --bs-btn-hover-bg: #E5D4FF;
+            --bs-btn-hover-border-color: #E5D4FF;
+            --bs-btn-active-color: #343a40;
+            --bs-btn-active-bg: #E5D4FF;
+            --bs-btn-active-border-color: #E5D4FF;
+        }
+
+        .summary-page {
+            background: #f8fafc;
+            min-height: calc(100vh - 80px);
+            padding: 32px 0 60px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+            padding: 28px 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-card h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .summary-card .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            margin-bottom: 24px;
+        }
+
+        .upload-box:hover {
+            border-color: #c4b5fd;
+            background: #faf5ff;
+        }
+
+        .upload-hint {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .summary-page table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.92rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-page th,
+        .summary-page td {
+            padding: 12px 14px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-page th {
+            background: #ede9fe;
+            color: #5b21b6;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .summary-page .subheader {
+            background: #f5f3ff;
+            color: #6d28d9;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .summary-page tbody tr:hover {
+            background: #faf5ff;
+        }
+
+        .summary-page .total-row {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .summary-page .total-row td {
+            border-bottom: none;
+        }
+
+        .diff-positive { color: #16a34a; font-weight: 600; }
+        .diff-negative { color: #dc2626; font-weight: 600; }
+        .diff-zero     { color: #64748b; }
+        .diff-none     { color: #94a3b8; }
+
+        .date {
+            text-align: right;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            margin-top: 16px;
+        }
+
+        .summary-page td:first-child {
+            font-weight: 500;
+            color: #334155;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>10. DBaaS Summary</h1>
+
+<div id="navbar-placeholder"></div>
+<script src="./assets/js/navbar.js"></script>
+
+<div class="summary-page">
+    <div class="summary-card">
+        <h1>DBaaS Summary</h1>
+        <div class="subtitle">上傳 Excel 檔案即可產生統計表（Diff 會跟上一次比較）</div>
+
         <div class="upload-box">
-            <input type="file" id="fileInput" accept=".xls,.xlsx" />
+            <div class="mb-1" style="font-weight: 500; color: #334155;">選擇檔案</div>
+            <input type="file" id="fileInput" accept=".xls,.xlsx" class="form-control form-control-sm" style="max-width: 320px; margin: 0 auto;" />
+            <div class="upload-hint">支援 .xls / .xlsx</div>
         </div>
+
         <div id="result"></div>
         <div class="date">Report Date: <span id="dateText">--</span></div>
     </div>
+</div>
 
-    <script>
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+<script src="assets/dist/js/bootstrap.bundle.min.js"></script>
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+<script>
+    const STORAGE_KEY = 'dbaas_summary_last';
 
-                // --- 數據結構初始化 ---
-                const summary = {
-                    aa: { idsT: new Set(), idsP: new Set(), dbT: 0, dbP: 0 },
-                    ap: { idsT: new Set(), idsP: new Set(), dbT: 0, dbP: 0 }
-                };
-                const globalIdsT = new Set();
-                const globalIdsP = new Set();
+    function formatDiff(current, previous) {
+        if (previous === undefined || previous === null) {
+            return '<span class="diff-none">—</span>';
+        }
+        const diff = current - previous;
+        if (diff > 0) return `<span class="diff-positive">+${diff}</span>`;
+        if (diff < 0) return `<span class="diff-negative">${diff}</span>`;
+        return '<span class="diff-zero">0</span>';
+    }
 
-                // 從第二行開始遍歷 (i=1)
-                for (let i = 1; i < rows.length; i++) {
-                    const r = rows[i];
-                    if (!r || r.length < 10) continue;
+    function loadLastSummary() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
 
-                    const gcisID = String(r[0] || "").trim();
-                    if (!gcisID || gcisID.toUpperCase() === "GCISID") continue;
+    function saveCurrentSummary(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
 
-                    const site = String(r[2] || "").trim().toUpperCase();
-                    const dbaasType = String(r[8] || "").toLowerCase();
-                    const dbType = String(r[9] || "").trim();
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
 
-                    // 只處理 MariaDB
-                    if (!dbType.includes("MariaDB")) continue;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
 
-                    const isTest = (site.startsWith("T")); // T1, T2...
-                    const isProd = (site.startsWith("P")); // P1, P2...
-
-                    // 判斷架構：嚴格匹配 Active-Active，其餘歸類為 Active-Passive
-                    const isAA = dbaasType.includes("active-active") || dbaasType.includes("active active");
-
-                    if (isAA) {
-                        if (isTest) { summary.aa.idsT.add(gcisID); summary.aa.dbT++; globalIdsT.add(gcisID); }
-                        if (isProd) { summary.aa.idsP.add(gcisID); summary.aa.dbP++; globalIdsP.add(gcisID); }
-                    } else {
-                        // 修正：包含所有非 AA 的 MariaDB 實例 (Active-Passive / Standalone)
-                        if (isTest) { summary.ap.idsT.add(gcisID); summary.ap.dbT++; globalIdsT.add(gcisID); }
-                        if (isProd) { summary.ap.idsP.add(gcisID); summary.ap.dbP++; globalIdsP.add(gcisID); }
-                    }
-                }
-
-                const html = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="2" rowspan="2">DBaaS Summary as of 11-Mar-2026</th>
-                                <th colspan="2">GCIS ID Count (Unique)</th>
-                                <th colspan="3">DB Count (Instances)</th>
-                                <th rowspan="2">+ diff DB Count from last</th>
-                            </tr>
-                            <tr>
-                                <th class="subheader">Testing</th>
-                                <th class="subheader">Production</th>
-                                <th class="subheader">Testing</th>
-                                <th class="subheader">Production</th>
-                                <th class="subheader">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td rowspan="1" style="font-weight:bold; background:#1a1a1a;">Active-Active</td>
-                                <td>MariaDB</td>
-                                <td>${summary.aa.idsT.size}</td>
-                                <td>${summary.aa.idsP.size}</td>
-                                <td>${summary.aa.dbT/2}</td>
-                                <td>${summary.aa.dbP/2}</td>
-                                <td>${(summary.aa.dbT + summary.aa.dbP)/2}</td>
-                                <td class="positive">+1</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="1" style="font-weight:bold; background:#1a1a1a;">Active-Passive</td>
-                                <td>MariaDB</td>
-                                <td>${summary.ap.idsT.size}</td>
-                                <td>${summary.ap.idsP.size}</td>
-                                <td>${summary.ap.dbT}</td>
-                                <td>${summary.ap.dbP}</td>
-                                <td>${summary.ap.dbT + summary.ap.dbP}</td>
-                                <td class="positive">0</td>
-                            </tr>
-                            <tr class="total-row">
-                                <td colspan="2">Total (Global Unique ID)</td>
-                                <td>${globalIdsT.size}</td>
-                                <td>${globalIdsP.size}</td>
-                                <td>${summary.aa.dbT/2 + summary.ap.dbT}</td>
-                                <td>${summary.aa.dbP/2 + summary.ap.dbP}</td>
-                                <td>${(summary.aa.dbT + summary.aa.dbP)/2 + summary.ap.dbT + summary.ap.dbP}</td>
-                                <td class="positive">+1</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `;
-
-                document.getElementById('result').innerHTML = html;
-                document.getElementById('dateText').textContent = new Date().toLocaleString('zh-HK');
+            const summary = {
+                aa: { idsT: new Set(), idsP: new Set(), dbT: 0, dbP: 0 },
+                ap: { idsT: new Set(), idsP: new Set(), dbT: 0, dbP: 0 }
             };
-            reader.readAsArrayBuffer(file);
-        });
-    </script>
+            const globalIdsT = new Set();
+            const globalIdsP = new Set();
 
-    
+            for (let i = 1; i < rows.length; i++) {
+                const r = rows[i];
+                if (!r || r.length < 10) continue;
 
-    <script>
-      // Get all the rows in the table
-  const rows = document.querySelectorAll('td');
-  
-  // Add a click event listener to each row
-  rows.forEach(row => {
-    row.addEventListener('click', () => {
-      // Change the background color of the row to green
-      row.style.backgroundColor = 'LightGreen';
+                const gcisID = String(r[0] || "").trim();
+                if (!gcisID || gcisID.toUpperCase() === "GCISID") continue;
+
+                const site = String(r[2] || "").trim().toUpperCase();
+                const dbaasType = String(r[8] || "").toLowerCase();
+                const dbType = String(r[9] || "").trim();
+
+                if (!dbType.includes("MariaDB")) continue;
+
+                const isTest = site.startsWith("T");
+                const isProd = site.startsWith("P");
+                const isAA = dbaasType.includes("active-active") || dbaasType.includes("active active");
+
+                if (isAA) {
+                    if (isTest) { summary.aa.idsT.add(gcisID); summary.aa.dbT++; globalIdsT.add(gcisID); }
+                    if (isProd) { summary.aa.idsP.add(gcisID); summary.aa.dbP++; globalIdsP.add(gcisID); }
+                } else {
+                    if (isTest) { summary.ap.idsT.add(gcisID); summary.ap.dbT++; globalIdsT.add(gcisID); }
+                    if (isProd) { summary.ap.idsP.add(gcisID); summary.ap.dbP++; globalIdsP.add(gcisID); }
+                }
+            }
+
+            const current = {
+                aa_idT: summary.aa.idsT.size,
+                aa_idP: summary.aa.idsP.size,
+                aa_dbT: summary.aa.dbT / 2,
+                aa_dbP: summary.aa.dbP / 2,
+                aa_total: (summary.aa.dbT + summary.aa.dbP) / 2,
+                ap_idT: summary.ap.idsT.size,
+                ap_idP: summary.ap.idsP.size,
+                ap_dbT: summary.ap.dbT,
+                ap_dbP: summary.ap.dbP,
+                ap_total: summary.ap.dbT + summary.ap.dbP,
+                total_idT: globalIdsT.size,
+                total_idP: globalIdsP.size,
+                total_dbT: summary.aa.dbT / 2 + summary.ap.dbT,
+                total_dbP: summary.aa.dbP / 2 + summary.ap.dbP,
+                total_all: (summary.aa.dbT + summary.aa.dbP) / 2 + summary.ap.dbT + summary.ap.dbP
+            };
+
+            const last = loadLastSummary();
+
+            const html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" rowspan="2">DBaaS Summary</th>
+                            <th colspan="2">GCIS ID Count (Unique)</th>
+                            <th colspan="3">DB Count (Instances)</th>
+                            <th rowspan="2">Diff</th>
+                        </tr>
+                        <tr>
+                            <th class="subheader">Testing</th>
+                            <th class="subheader">Production</th>
+                            <th class="subheader">Testing</th>
+                            <th class="subheader">Production</th>
+                            <th class="subheader">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Active-Active</td>
+                            <td>MariaDB</td>
+                            <td>${current.aa_idT}</td>
+                            <td>${current.aa_idP}</td>
+                            <td>${current.aa_dbT}</td>
+                            <td>${current.aa_dbP}</td>
+                            <td>${current.aa_total}</td>
+                            <td>${formatDiff(current.aa_total, last?.aa_total)}</td>
+                        </tr>
+                        <tr>
+                            <td>Active-Passive</td>
+                            <td>MariaDB</td>
+                            <td>${current.ap_idT}</td>
+                            <td>${current.ap_idP}</td>
+                            <td>${current.ap_dbT}</td>
+                            <td>${current.ap_dbP}</td>
+                            <td>${current.ap_total}</td>
+                            <td>${formatDiff(current.ap_total, last?.ap_total)}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="2">Total (Global Unique ID)</td>
+                            <td>${current.total_idT}</td>
+                            <td>${current.total_idP}</td>
+                            <td>${current.total_dbT}</td>
+                            <td>${current.total_dbP}</td>
+                            <td>${current.total_all}</td>
+                            <td>${formatDiff(current.total_all, last?.total_all)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('result').innerHTML = html;
+            document.getElementById('dateText').textContent = new Date().toLocaleString('zh-HK');
+
+            saveCurrentSummary(current);
+        };
+        reader.readAsArrayBuffer(file);
     });
-  });
-  
-  // Add a click event listener to each row
-  rows.forEach(row => {
-    row.addEventListener('click', () => {
-      // Add a class to the row to indicate that it has been clicked
-      row.classList.add('clicked');
-    });
-  });
-  
-  </script>
-   
+</script>
 
-      <script>
-const toastTrigger = document.getElementById('staticBackdropLabel')
-const toastLiveExample = document.getElementById('liveToast')
-
-if (toastTrigger) {
-const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-toastTrigger.addEventListener('click', () => {
-  toastBootstrap.show()
-})
-}
-        </script>
-    
-    <script>
-    // Check login status
+<script>
     if (localStorage.getItem('isLoggedIn') !== 'true') {
         alert('Please log in first!');
         window.location.href = 'index.html';
     }
 
-    // Optional: Logout function (add a button in your header)
     function logout() {
         localStorage.removeItem('isLoggedIn');
         window.location.href = 'index.html';
     }
 </script>
-
-
 
 </body>
 </html>

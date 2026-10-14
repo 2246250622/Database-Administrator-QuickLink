@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Server List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .btn-outline-custom {
+            --bs-btn-color: #343a40;
+            --bs-btn-bg: #DCBFFF;
+            --bs-btn-border-color: #DCBFFF;
+            --bs-btn-hover-color: #343a40;
+            --bs-btn-hover-bg: #E5D4FF;
+            --bs-btn-hover-border-color: #E5D4FF;
+        }
+        body { background: #f8fafc; }
+        .list-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
+        .server-item { border-left: 4px solid #c4b5fd; }
+        .server-item:hover { background: #faf5ff; }
+        .badge-site { font-size: 0.75rem; }
+        .search-box { max-width: 420px; }
+    </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+<script src="./assets/js/navbar.js"></script>
+
+<div class="container py-4">
+    <div class="list-card p-4 mb-4">
+        <h4 class="mb-1">Server List</h4>
+        <p class="text-muted small mb-3">自動載入 assets/GCIS DBaaS Summary2.xls</p>
+
+        <div class="d-flex gap-2 flex-wrap mb-3">
+            <input type="text" id="searchInput" class="form-control form-control-sm search-box" placeholder="搜尋 GCISID / Service / VMName / IP...">
+            <select id="siteFilter" class="form-select form-select-sm" style="max-width:140px">
+                <option value="">全部 Site</option>
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+                <option value="T1">T1</option>
+                <option value="T2">T2</option>
+            </select>
+            <select id="typeFilter" class="form-select form-select-sm" style="max-width:180px">
+                <option value="">全部 Type</option>
+                <option value="Active-Active">Active-Active</option>
+                <option value="Active-Passive">Active-Passive</option>
+            </select>
+        </div>
+
+        <div id="stats" class="small text-muted mb-2">載入中...</div>
+        <div id="serverList" class="list-group"></div>
+    </div>
+</div>
+
+<script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+let allRows = [];
+
+async function autoLoad() {
+    try {
+        const res = await fetch('GCIS DBaaS Summary2.xls');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const buf = await res.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        allRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
+        renderList();
+    } catch (e) {
+        document.getElementById('stats').textContent = '載入失敗，請確認 assets/GCIS DBaaS Summary2.xls 存在';
+        console.error(e);
+    }
+}
+
+function renderList() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const site = document.getElementById('siteFilter').value;
+    const type = document.getElementById('typeFilter').value;
+
+    const filtered = allRows.filter(r => {
+        const text = `${r.GCISID} ${r.CloudServiceName} ${r.VMName} ${r['HostIP of VM']} ${r['ServiceIP of VM']}`.toLowerCase();
+        if (q && !text.includes(q)) return false;
+        if (site && r.Site !== site) return false;
+        if (type && r.DBaaSType !== type) return false;
+        return true;
+    });
+
+    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allRows.length} 筆`;
+
+    const html = filtered.map(r => `
+        <div class="list-group-item server-item">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${r.GCISID || '-'}</strong>
+                    <span class="text-muted"> / ${r.CloudServiceName || '-'}</span>
+                    <div class="small mt-1">
+                        <span class="badge bg-secondary badge-site">${r.Site || '-'}</span>
+                        <span class="badge bg-light text-dark border">${r.DBaaSType || '-'}</span>
+                        <span class="text-muted">${r.VMName || ''}</span>
+                    </div>
+                </div>
+                <div class="text-end small">
+                    <div>Host: ${r['HostIP of VM'] || '-'}</div>
+                    <div>Service: ${r['ServiceIP of VM'] || '-'}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('serverList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
+}
+
+['searchInput', 'siteFilter', 'typeFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderList);
+    document.getElementById(id).addEventListener('change', renderList);
+});
+
+if (localStorage.getItem('isLoggedIn') !== 'true') {
+    alert('Please log in first!');
+    location.href = 'index.html';
+} else {
+    autoLoad();
+}
+</script>
+</body>
+</html>
