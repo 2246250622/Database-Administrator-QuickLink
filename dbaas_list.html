@@ -185,12 +185,7 @@ function renderList() {
     document.getElementById(id).addEventListener('change', renderList);
 });
 
-if (localStorage.getItem('isLoggedIn') !== 'true') {
-    alert('Please log in first!');
-    location.href = 'index.html';
-} else {
-    autoLoad();
-}
+
 </script>
 </body>
 </html>

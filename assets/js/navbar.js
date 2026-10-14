@@ -78,7 +78,7 @@
           <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small">
-          <li><a class="dropdown-item" href="index.html" onclick="logout()">Sign out</a></li>
+          <li><a class="dropdown-item" href="#" onclick="logout(); return false;">Sign out</a></li>
         </ul>
       </div>
     </div>
@@ -86,116 +86,113 @@
 </header>
   `;
 
-
-
+  // ===== Supabase + Session =====
+  const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
+  const SUPABASE_ANON_KEY = "你的_anon_key_貼這裡";
   const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 小時
 
-function updateActivity() {
-    localStorage.setItem("lastActivity", Date.now().toString());
-}
-
-function checkSession() {
-    const last = localStorage.getItem("lastActivity");
-    if (!last || Date.now() - parseInt(last) > SESSION_TIMEOUT) {
-        // 逾時，登出
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("lastActivity");
-        if (typeof supabaseClient !== "undefined") {
-            supabaseClient.auth.signOut();
-        }
-        alert("Session expired. Please log in again.");
-        location.href = "index.html";
-        return false;
-    }
-    return true;
-}
-
-// 頁面載入時檢查
-if (localStorage.getItem("isLoggedIn") === "true") {
-    if (!checkSession()) {
-        // 已跳轉
-    } else {
-        updateActivity();
-    }
-} else {
-    location.href = "index.html";
-}
-
-// 有操作就更新活動時間
-["click", "keydown", "mousemove", "scroll"].forEach(evt => {
-    document.addEventListener(evt, updateActivity, { passive: true });
-});
-
-// 每分鐘檢查一次
-setInterval(checkSession, 60 * 1000);
-
-function isSessionValid() {
-    try {
-        const raw = localStorage.getItem("dba_session");
-        if (!raw) return false;
-        const s = JSON.parse(raw);
-        return s.expiry && Date.now() < s.expiry;
-    } catch { return false; }
-}
-if (!isSessionValid()) {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("dba_session");
-    alert("Please log in first!");
-    location.href = "index.html";
-}
-
-async function logout() {
-    await supabase.auth.signOut();
-    localStorage.removeItem("isLoggedIn");
-    location.href = "index.html";
-}
-
-function injectNavbar() {
-  const placeholder = document.getElementById('navbar-placeholder');
-  if (!placeholder) return;
-
-  placeholder.outerHTML = navbarHTML;
-
-  // 自動加 active
-  const currentPage = window.location.pathname.split('/').pop() || 'home.html';
-  document.querySelectorAll('[data-page]').forEach(btn => {
-    if (btn.getAttribute('data-page') === currentPage) {
-      btn.classList.add('active');
-    }
-    btn.addEventListener('click', () => {
-      location.href = btn.getAttribute('data-page');
-    });
-  });
-
-  // 等 Bootstrap 載入完成後再初始化 Modal
-  function initModal() {
-    if (typeof bootstrap === 'undefined') {
-      // Bootstrap 還沒好，稍後再試
-      setTimeout(initModal, 50);
+  function loadSupabase(callback) {
+    if (window.supabase) {
+      callback();
       return;
     }
-
-    const modalEl = document.getElementById('staticBackdrop');
-    if (!modalEl) return;
-
-    // 預先建立實例
-    const modal = new bootstrap.Modal(modalEl);
-
-    // 綁定 Server List 按鈕
-    const serverListBtn = document.querySelector('[data-bs-target="#staticBackdrop"]');
-    if (serverListBtn) {
-      serverListBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        modal.show();
-      });
-    }
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    script.onload = callback;
+    document.head.appendChild(script);
   }
 
-  initModal();
-}
+  function initAuth() {
+    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    checkAuth();
+    setupActivityTracker();
+  }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectNavbar);
+  async function checkAuth() {
+    const path = location.pathname;
+    if (path.endsWith("index.html") || path.endsWith("/")) return;
+
+    const { data } = await window.supabaseClient.auth.getSession();
+    if (!data.session) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("lastActivity");
+      alert("Please log in first!");
+      location.href = "index.html";
+      return;
+    }
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("lastActivity", Date.now().toString());
+  }
+
+  function setupActivityTracker() {
+    function updateActivity() {
+      localStorage.setItem("lastActivity", Date.now().toString());
+    }
+    ["click", "keydown", "mousemove", "scroll"].forEach(evt => {
+      document.addEventListener(evt, updateActivity, { passive: true });
+    });
+
+    setInterval(async () => {
+      const last = localStorage.getItem("lastActivity");
+      if (last && Date.now() - parseInt(last) > SESSION_TIMEOUT) {
+        await window.supabaseClient.auth.signOut();
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("lastActivity");
+        alert("Session expired. Please log in again.");
+        location.href = "index.html";
+      }
+    }, 60 * 1000);
+  }
+
+  window.logout = async function () {
+    if (window.supabaseClient) {
+      await window.supabaseClient.auth.signOut();
+    }
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("lastActivity");
+    location.href = "index.html";
+  };
+
+  function injectNavbar() {
+    const placeholder = document.getElementById("navbar-placeholder");
+    if (!placeholder) return;
+
+    placeholder.outerHTML = navbarHTML;
+
+    const currentPage = location.pathname.split("/").pop() || "home.html";
+    document.querySelectorAll("[data-page]").forEach(btn => {
+      if (btn.getAttribute("data-page") === currentPage) {
+        btn.classList.add("active");
+      }
+      btn.addEventListener("click", () => {
+        location.href = btn.getAttribute("data-page");
+      });
+    });
+
+    function initModal() {
+      if (typeof bootstrap === "undefined") {
+        setTimeout(initModal, 50);
+        return;
+      }
+      const modalEl = document.getElementById("staticBackdrop");
+      if (!modalEl) return;
+      const modal = new bootstrap.Modal(modalEl);
+      const serverListBtn = document.querySelector('[data-bs-target="#staticBackdrop"]');
+      if (serverListBtn) {
+        serverListBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          modal.show();
+        });
+      }
+    }
+    initModal();
+  }
+
+  // 啟動
+  loadSupabase(initAuth);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectNavbar);
   } else {
     injectNavbar();
   }
