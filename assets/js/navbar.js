@@ -78,7 +78,9 @@
           <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small">
-          <li><a class="dropdown-item" href="#" onclick="logout(); return false;">Sign out</a></li>
+        <li><a class="dropdown-item" href="admin.html">Admin</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="logout(); return false;">Sign out</a></li>
         </ul>
       </div>
     </div>
