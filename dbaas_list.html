@@ -13,8 +13,8 @@
         .server-item { border-left: 4px solid #c4b5fd; }
         .server-item:hover { background: #faf5ff; }
         .badge-site { font-size: 0.75rem; }
-        .search-box { max-width: 280px; }
-        .filter-select { max-width: 180px; }
+        .search-box { max-width: 260px; }
+        .filter-select { max-width: 170px; }
     </style>
 </head>
 <body>
@@ -42,7 +42,7 @@
                 <option value="">全部 DB Name</option>
             </select>
 
-            <select id="siteFilter" class="form-select form-select-sm" style="max-width:120px">
+            <select id="siteFilter" class="form-select form-select-sm" style="max-width:110px">
                 <option value="">全部 Site</option>
                 <option value="P1">P1</option>
                 <option value="P2">P2</option>
@@ -50,10 +50,16 @@
                 <option value="T2">T2</option>
             </select>
 
-            <select id="typeFilter" class="form-select form-select-sm" style="max-width:160px">
+            <select id="typeFilter" class="form-select form-select-sm" style="max-width:150px">
                 <option value="">全部 Type</option>
                 <option value="Active-Active">Active-Active</option>
                 <option value="Active-Passive">Active-Passive</option>
+            </select>
+
+            <select id="statusFilter" class="form-select form-select-sm" style="max-width:140px">
+                <option value="InUse" selected>InUse</option>
+                <option value="Decommission">Decommission</option>
+                <option value="">全部 Status</option>
             </select>
         </div>
 
@@ -104,11 +110,10 @@ function populateDropdowns() {
     const gcis = uniqueSorted(allRows.map(r => r.GCISID));
     const dbs = uniqueSorted(allRows.map(r => r.CloudServiceName));
 
-    // Group 1~8
-    const groupOptions = Object.entries(GROUP_MAP).map(([key, label]) => 
+    const groupOptions = Object.entries(GROUP_MAP).map(([key, label]) =>
         `<option value="${key}">${label}</option>`
     ).join('');
-    document.getElementById('groupFilter').innerHTML = 
+    document.getElementById('groupFilter').innerHTML =
         `<option value="">全部 Group</option>` + groupOptions;
 
     fillSelect('gcisFilter', gcis, '全部 GCISID');
@@ -124,10 +129,11 @@ function fillSelect(id, items, defaultText) {
 function renderList() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const gcis = document.getElementById('gcisFilter').value;
-    const group = document.getElementById('groupFilter').value; // GPA, GPB...
+    const group = document.getElementById('groupFilter').value;
     const db = document.getElementById('dbFilter').value;
     const site = document.getElementById('siteFilter').value;
     const type = document.getElementById('typeFilter').value;
+    const status = document.getElementById('statusFilter').value;
 
     const filtered = allRows.filter(r => {
         const text = `${r.GCISID} ${r.CloudServiceName} ${r.VMName} ${r['HostIP of VM']} ${r['ServiceIP of VM']} ${r['MgtIP of VM']}`.toLowerCase();
@@ -137,6 +143,7 @@ function renderList() {
         if (db && r.CloudServiceName !== db) return false;
         if (site && r.Site !== site) return false;
         if (type && r.DBaaSType !== type) return false;
+        if (status && r.DBaaSStatus !== status) return false;
         return true;
     });
 
@@ -144,7 +151,7 @@ function renderList() {
 
     const html = filtered.map(r => {
         const nsx = r['NSX-T group'] || '';
-        const groupKey = nsx.slice(-3); // GPA, GPB...
+        const groupKey = nsx.slice(-3);
         const groupLabel = GROUP_MAP[groupKey] || nsx;
 
         return `
@@ -157,6 +164,7 @@ function renderList() {
                         <span class="badge bg-secondary badge-site">${r.Site || '-'}</span>
                         <span class="badge bg-light text-dark border">${r.DBaaSType || '-'}</span>
                         <span class="badge bg-info text-dark">${groupLabel}</span>
+                        <span class="badge ${r.DBaaSStatus === 'InUse' ? 'bg-success' : 'bg-warning text-dark'}">${r.DBaaSStatus || '-'}</span>
                         <span class="text-muted">${r.VMName || ''}</span>
                     </div>
                 </div>
@@ -172,7 +180,7 @@ function renderList() {
     document.getElementById('serverList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
 }
 
-['searchInput', 'gcisFilter', 'groupFilter', 'dbFilter', 'siteFilter', 'typeFilter'].forEach(id => {
+['searchInput', 'gcisFilter', 'groupFilter', 'dbFilter', 'siteFilter', 'typeFilter', 'statusFilter'].forEach(id => {
     document.getElementById(id).addEventListener('input', renderList);
     document.getElementById(id).addEventListener('change', renderList);
 });
