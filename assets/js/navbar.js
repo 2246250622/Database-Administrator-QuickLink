@@ -87,7 +87,7 @@
   `;
 
   // ===== Supabase + Session =====
-  const SUPABASE_URL = "https://fyrzooerrmkwrbjapoa.supabase.co";
+  const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
   const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 小時
 
