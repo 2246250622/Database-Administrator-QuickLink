@@ -11,3 +11,6 @@ sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0
 
 SignUP API:
 https://fyrzooerrrmkwrbjapoa.supabase.co/rest/v1/pending_user
+
+
+Could not find the table 'public.pending_users' in the schema cache

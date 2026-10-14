@@ -127,7 +127,7 @@ form.addEventListener("submit", async function(e) {
     if (isSignupMode) {
         // 寫入 pending_users，不直接建立帳號
         const { error } = await supabaseClient
-            .from('pending_users')
+            .from('pending_user')
             .insert({ email, password, status: 'pending' });
 
         if (error) {
