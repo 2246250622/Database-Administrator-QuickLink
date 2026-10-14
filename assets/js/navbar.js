@@ -51,7 +51,7 @@
                         </div>
                         <div class="tab-pane fade" id="profile">
                           <div class="list-group">
-                            <a href="" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Empty</a>
+                            <a href="inventory.html" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Inventory</a>
                           </div>
                         </div>
                         <div class="tab-pane fade" id="stake">
