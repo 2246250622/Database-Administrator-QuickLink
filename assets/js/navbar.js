@@ -87,6 +87,48 @@
   `;
 
 
+
+  const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 小時
+
+function updateActivity() {
+    localStorage.setItem("lastActivity", Date.now().toString());
+}
+
+function checkSession() {
+    const last = localStorage.getItem("lastActivity");
+    if (!last || Date.now() - parseInt(last) > SESSION_TIMEOUT) {
+        // 逾時，登出
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("lastActivity");
+        if (typeof supabaseClient !== "undefined") {
+            supabaseClient.auth.signOut();
+        }
+        alert("Session expired. Please log in again.");
+        location.href = "index.html";
+        return false;
+    }
+    return true;
+}
+
+// 頁面載入時檢查
+if (localStorage.getItem("isLoggedIn") === "true") {
+    if (!checkSession()) {
+        // 已跳轉
+    } else {
+        updateActivity();
+    }
+} else {
+    location.href = "index.html";
+}
+
+// 有操作就更新活動時間
+["click", "keydown", "mousemove", "scroll"].forEach(evt => {
+    document.addEventListener(evt, updateActivity, { passive: true });
+});
+
+// 每分鐘檢查一次
+setInterval(checkSession, 60 * 1000);
+
 function isSessionValid() {
     try {
         const raw = localStorage.getItem("dba_session");

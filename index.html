@@ -60,15 +60,15 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const errorMsg = document.getElementById("errorMsg");
 
 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) {
-        errorMsg.textContent = error.message;
-        errorMsg.style.display = "block";
-        setTimeout(() => errorMsg.style.display = "none", 4000);
-    } else {
-        // 登入成功
-        localStorage.setItem("isLoggedIn", "true");
-        window.location.href = "home.html";
-    }
+ if (error) {
+    errorMsg.textContent = error.message;
+    errorMsg.style.display = "block";
+    setTimeout(() => errorMsg.style.display = "none", 4000);
+} else {
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("lastActivity", Date.now().toString());
+    window.location.href = "home.html";
+}
 });
 
 // 已登入就跳轉
