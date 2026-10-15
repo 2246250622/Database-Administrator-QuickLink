@@ -73,7 +73,29 @@
 </div>
 
 <script>
-    const API_KEY = "sk-31484e39ef50408ba687476fbd830c6c"; // 注意：純 HTML 會暴露 Key
+
+
+const ANALYZE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/analyze-logs";
+
+// 在 startAnalyze 裡面，把 fetch 改成這樣：
+const response = await fetch(ANALYZE_FUNCTION_URL, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        messages: [
+            { 
+                role: "system", 
+                content: `You are a Senior GCIS MariaDB DBA...`  // 你原本的 system prompt
+            },
+            { 
+                role: "user", 
+                content: `INC INFORMATION:\n${incText}\n\nLOG DATA:\n${allLogData}` 
+            }
+        ]
+    })
+});
     const MAX_TAIL_CHARS = 8000;
 
     // 顯示已選取的檔案名
