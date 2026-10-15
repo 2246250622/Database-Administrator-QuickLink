@@ -16,7 +16,7 @@ SignUP API:
 https://fyrzooerrrmkwrbjapoa.supabase.co/rest/v1/pending_user
 
 
-Error Message When Approving Account:
+✅Error Message When Approving Account:
 Approve failed: {"code":"UNAUTHORIZED_NO_AUTH_HEADER","message":"Missing authorization header"}
 
 
