@@ -3,7 +3,7 @@
 ✅3. Add Session
 ✅5. Add Inventory List
 ✅6. Fix reset Password and Create account => email link are localhost:3000
-⚠️7. Real Time Chatroom
+✅7. Real Time Chatroom
 ⚠️8. Translate ENG/繁/簡
 ❎9. Add the Forum
 ✅10. Develop Ticket System with 3 status => Complated / Pending / Cancel
@@ -32,11 +32,3 @@ https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user
 5qK$R3JC$VkbwJpD
 
 
-
-Time: 
-INC: INC
-Status: OPEN
-HostName: 
-Severity: CRITICAL
-Object: 
-Message: 
