@@ -19,20 +19,29 @@
           </svg>
         </button>
 
-<div class="dropdown">
-  <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">
-    Alerts
-  </button>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="tickets.html">Tickets</a></li>
-    <li><a class="dropdown-item" href="warns.html">Warns</a></li>
-  </ul>
-</div>
-      <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
-        <button type="button" class="btn btn-outline-custom" data-page="analyzer.html">Troubleshooting</button>
-        <button type="button" class="btn btn-outline-custom" data-page="DBaaS_Summary.html">GCIS DBaaS Summary</button>
-        <button type="button" class="btn btn-outline-custom" data-page="Converter.html">Unit Converter⚡</button>
-   
+          <div class="dropdown">
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">Alerts</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="tickets.html">Tickets</a></li>
+              <li><a class="dropdown-item" href="warns.html">Warns</a></li>
+            </ul>
+          </div>
+
+          <div class="dropdown">
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">DBaaS</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</a></li>
+              <li><a class="dropdown-item" href="DBaaS_Summary.html">GCIS DBaaS Summary</a></li>
+            </ul>
+          </div>
+
+          <div class="dropdown">
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">Tools</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="analyzer.html">Troubleshooting</a></li>
+              <li><a class="dropdown-item" href="Converter.html">Unit Converter⚡</a></li>
+            </ul>
+          </div>
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
