@@ -179,15 +179,34 @@ function bindButtons() {
     });
 
     // Delete
+    const DELETE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user";
+
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-            if (!confirm(`Delete ${btn.dataset.email} permanently?`)) return;
-            const { error } = await supabaseClient
-                .from('pending_user')
-                .delete()
-                .eq('email', btn.dataset.email);
-            if (error) alert(error.message);
-            else loadUsers();
+            if (!confirm(`Permanently delete ${btn.dataset.email}? This cannot be undone.`)) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Deleting...';
+
+            try {
+                const res = await fetch(DELETE_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ email: btn.dataset.email })
+                });
+
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error || 'Delete failed');
+
+                loadUsers();
+            } catch (e) {
+                alert(e.message);
+                btn.disabled = false;
+                btn.textContent = 'Delete';
+            }
         });
     });
 }
