@@ -13,6 +13,7 @@
         .severity-critical { background: #fee2e2; color: #991b1b; }
         .status-open { background: #dbeafe; color: #1e40af; }
         .status-resolved { background: #dcfce7; color: #166534; }
+        .notes-box { background: #f8fafc; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -78,7 +79,7 @@ function renderTickets() {
         const stClass = t.status === 'OPEN' ? 'status-open' : 'status-resolved';
         const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK') : '-';
         return `
-        <div class="list-group-item ticket-card mb-2">
+        <div class="list-group-item ticket-card mb-2" data-id="${t.id}">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <strong>${t.inc_number || '-'}</strong>
@@ -90,10 +91,32 @@ function renderTickets() {
                 <div class="text-end small text-muted">${time}</div>
             </div>
             <div class="small mt-2 text-break">${t.message || ''}</div>
+            <div class="notes-box p-2 mt-2">
+                <div class="small text-muted mb-1">備註</div>
+                <textarea class="form-control form-control-sm notes-input" rows="2" data-id="${t.id}">${t.notes || ''}</textarea>
+                <button class="btn btn-sm btn-outline-primary mt-1 save-notes" data-id="${t.id}">儲存備註</button>
+            </div>
         </div>`;
     }).join('');
 
     document.getElementById('ticketList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
+
+    // 綁定儲存備註
+    document.querySelectorAll('.save-notes').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const notes = document.querySelector(`.notes-input[data-id="${id}"]`).value;
+            const { error } = await supabaseClient
+                .from('tickets')
+                .update({ notes })
+                .eq('id', id);
+            if (error) alert(error.message);
+            else {
+                btn.textContent = '已儲存';
+                setTimeout(() => btn.textContent = '儲存備註', 1500);
+            }
+        });
+    });
 }
 
 document.getElementById('searchInput').addEventListener('input', renderTickets);
