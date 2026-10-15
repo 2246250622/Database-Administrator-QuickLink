@@ -190,8 +190,8 @@
           <div class="card-body p-2 d-flex flex-column" style="height: calc(100% - 46px);">
             <div id="chatMessages" class="flex-grow-1 overflow-auto mb-2" style="font-size:0.85rem; background:#f8fafc; border-radius:6px; padding:8px;"></div>
             <form id="chatForm" class="d-flex gap-1">
-              <input type="text" id="chatInput" class="form-control form-control-sm" placeholder="訊息..." autocomplete="off">
-              <button type="submit" class="btn btn-sm btn-primary">送</button>
+              <input type="text" id="chatInput" class="form-control form-control-sm" placeholder="Message..." autocomplete="off">
+              <button type="submit" class="btn btn-sm btn-primary">Submit</button>
             </form>
           </div>
         </div>
@@ -234,11 +234,11 @@
 
         messagesDiv.innerHTML = '';
         if (error) {
-          messagesDiv.innerHTML = `<div class="text-danger small">載入失敗：${error.message}</div>`;
+          messagesDiv.innerHTML = `<div class="text-danger small">Load Failed: ${error.message}</div>`;
           return;
         }
         if (!msgs || msgs.length === 0) {
-          messagesDiv.innerHTML = '<div class="text-muted small">尚無訊息</div>';
+          messagesDiv.innerHTML = '<div class="text-muted small">No messages yet</div>';
         } else {
           msgs.forEach(renderMsg);
         }
