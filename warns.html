@@ -8,9 +8,20 @@
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background: #f8fafc; }
-        .warn-card { border-left: 4px solid #f59e0b; }
-        .severity-warn { background: #fef3c7; color: #92400e; }
+        body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; }
+        .warn-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            transition: box-shadow 0.15s;
+        }
+        .warn-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .badge-warn { background: #fef3c7; color: #d97706; font-weight: 600; }
+        .host-link { color: #64748b; }
+        .host-link:hover { color: #7c3aed; }
+        .message-preview { color: #64748b; line-height: 1.5; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -26,10 +37,10 @@
 
     <div class="d-flex gap-2 flex-wrap mb-3">
         <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:280px" placeholder="搜尋 INC / Host / Message...">
+        <span id="stats" class="small text-muted align-self-center ms-auto">載入中...</span>
     </div>
 
-    <div id="stats" class="small text-muted mb-2">載入中...</div>
-    <div id="warnList" class="list-group"></div>
+    <div id="warnList"></div>
 </div>
 
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
@@ -41,13 +52,14 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 let allWarns = [];
 
 async function loadWarns() {
+    document.getElementById('stats').textContent = '載入中...';
     const { data, error } = await supabaseClient
         .from('warns')
         .select('*')
         .order('occurred_at', { ascending: false });
 
     if (error) {
-        document.getElementById('stats').textContent = '載入失敗：' + error.message;
+        document.getElementById('stats').textContent = '載入失敗';
         return;
     }
     allWarns = data || [];
@@ -63,26 +75,39 @@ function renderWarns() {
         return true;
     });
 
-    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allWarns.length} 筆`;
+    document.getElementById('stats').textContent = `${filtered.length} / ${allWarns.length}`;
+
+    if (filtered.length === 0) {
+        document.getElementById('warnList').innerHTML = `
+            <div class="empty-state">
+                <div class="fs-1 mb-2">⚠️</div>
+                <div>沒有符合的資料</div>
+            </div>`;
+        return;
+    }
 
     const html = filtered.map(t => {
-        const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK') : '-';
+        const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
         return `
-        <div class="list-group-item warn-card mb-2">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <strong>${t.inc_number || '-'}</strong>
-                    <span class="badge severity-warn ms-2">WARN</span>
-                    <div class="small text-muted mt-1">${t.hostname || '-'}</div>
-                    <div class="small mt-1">${t.object || ''}</div>
+        <div class="warn-card p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <strong class="text-dark">${t.inc_number || '-'}</strong>
+                    <span class="badge badge-warn">WARN</span>
                 </div>
-                <div class="text-end small text-muted">${time}</div>
+                <small class="text-muted">${time}</small>
             </div>
-            <div class="small mt-2 text-break">${t.message || ''}</div>
+            <div class="mb-1">
+                <a href="dbaas_list.html?host=${encodeURIComponent(t.hostname || '')}" class="host-link text-decoration-none small">
+                    ${t.hostname || '-'}
+                </a>
+            </div>
+            <div class="small text-muted mb-2">${t.object || ''}</div>
+            <div class="message-preview small">${t.message || ''}</div>
         </div>`;
     }).join('');
 
-    document.getElementById('warnList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
+    document.getElementById('warnList').innerHTML = html;
 }
 
 document.getElementById('searchInput').addEventListener('input', renderWarns);
