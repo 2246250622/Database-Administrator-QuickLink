@@ -18,7 +18,7 @@
 <div id="navbar-placeholder"></div>
 <script src="./assets/js/navbar.js"></script>
 
-<div class="container">
+<div class="container" id="mainContent" style="display:none;">
     <div class="card shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <div>
@@ -39,15 +39,34 @@
     </div>
 </div>
 
+<div id="denied" class="container text-center py-5" style="display:none;">
+    <h4 class="text-danger">Access Denied</h4>
+    <p class="text-muted">Only the owner can access this page.</p>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 const APPROVE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/approve-user";
 
+// ← 改成你的 owner email
+const OWNER_EMAIL = "a232007120104@gmail.com";
+
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allUsers = [];
+
+async function checkOwner() {
+    const { data } = await supabaseClient.auth.getSession();
+    const email = data?.session?.user?.email;
+    if (email === OWNER_EMAIL) {
+        document.getElementById('mainContent').style.display = 'block';
+        loadUsers();
+    } else {
+        document.getElementById('denied').style.display = 'block';
+    }
+}
 
 async function loadUsers() {
     const status = document.getElementById('statusFilter').value;
@@ -55,7 +74,6 @@ async function loadUsers() {
     if (status) query = query.eq('status', status);
 
     const { data, error } = await query;
-
     const listEl = document.getElementById('list');
     const loadingEl = document.getElementById('loading');
 
@@ -84,8 +102,9 @@ async function loadUsers() {
             </div>
             <div class="btn-group btn-group-sm">
                 ${u.status === 'pending' ? `<button class="btn btn-outline-primary approve-btn" data-email="${u.email}" data-password="${u.password}">Approve</button>` : ''}
-                ${u.status !== 'banned' ? `<button class="btn btn-outline-danger ban-btn" data-email="${u.email}">Ban</button>` : ''}
+                ${u.status !== 'banned' ? `<button class="btn btn-outline-warning ban-btn" data-email="${u.email}">Ban</button>` : ''}
                 ${u.status === 'banned' ? `<button class="btn btn-outline-secondary unban-btn" data-email="${u.email}">Unban</button>` : ''}
+                <button class="btn btn-outline-danger delete-btn" data-email="${u.email}">Delete</button>
             </div>
         </div>`;
     }).join('');
@@ -101,7 +120,6 @@ function bindButtons() {
             const password = btn.dataset.password;
             btn.disabled = true;
             btn.textContent = 'Approving...';
-
             try {
                 const res = await fetch(APPROVE_FUNCTION_URL, {
                     method: 'POST',
@@ -122,25 +140,26 @@ function bindButtons() {
         });
     });
 
-    // Ban
-    document.querySelectorAll('.ban-btn').forEach(btn => {
+    // Ban / Unban
+    document.querySelectorAll('.ban-btn, .unban-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-            if (!confirm(`Ban ${btn.dataset.email}?`)) return;
+            const newStatus = btn.classList.contains('ban-btn') ? 'banned' : 'pending';
             const { error } = await supabaseClient
                 .from('pending_user')
-                .update({ status: 'banned' })
+                .update({ status: newStatus })
                 .eq('email', btn.dataset.email);
             if (error) alert(error.message);
             else loadUsers();
         });
     });
 
-    // Unban
-    document.querySelectorAll('.unban-btn').forEach(btn => {
+    // Delete
+    document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
+            if (!confirm(`Delete ${btn.dataset.email} permanently?`)) return;
             const { error } = await supabaseClient
                 .from('pending_user')
-                .update({ status: 'pending' })
+                .delete()
                 .eq('email', btn.dataset.email);
             if (error) alert(error.message);
             else loadUsers();
@@ -149,7 +168,7 @@ function bindButtons() {
 }
 
 document.getElementById('statusFilter').addEventListener('change', loadUsers);
-loadUsers();
+checkOwner();
 </script>
 </body>
 </html>
