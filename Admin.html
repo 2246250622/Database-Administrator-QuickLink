@@ -141,14 +141,39 @@ function bindButtons() {
     });
 
     // Ban / Unban
-    document.querySelectorAll('.ban-btn, .unban-btn').forEach(btn => {
+    const BAN_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/ban-user";
+
+    // Ban
+    document.querySelectorAll('.ban-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-            const newStatus = btn.classList.contains('ban-btn') ? 'banned' : 'pending';
-            const { error } = await supabaseClient
-                .from('pending_user')
-                .update({ status: newStatus })
-                .eq('email', btn.dataset.email);
-            if (error) alert(error.message);
+            if (!confirm(`Ban ${btn.dataset.email}?`)) return;
+            const res = await fetch(BAN_FUNCTION_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ email: btn.dataset.email, ban: true })
+            });
+            const result = await res.json();
+            if (!res.ok) alert(result.error || 'Ban failed');
+            else loadUsers();
+        });
+    });
+
+    // Unban
+    document.querySelectorAll('.unban-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const res = await fetch(BAN_FUNCTION_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ email: btn.dataset.email, ban: false })
+            });
+            const result = await res.json();
+            if (!res.ok) alert(result.error || 'Unban failed');
             else loadUsers();
         });
     });
