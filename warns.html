@@ -11,8 +11,6 @@
         body { background: #f8fafc; }
         .warn-card { border-left: 4px solid #f59e0b; }
         .severity-warn { background: #fef3c7; color: #92400e; }
-        .status-open { background: #dbeafe; color: #1e40af; }
-        .notes-box { background: #f8fafc; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -75,38 +73,16 @@ function renderWarns() {
                 <div>
                     <strong>${t.inc_number || '-'}</strong>
                     <span class="badge severity-warn ms-2">WARN</span>
-                    <span class="badge status-open">${t.status || '-'}</span>
                     <div class="small text-muted mt-1">${t.hostname || '-'}</div>
                     <div class="small mt-1">${t.object || ''}</div>
                 </div>
                 <div class="text-end small text-muted">${time}</div>
             </div>
             <div class="small mt-2 text-break">${t.message || ''}</div>
-            <div class="notes-box p-2 mt-2">
-                <div class="small text-muted mb-1">備註</div>
-                <textarea class="form-control form-control-sm notes-input" rows="2" data-id="${t.id}">${t.notes || ''}</textarea>
-                <button class="btn btn-sm btn-outline-primary mt-1 save-notes" data-id="${t.id}">儲存備註</button>
-            </div>
         </div>`;
     }).join('');
 
     document.getElementById('warnList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
-
-    document.querySelectorAll('.save-notes').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            const notes = document.querySelector(`.notes-input[data-id="${id}"]`).value;
-            const { error } = await supabaseClient
-                .from('warns')
-                .update({ notes })
-                .eq('id', id);
-            if (error) alert(error.message);
-            else {
-                btn.textContent = '已儲存';
-                setTimeout(() => btn.textContent = '儲存備註', 1500);
-            }
-        });
-    });
 }
 
 document.getElementById('searchInput').addEventListener('input', renderWarns);
