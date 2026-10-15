@@ -19,10 +19,16 @@
           </svg>
         </button>
 
-
-        <button type="button" class="btn btn-outline-custom" data-page="tickets.html">Tickets</button>
-        <button type="button" class="btn btn-outline-custom" data-page="warns.html">Warns</button>
-        <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
+<div class="dropdown">
+  <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">
+    Alerts
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="tickets.html">Tickets</a></li>
+    <li><a class="dropdown-item" href="warns.html">Warns</a></li>
+  </ul>
+</div>
+      <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
         <button type="button" class="btn btn-outline-custom" data-page="analyzer.html">Troubleshooting</button>
         <button type="button" class="btn btn-outline-custom" data-page="DBaaS_Summary.html">GCIS DBaaS Summary</button>
         <button type="button" class="btn btn-outline-custom" data-page="Converter.html">Unit Converter⚡</button>
