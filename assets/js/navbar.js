@@ -33,6 +33,7 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</a></li>
               <li><a class="dropdown-item" href="DBaaS_Summary.html">GCIS DBaaS Summary</a></li>
+              <li><a class="dropdown-item" href="bookmark.html">Bookmarks</a></li>
             </ul>
           </div>
 
