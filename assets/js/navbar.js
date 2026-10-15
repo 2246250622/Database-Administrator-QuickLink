@@ -192,6 +192,99 @@
       });
     });
 
+
+      // ===== 浮動聊天室 =====
+  function injectChatWidget() {
+    const widget = document.createElement('div');
+    widget.innerHTML = `
+      <div id="chatWidget" style="position:fixed; bottom:20px; right:20px; z-index:9999;">
+        <button id="chatToggle" class="btn btn-primary rounded-circle shadow" style="width:56px; height:56px; font-size:24px;">
+          💬
+        </button>
+        <div id="chatPanel" class="card shadow" style="display:none; position:absolute; bottom:70px; right:0; width:320px; height:420px;">
+          <div class="card-header d-flex justify-content-between align-items-center py-2">
+            <strong>Chatroom</strong>
+            <button class="btn-close btn-sm" id="chatClose"></button>
+          </div>
+          <div class="card-body p-2 d-flex flex-column" style="height:100%;">
+            <div id="chatMessages" class="flex-grow-1 overflow-auto mb-2" style="font-size:0.85rem;"></div>
+            <form id="chatForm" class="d-flex gap-1">
+              <input type="text" id="chatInput" class="form-control form-control-sm" placeholder="訊息..." autocomplete="off">
+              <button type="submit" class="btn btn-sm btn-primary">送</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(widget);
+
+    const toggle = document.getElementById('chatToggle');
+    const panel = document.getElementById('chatPanel');
+    const closeBtn = document.getElementById('chatClose');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('chatInput');
+    const messagesDiv = document.getElementById('chatMessages');
+
+    let myEmail = 'Anonymous';
+    let subscribed = false;
+
+    toggle.addEventListener('click', async () => {
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      if (panel.style.display === 'block' && !subscribed) {
+        await initChat();
+        subscribed = true;
+      }
+    });
+
+    closeBtn.addEventListener('click', () => panel.style.display = 'none');
+
+    async function initChat() {
+      const { data } = await window.supabaseClient.auth.getSession();
+      if (data.session) myEmail = data.session.user.email;
+
+      const { data: msgs } = await window.supabaseClient
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: true })
+        .limit(50);
+
+      if (msgs) msgs.forEach(renderMsg);
+
+      window.supabaseClient
+        .channel('chat-widget')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+          renderMsg(payload.new);
+        })
+        .subscribe();
+    }
+
+    function renderMsg(msg) {
+      const isMine = msg.user_email === myEmail;
+      const time = new Date(msg.created_at).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+      const div = document.createElement('div');
+      div.className = 'mb-1' + (isMine ? ' text-end' : '');
+      div.innerHTML = `<div class="small text-muted">${msg.user_email.split('@')[0]} · ${time}</div>
+                       <span class="badge ${isMine ? 'bg-primary' : 'bg-secondary'}">${escapeHtml(msg.content)}</span>`;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function escapeHtml(t) {
+      const d = document.createElement('div');
+      d.textContent = t;
+      return d.innerHTML;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = input.value.trim();
+      if (!content) return;
+      await window.supabaseClient.from('messages').insert({ user_email: myEmail, content });
+      input.value = '';
+    });
+  }
+
+
     function initModal() {
       if (typeof bootstrap === "undefined") {
         setTimeout(initModal, 50);
@@ -213,6 +306,9 @@
 
   // 啟動
   loadSupabase(initAuth);
+  
+  // 在 injectNavbar 最後呼叫
+  injectChatWidget();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", injectNavbar);
