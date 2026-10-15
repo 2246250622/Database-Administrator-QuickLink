@@ -60,8 +60,8 @@
                     <div class="card-header">
                       <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item"><a href="#home" class="nav-link active" data-bs-toggle="tab">Server List</a></li>
-                        <li class="nav-item"><a href="#profile" class="nav-link" data-bs-toggle="tab">2</a></li>
-                        <li class="nav-item"><a href="#stake" class="nav-link" data-bs-toggle="tab">3</a></li>
+                        <li class="nav-item"><a href="#profile" class="nav-link" data-bs-toggle="tab">Inventory</a></li>
+                        <li class="nav-item"><a href="#stake" class="nav-link" data-bs-toggle="tab">CA InFo</a></li>
                       </ul>
                     </div>
                     <div class="card-body">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="tab-pane fade" id="stake">
                           <div class="list-group">
-                            <a href="" class="list-group-item list-group-item-action list-group-item-success" target="_blank">Empty</a>
+                          <a href="ca_info.html" class="list-group-item list-group-item-action list-group-item-success" target="_blank">CA Info</a>
                           </div>
                         </div>
                       </div>
