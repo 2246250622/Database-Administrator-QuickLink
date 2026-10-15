@@ -96,6 +96,14 @@ async function autoLoad() {
         populateDropdowns();
         document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
         renderList();
+
+        // 載入完成後檢查 URL 參數
+        const params = new URLSearchParams(location.search);
+        const hostParam = params.get('host');
+        if (hostParam) {
+            document.getElementById('searchInput').value = hostParam;
+            renderList();
+        }
     } catch (e) {
         document.getElementById('stats').textContent = '載入失敗，請確認 GCIS DBaaS Summary2.xls 在根目錄';
         console.error(e);
@@ -184,6 +192,8 @@ function renderList() {
     document.getElementById(id).addEventListener('input', renderList);
     document.getElementById(id).addEventListener('change', renderList);
 });
+
+
 
 autoLoad();
 </script>

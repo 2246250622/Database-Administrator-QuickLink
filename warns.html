@@ -87,6 +87,7 @@ function renderWarns() {
 
 document.getElementById('searchInput').addEventListener('input', renderWarns);
 loadWarns();
+setInterval(loadWarns, 30000);
 </script>
 </body>
 </html>

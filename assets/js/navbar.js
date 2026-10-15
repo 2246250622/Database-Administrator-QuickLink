@@ -221,6 +221,32 @@
 
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
 
+      // ===== 新 INC 通知 =====
+  let lastTicketCount = 0;
+
+  async function checkNewTickets() {
+    if (!window.supabaseClient) return;
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    const { data } = await window.supabaseClient
+      .from('tickets')
+      .select('id')
+      .eq('status', 'OPEN');
+    const count = data?.length || 0;
+    if (lastTicketCount > 0 && count > lastTicketCount) {
+      if (Notification.permission === 'granted') {
+        new Notification('新 CRITICAL INC', {
+          body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
+          icon: 'IMG_3755.jpg'
+        });
+      }
+    }
+    lastTicketCount = count;
+  }
+
+  setInterval(checkNewTickets, 60000);
+  setTimeout(checkNewTickets, 3000);
     async function initChat() {
       try {
         const { data } = await window.supabaseClient.auth.getSession();

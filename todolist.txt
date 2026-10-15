@@ -8,6 +8,10 @@
 ❎9. Add the Forum
 ✅10. Develop Ticket System with 3 status => Complated / Pending / Cancel
 ✅11. Fix Error Message When Approving Account
+⚠️12. 自動重新整理 | tickets.html warns.html 
+⚠️13. Dashboard 首頁 | 顯示今天 OPEN 幾筆、CRITICAL 幾筆、最近 5 筆
+⚠️14. 新 INC 通知 | 有新 CRITICAL 時，瀏覽器彈通知 
+⚠️15. 關聯 Server List | 點 Host 可以跳到對應的伺服器資訊 
 
 
 API:

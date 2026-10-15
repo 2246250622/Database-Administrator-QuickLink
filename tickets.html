@@ -9,11 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #f8fafc; }
-        .ticket-card { border-left: 4px solid #ef4444; }
+        .ticket-card { border-left: 4px solid #ef4444; cursor: pointer; }
+        .ticket-card:hover { background: #faf5ff; }
         .severity-critical { background: #fee2e2; color: #991b1b; }
         .status-open { background: #dbeafe; color: #1e40af; }
         .status-resolved { background: #dcfce7; color: #166534; }
-        .notes-box { background: #f8fafc; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -40,6 +40,36 @@
     <div id="ticketList" class="list-group"></div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="ticketModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">INC</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalInfo" class="mb-3"></div>
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select id="modalStatus" class="form-select">
+                        <option value="OPEN">OPEN</option>
+                        <option value="RESOLVED">RESOLVED</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">備註</label>
+                    <textarea id="modalNotes" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-primary" id="saveModal">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
@@ -47,6 +77,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allTickets = [];
+let currentTicket = null;
+let ticketModal = null;
 
 async function loadTickets() {
     const { data, error } = await supabaseClient
@@ -85,62 +117,64 @@ function renderTickets() {
                     <strong>${t.inc_number || '-'}</strong>
                     <span class="badge severity-critical ms-2">CRITICAL</span>
                     <span class="badge ${stClass}">${t.status || '-'}</span>
-                    <div class="small text-muted mt-1">${t.hostname || '-'}</div>
+                    <div class="small text-muted mt-1">
+                        <a href="dbaas_list.html?host=${encodeURIComponent(t.hostname || '')}" class="text-decoration-none" onclick="event.stopPropagation()">${t.hostname || '-'}</a>
+                    </div>
                     <div class="small mt-1">${t.object || ''}</div>
                 </div>
                 <div class="text-end small text-muted">${time}</div>
             </div>
-            <div class="small mt-2 text-break">${t.message || ''}</div>
-            ${t.status !== 'RESOLVED' ? `<button class="btn btn-sm btn-outline-success mt-2 resolve-btn" data-id="${t.id}">標記為 Resolved</button>` : '<span class="badge status-resolved mt-2">已解決</span>'}
-            <div class="notes-box p-2 mt-2">
-                <div class="small text-muted mb-1">備註</div>
-                <textarea class="form-control form-control-sm notes-input" rows="2" data-id="${t.id}">${t.notes || ''}</textarea>
-                <button class="btn btn-sm btn-outline-primary mt-1 save-notes" data-id="${t.id}">儲存備註</button>
-            </div>
+            <div class="small mt-2 text-break text-muted">${(t.message || '').slice(0, 100)}${(t.message || '').length > 100 ? '...' : ''}</div>
         </div>`;
     }).join('');
 
     document.getElementById('ticketList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
 
-    document.querySelectorAll('.resolve-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            btn.disabled = true;
-            btn.textContent = '處理中...';
-            const { error } = await supabaseClient
-                .from('tickets')
-                .update({ status: 'RESOLVED' })
-                .eq('id', id);
-            if (error) {
-                alert(error.message);
-                btn.disabled = false;
-                btn.textContent = '標記為 Resolved';
-            } else {
-                loadTickets();
-            }
-        });
-    });
-
-    document.querySelectorAll('.save-notes').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            const notes = document.querySelector(`.notes-input[data-id="${id}"]`).value;
-            const { error } = await supabaseClient
-                .from('tickets')
-                .update({ notes })
-                .eq('id', id);
-            if (error) alert(error.message);
-            else {
-                btn.textContent = '已儲存';
-                setTimeout(() => btn.textContent = '儲存備註', 1500);
-            }
-        });
+    document.querySelectorAll('.ticket-card').forEach(card => {
+        card.addEventListener('click', () => openModal(card.dataset.id));
     });
 }
+
+function openModal(id) {
+    currentTicket = allTickets.find(t => t.id === id);
+    if (!currentTicket) return;
+
+    document.getElementById('modalTitle').textContent = currentTicket.inc_number;
+    document.getElementById('modalInfo').innerHTML = `
+        <div><strong>Host:</strong> ${currentTicket.hostname || '-'}</div>
+        <div><strong>Object:</strong> ${currentTicket.object || '-'}</div>
+        <div><strong>Severity:</strong> ${currentTicket.severity || '-'}</div>
+        <div class="mt-2"><strong>Message:</strong><br>${currentTicket.message || '-'}</div>
+    `;
+    document.getElementById('modalStatus').value = currentTicket.status || 'OPEN';
+    document.getElementById('modalNotes').value = currentTicket.notes || '';
+
+    if (!ticketModal) ticketModal = new bootstrap.Modal(document.getElementById('ticketModal'));
+    ticketModal.show();
+}
+
+document.getElementById('saveModal').addEventListener('click', async () => {
+    if (!currentTicket) return;
+    const status = document.getElementById('modalStatus').value;
+    const notes = document.getElementById('modalNotes').value;
+
+    const { error } = await supabaseClient
+        .from('tickets')
+        .update({ status, notes })
+        .eq('id', currentTicket.id);
+
+    if (error) {
+        alert(error.message);
+    } else {
+        ticketModal.hide();
+        loadTickets();
+    }
+});
 
 document.getElementById('searchInput').addEventListener('input', renderTickets);
 document.getElementById('statusFilter').addEventListener('change', renderTickets);
 loadTickets();
+setInterval(loadTickets, 30000);
 </script>
 </body>
 </html>
