@@ -91,6 +91,7 @@ function renderTickets() {
                 <div class="text-end small text-muted">${time}</div>
             </div>
             <div class="small mt-2 text-break">${t.message || ''}</div>
+            ${t.status !== 'RESOLVED' ? `<button class="btn btn-sm btn-outline-success mt-2 resolve-btn" data-id="${t.id}">標記為 Resolved</button>` : '<span class="badge status-resolved mt-2">已解決</span>'}
             <div class="notes-box p-2 mt-2">
                 <div class="small text-muted mb-1">備註</div>
                 <textarea class="form-control form-control-sm notes-input" rows="2" data-id="${t.id}">${t.notes || ''}</textarea>
@@ -101,7 +102,25 @@ function renderTickets() {
 
     document.getElementById('ticketList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
 
-    // 綁定儲存備註
+    document.querySelectorAll('.resolve-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            btn.disabled = true;
+            btn.textContent = '處理中...';
+            const { error } = await supabaseClient
+                .from('tickets')
+                .update({ status: 'RESOLVED' })
+                .eq('id', id);
+            if (error) {
+                alert(error.message);
+                btn.disabled = false;
+                btn.textContent = '標記為 Resolved';
+            } else {
+                loadTickets();
+            }
+        });
+    });
+
     document.querySelectorAll('.save-notes').forEach(btn => {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
