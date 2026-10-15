@@ -1,6 +1,9 @@
 1. Real Time Chatroom
-2. Fix reset Password and Create account => email link are localhost:3000
-3. Translate ENG/繁/簡
+2. Translate ENG/繁/簡
+3. Add the Forum
+4. Develop Ticket System with 3 status => Complated / Pending / Cancel
+5.
+
 
 
 API:
@@ -13,4 +16,8 @@ SignUP API:
 https://fyrzooerrrmkwrbjapoa.supabase.co/rest/v1/pending_user
 
 
-Could not find the table 'public.pending_users' in the schema cache
+Error Message When Approving Account:
+Approve failed: {"code":"UNAUTHORIZED_NO_AUTH_HEADER","message":"Missing authorization header"}
+
+
+

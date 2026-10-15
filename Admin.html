@@ -81,10 +81,13 @@ async function loadPending() {
 
             try {
                 const res = await fetch(APPROVE_FUNCTION_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({ email, password })
+            });
 
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error || JSON.stringify(result));
