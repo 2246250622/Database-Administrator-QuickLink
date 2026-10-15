@@ -1,9 +1,13 @@
-1. Real Time Chatroom
-2. Translate ENG/繁/簡
-3. Add the Forum
-4. Develop Ticket System with 3 status => Complated / Pending / Cancel
-5.
-
+✅1. Hidden Login Password
+✅2. Encryption Password
+✅3. Add Session
+✅5. Add Inventory List
+✅6. Fix reset Password and Create account => email link are localhost:3000
+⚠️7. Real Time Chatroom
+⚠️8. Translate ENG/繁/簡
+⚠️9. Add the Forum
+✅10. Develop Ticket System with 3 status => Complated / Pending / Cancel
+✅11. Fix Error Message When Approving Account
 
 
 API:
@@ -12,12 +16,15 @@ https://fyrzooerrrmkwrbjapoa.supabase.co
 Key:
 sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0
 
-SignUP API:
-https://fyrzooerrrmkwrbjapoa.supabase.co/rest/v1/pending_user
+API:
+analyze-logs
+https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/analyze-logs
 
+approve-user
+https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/approve-user
 
-✅Error Message When Approving Account:
-Approve failed: {"code":"UNAUTHORIZED_NO_AUTH_HEADER","message":"Missing authorization header"}
+ban-user
+https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/ban-user
 
-
-
+delete-user
+https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user
