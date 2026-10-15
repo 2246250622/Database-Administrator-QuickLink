@@ -28,3 +28,15 @@ https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/ban-user
 
 delete-user
 https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user
+
+5qK$R3JC$VkbwJpD
+
+
+
+Time: 
+INC: INC
+Status: OPEN
+HostName: 
+Severity: CRITICAL
+Object: 
+Message: 

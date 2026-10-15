@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>INC Tickets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background: #f8fafc; }
+        .ticket-card { border-left: 4px solid #ef4444; }
+        .severity-critical { background: #fee2e2; color: #991b1b; }
+        .status-open { background: #dbeafe; color: #1e40af; }
+        .status-resolved { background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+<script src="./assets/js/navbar.js"></script>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">INC Tickets</h4>
+        <button class="btn btn-sm btn-outline-secondary" onclick="loadTickets()">重新載入</button>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:280px" placeholder="搜尋 INC / Host / Message...">
+        <select id="statusFilter" class="form-select form-select-sm" style="max-width:160px">
+            <option value="">全部 Status</option>
+            <option value="OPEN">OPEN</option>
+            <option value="RESOLVED">RESOLVED</option>
+        </select>
+    </div>
+
+    <div id="stats" class="small text-muted mb-2">載入中...</div>
+    <div id="ticketList" class="list-group"></div>
+</div>
+
+<script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allTickets = [];
+
+async function loadTickets() {
+    const { data, error } = await supabaseClient
+        .from('tickets')
+        .select('*')
+        .order('occurred_at', { ascending: false });
+
+    if (error) {
+        document.getElementById('stats').textContent = '載入失敗：' + error.message;
+        return;
+    }
+    allTickets = data || [];
+    renderTickets();
+}
+
+function renderTickets() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const st = document.getElementById('statusFilter').value;
+
+    const filtered = allTickets.filter(t => {
+        const text = `${t.inc_number} ${t.hostname} ${t.message} ${t.title}`.toLowerCase();
+        if (q && !text.includes(q)) return false;
+        if (st && t.status !== st) return false;
+        return true;
+    });
+
+    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allTickets.length} 筆`;
+
+    const html = filtered.map(t => {
+        const stClass = t.status === 'OPEN' ? 'status-open' : 'status-resolved';
+        const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK') : '-';
+        return `
+        <div class="list-group-item ticket-card mb-2">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${t.inc_number || '-'}</strong>
+                    <span class="badge severity-critical ms-2">CRITICAL</span>
+                    <span class="badge ${stClass}">${t.status || '-'}</span>
+                    <div class="small text-muted mt-1">${t.hostname || '-'}</div>
+                    <div class="small mt-1">${t.object || ''}</div>
+                </div>
+                <div class="text-end small text-muted">${time}</div>
+            </div>
+            <div class="small mt-2 text-break">${t.message || ''}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('ticketList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
+}
+
+document.getElementById('searchInput').addEventListener('input', renderTickets);
+document.getElementById('statusFilter').addEventListener('change', renderTickets);
+loadTickets();
+</script>
+</body>
+</html>

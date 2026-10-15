@@ -19,6 +19,9 @@
           </svg>
         </button>
 
+
+        <button type="button" class="btn btn-outline-custom" data-page="tickets.html">Tickets</button>
+        <button type="button" class="btn btn-outline-custom" data-page="warns.html">Warns</button>
         <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</button>
         <button type="button" class="btn btn-outline-custom" data-page="analyzer.html">Troubleshooting</button>
         <button type="button" class="btn btn-outline-custom" data-page="DBaaS_Summary.html">GCIS DBaaS Summary</button>
