@@ -46,7 +46,6 @@
           </div>
         </div>
 
-        <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -182,7 +181,10 @@
     const widget = document.createElement('div');
     widget.innerHTML = `
       <div id="chatWidget" style="position:fixed; bottom:20px; right:20px; z-index:9999;">
-        <button id="chatToggle" class="btn btn-primary rounded-circle shadow" style="width:56px; height:56px; font-size:24px;">💬</button>
+        <button id="chatToggle" class="btn btn-primary rounded-circle shadow position-relative" style="width:56px; height:56px; font-size:24px;">
+          💬
+          <span id="unreadBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none; font-size:0.65rem;">0</span>
+        </button>
         <div id="chatPanel" class="card shadow" style="display:none; position:absolute; bottom:70px; right:0; width:340px; height:450px;">
           <div class="card-header d-flex justify-content-between align-items-center py-2">
             <strong>Chatroom</strong>
@@ -206,48 +208,64 @@
     const form = document.getElementById('chatForm');
     const input = document.getElementById('chatInput');
     const messagesDiv = document.getElementById('chatMessages');
+    const unreadBadge = document.getElementById('unreadBadge');
 
     let myEmail = 'Anonymous';
     let loaded = false;
+    let unreadCount = 0;
+
+    function updateBadge() {
+      if (unreadCount > 0 && panel.style.display === 'none') {
+        unreadBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        unreadBadge.style.display = 'block';
+      } else {
+        unreadBadge.style.display = 'none';
+      }
+    }
 
     toggle.addEventListener('click', async () => {
       const isHidden = panel.style.display === 'none';
       panel.style.display = isHidden ? 'block' : 'none';
-      if (isHidden && !loaded) {
-        messagesDiv.innerHTML = '<div class="text-muted small">載入中...</div>';
-        await initChat();
-        loaded = true;
+      if (isHidden) {
+        unreadCount = 0;
+        updateBadge();
+        if (!loaded) {
+          messagesDiv.innerHTML = '<div class="text-muted small">載入中...</div>';
+          await initChat();
+          loaded = true;
+        }
       }
     });
 
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
 
-      // ===== 新 INC 通知 =====
-  let lastTicketCount = 0;
+    // ===== 新 INC 通知 =====
+    let lastTicketCount = 0;
 
-  async function checkNewTickets() {
-    if (!window.supabaseClient) return;
-    if (Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-    const { data } = await window.supabaseClient
-      .from('tickets')
-      .select('id')
-      .eq('status', 'OPEN');
-    const count = data?.length || 0;
-    if (lastTicketCount > 0 && count > lastTicketCount) {
-      if (Notification.permission === 'granted') {
-        new Notification('新 CRITICAL INC', {
-          body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
-          icon: 'IMG_3755.jpg'
-        });
+    async function checkNewTickets() {
+      if (!window.supabaseClient) return;
+      if (Notification.permission === 'default') {
+        Notification.requestPermission();
       }
+      const { data } = await window.supabaseClient
+        .from('tickets')
+        .select('id')
+        .eq('status', 'OPEN');
+      const count = data?.length || 0;
+      if (lastTicketCount > 0 && count > lastTicketCount) {
+        if (Notification.permission === 'granted') {
+          new Notification('新 CRITICAL INC', {
+            body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
+            icon: 'IMG_3755.jpg'
+          });
+        }
+      }
+      lastTicketCount = count;
     }
-    lastTicketCount = count;
-  }
 
-  setInterval(checkNewTickets, 60000);
-  setTimeout(checkNewTickets, 3000);
+    setInterval(checkNewTickets, 60000);
+    setTimeout(checkNewTickets, 3000);
+
     async function initChat() {
       try {
         const { data } = await window.supabaseClient.auth.getSession();
@@ -267,13 +285,13 @@
         if (!msgs || msgs.length === 0) {
           messagesDiv.innerHTML = '<div class="text-muted small">No messages yet</div>';
         } else {
-          msgs.forEach(renderMsg);
+          msgs.forEach(msg => renderMsg(msg, false));
         }
 
         window.supabaseClient
           .channel('chat-widget')
           .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-            renderMsg(payload.new);
+            renderMsg(payload.new, true);
           })
           .subscribe();
       } catch (e) {
@@ -281,7 +299,7 @@
       }
     }
 
-    function renderMsg(msg) {
+    function renderMsg(msg, isNew) {
       const isMine = msg.user_email === myEmail;
       const time = new Date(msg.created_at).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
       const div = document.createElement('div');
@@ -292,6 +310,11 @@
       `;
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      if (isNew && panel.style.display === 'none' && !isMine) {
+        unreadCount++;
+        updateBadge();
+      }
     }
 
     function escapeHtml(t) {
@@ -342,8 +365,6 @@
       }
     }
     initModal();
-
-    // 注入聊天室
     injectChatWidget();
   }
 
