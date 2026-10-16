@@ -51,6 +51,20 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 let allWarns = [];
 
+function cleanHostname(host) {
+    if (!host) return '-';
+    return host
+        .replace(/\.dbaas\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.mgt\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.dbaas\.gcis\.hksarg$/i, '')
+        .replace(/\.mgt\.gcis\.hksarg$/i, '');
+}
+
+function formatTime(dt) {
+    if (!dt) return '-';
+    return new Date(dt).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
 async function loadWarns() {
     document.getElementById('stats').textContent = '載入中...';
     const { data, error } = await supabaseClient
@@ -87,7 +101,8 @@ function renderWarns() {
     }
 
     const html = filtered.map(t => {
-        const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+        const time = formatTime(t.occurred_at);
+        const cleanHost = cleanHostname(t.hostname);
         return `
         <div class="warn-card p-3 mb-2">
             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -98,11 +113,11 @@ function renderWarns() {
                 <small class="text-muted">${time}</small>
             </div>
             <div class="mb-1">
-                <a href="dbaas_list.html?host=${encodeURIComponent(t.hostname || '')}" class="host-link text-decoration-none small">
-                    ${t.hostname || '-'}
+                <a href="dbaas_list.html?host=${encodeURIComponent(cleanHostname(t.hostname))}" class="host-link text-decoration-none small">
+                    ${cleanHost}
                 </a>
             </div>
-            <div class="small text-muted mb-2">${t.object || ''}</div>
+            <div class="small text-muted mb-2">${time}</div>
             <div class="message-preview small">${t.message || ''}</div>
         </div>`;
     }).join('');
@@ -112,7 +127,7 @@ function renderWarns() {
 
 document.getElementById('searchInput').addEventListener('input', renderWarns);
 loadWarns();
-setInterval(loadWarns, 30000);
+setInterval(loadWarns, 1000);
 </script>
 </body>
 </html>
