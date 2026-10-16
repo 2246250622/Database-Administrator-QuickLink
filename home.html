@@ -26,25 +26,25 @@
     <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card stat-card stat-open p-3">
-                <div class="text-muted small">Opening Ticket</div>
+                <div class="text-muted small">Opening Incident</div>
                 <div class="fs-2 fw-bold" id="openCount">-</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card stat-card stat-critical p-3">
-                <div class="text-muted small">Today ERROR</div>
+                <div class="text-muted small">Error (For Today)</div>
                 <div class="fs-2 fw-bold" id="criticalCount">-</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card stat-card stat-warn p-3">
-                <div class="text-muted small">Today WARN</div>
+                <div class="text-muted small">Warning (For Today)</div>
                 <div class="fs-2 fw-bold" id="warnCount">-</div>
             </div>
         </div>
     </div>
 
-    <h5 class="mb-3">Latest CRITICAL</h5>
+    <h5 class="mb-3">Latest Incident</h5>
     <div id="recentList" class="list-group"></div>
 </div>
 
@@ -85,7 +85,7 @@ async function loadDashboard() {
             <div class="small">${t.message?.slice(0, 80) || ''}</div>
         </a>
     `).join('');
-    document.getElementById('recentList').innerHTML = html || '<div class="text-muted p-3">今日無 CRITICAL</div>';
+    document.getElementById('recentList').innerHTML = html || '<div class="text-muted p-3">No Incident Was Found Today</div>';
 }
 
 loadDashboard();
