@@ -186,7 +186,7 @@ function renderTickets() {
                 <small class="text-muted">${time}</small>
             </div>
             <div class="mb-1">
-                <a href="dbaas_list.html?host=${encodeURIComponent(t.hostname || '')}" class="host-link text-decoration-none small" onclick="event.stopPropagation()">
+                <a href="dbaas_list.html?host=${encodeURIComponent(cleanHostname(t.hostname))}" class="host-link text-decoration-none small" onclick="event.stopPropagation()">
                     ${cleanHost}
                 </a>
             </div>
