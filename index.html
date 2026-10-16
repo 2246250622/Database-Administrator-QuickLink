@@ -41,6 +41,10 @@
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" placeholder="Enter password" required>
         </div>
+        <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe" checked>
+        <label class="form-check-label" for="rememberMe">Remember me</label>
+    </div>
         <button type="submit" class="btn btn-custom w-100" id="submitBtn">Login</button>
     </form>
 
@@ -148,7 +152,15 @@ form.addEventListener("submit", async function(e) {
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if (error) {
             showError(error.message);
-        } else {
+            } else {
+            const remember = document.getElementById("rememberMe").checked;
+            if (remember) {
+                localStorage.setItem("savedEmail", email);
+                localStorage.setItem("savedPassword", password);
+            } else {
+                localStorage.removeItem("savedEmail");
+                localStorage.removeItem("savedPassword");
+            }
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("lastActivity", Date.now().toString());
             window.location.href = "home.html";
@@ -163,6 +175,24 @@ supabaseClient.auth.getSession().then(({ data }) => {
         window.location.href = "home.html";
     }
 });
+
+
+
+
+// 頁面載入時自動填入
+window.addEventListener('DOMContentLoaded', () => {
+    const savedEmail = localStorage.getItem('savedEmail');
+    const savedPassword = localStorage.getItem('savedPassword');
+    if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('rememberMe').checked = true;
+    }
+    if (savedPassword) {
+        document.getElementById('password').value = savedPassword;
+    }
+});
+
+
 </script>
 </body>
 </html>
