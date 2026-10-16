@@ -21,7 +21,7 @@
           </button>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">Alerts</button>
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🚨 Alerts</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="tickets.html">Tickets</a></li>
               <li><a class="dropdown-item" href="warns.html">Warns</a></li>
@@ -29,7 +29,7 @@
           </div>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">DBaaS</button>
+                <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🗄️ DBaaS</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Server List⛏️</a></li>
               <li><a class="dropdown-item" href="DBaaS_Summary.html">GCIS DBaaS Summary</a></li>
@@ -38,7 +38,7 @@
           </div>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">Tools</button>
+              <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🔧 Tools</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="analyzer.html">Troubleshooting</a></li>
               <li><a class="dropdown-item" href="Converter.html">Unit Converter⚡</a></li>
@@ -254,7 +254,7 @@
       const count = data?.length || 0;
       if (lastTicketCount > 0 && count > lastTicketCount) {
         if (Notification.permission === 'granted') {
-          new Notification('新 CRITICAL INC', {
+            new Notification('🚨 新 CRITICAL INC', {
             body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
             icon: 'IMG_3755.jpg'
           });
