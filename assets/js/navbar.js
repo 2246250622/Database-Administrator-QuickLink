@@ -263,8 +263,8 @@
       lastTicketCount = count;
     }
 
-    setInterval(checkNewTickets, 60000);
-    setTimeout(checkNewTickets, 3000);
+    setInterval(checkNewTickets, 1000); // 每 1 秒檢查一次
+    setTimeout(checkNewTickets, 1000);
 
     async function initChat() {
       try {
