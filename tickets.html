@@ -118,6 +118,11 @@ function cleanHostname(host) {
         .replace(/\.mgt\.gcis\.hksarg$/i, '');
 }
 
+function formatTime(dt) {
+    if (!dt) return '-';
+    return new Date(dt).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
 async function loadBlackouts() {
     const { data } = await supabaseClient
         .from('blackouts')
@@ -173,7 +178,7 @@ function renderTickets() {
 
     const html = filtered.map(t => {
         const isResolved = t.status === 'RESOLVED';
-        const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+        const time = formatTime(t.occurred_at);
         const cleanHost = cleanHostname(t.hostname);
         return `
         <div class="ticket-card p-3 mb-2 ${isResolved ? 'resolved' : ''}" data-id="${t.id}">
@@ -190,7 +195,7 @@ function renderTickets() {
                     ${cleanHost}
                 </a>
             </div>
-            <div class="small text-muted mb-2">${t.object || ''}</div>
+            <div class="small text-muted mb-2">${time}</div>
             <div class="message-preview small">${(t.message || '').slice(0, 120)}${(t.message || '').length > 120 ? '...' : ''}</div>
         </div>`;
     }).join('');
@@ -210,8 +215,8 @@ function openModal(id) {
     document.getElementById('modalTitle').textContent = currentTicket.inc_number;
     document.getElementById('modalTime').textContent = time;
     document.getElementById('modalInfo').innerHTML = `
+        <div class="info-row"><span class="info-label">Time</span><span class="info-value">${time}</span></div>
         <div class="info-row"><span class="info-label">Host</span><span class="info-value">${cleanHostname(currentTicket.hostname)}</span></div>
-        <div class="info-row"><span class="info-label">Object</span><span class="info-value">${currentTicket.object || '-'}</span></div>
         <div class="info-row"><span class="info-label">Severity</span><span class="info-value">${currentTicket.severity || '-'}</span></div>
         <div class="info-row" style="border:none;"><span class="info-label">Message</span><span class="info-value">${currentTicket.message || '-'}</span></div>
     `;
