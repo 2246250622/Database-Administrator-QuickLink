@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; }
-        .page-header { background: #fff; border-bottom: 1px solid #e2e8f0; }
         .ticket-card {
             background: #fff;
             border: 1px solid #e2e8f0;
@@ -38,15 +37,12 @@
 <div id="navbar-placeholder"></div>
 <script src="./assets/js/navbar.js"></script>
 
-<div class="page-header py-3 mb-4">
-    <div class="container py-4">
+<div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">INC Tickets</h4>
         <button class="btn btn-sm btn-outline-secondary" onclick="loadTickets()">重新載入</button>
     </div>
-</div>
 
-<div class="container pb-4">
     <div class="d-flex gap-2 flex-wrap mb-3">
         <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:280px" placeholder="搜尋 INC / Host / Message...">
         <select id="statusFilter" class="form-select form-select-sm" style="max-width:140px">
@@ -81,10 +77,17 @@
                             <option value="RESOLVED">RESOLVED</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small text-muted">備註</label>
-                        <textarea id="modalNotes" class="form-control" rows="18" placeholder="輸入處理備註..."></textarea>
+                    <div class="col-md-8">
+                        <label class="form-label small text-muted">Blackout 此 Host</label>
+                        <div class="input-group">
+                            <input type="datetime-local" id="blackoutUntil" class="form-control">
+                            <button class="btn btn-outline-warning" id="addBlackout">屏蔽</button>
+                        </div>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label small text-muted">備註</label>
+                    <textarea id="modalNotes" class="form-control" rows="8" placeholder="輸入處理備註..."></textarea>
                 </div>
             </div>
             <div class="modal-footer bg-light">
@@ -104,9 +107,34 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 let allTickets = [];
 let currentTicket = null;
 let ticketModal = null;
+let blackoutHosts = new Set();
+
+function cleanHostname(host) {
+    if (!host) return '-';
+    return host
+        .replace(/\.dbaas\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.mgt\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.dbaas\.gcis\.hksarg$/i, '')
+        .replace(/\.mgt\.gcis\.hksarg$/i, '');
+}
+
+async function loadBlackouts() {
+    const { data } = await supabaseClient
+        .from('blackouts')
+        .select('hostname')
+        .gt('until', new Date().toISOString());
+    blackoutHosts = new Set((data || []).map(b => b.hostname));
+}
+
+async function setBlackout(host, until) {
+    await supabaseClient
+        .from('blackouts')
+        .upsert({ hostname: host, until: new Date(until).toISOString() }, { onConflict: 'hostname' });
+}
 
 async function loadTickets() {
     document.getElementById('stats').textContent = '載入中...';
+    await loadBlackouts();
     const { data, error } = await supabaseClient
         .from('tickets')
         .select('*')
@@ -125,6 +153,7 @@ function renderTickets() {
     const st = document.getElementById('statusFilter').value;
 
     const filtered = allTickets.filter(t => {
+        if (blackoutHosts.has(t.hostname)) return false;
         const text = `${t.inc_number} ${t.hostname} ${t.message} ${t.title}`.toLowerCase();
         if (q && !text.includes(q)) return false;
         if (st && t.status !== st) return false;
@@ -145,6 +174,7 @@ function renderTickets() {
     const html = filtered.map(t => {
         const isResolved = t.status === 'RESOLVED';
         const time = t.occurred_at ? new Date(t.occurred_at).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+        const cleanHost = cleanHostname(t.hostname);
         return `
         <div class="ticket-card p-3 mb-2 ${isResolved ? 'resolved' : ''}" data-id="${t.id}">
             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -157,7 +187,7 @@ function renderTickets() {
             </div>
             <div class="mb-1">
                 <a href="dbaas_list.html?host=${encodeURIComponent(t.hostname || '')}" class="host-link text-decoration-none small" onclick="event.stopPropagation()">
-                    ${t.hostname || '-'}
+                    ${cleanHost}
                 </a>
             </div>
             <div class="small text-muted mb-2">${t.object || ''}</div>
@@ -180,17 +210,36 @@ function openModal(id) {
     document.getElementById('modalTitle').textContent = currentTicket.inc_number;
     document.getElementById('modalTime').textContent = time;
     document.getElementById('modalInfo').innerHTML = `
-        <div class="info-row"><span class="info-label">Host</span><span class="info-value">${currentTicket.hostname || '-'}</span></div>
+        <div class="info-row"><span class="info-label">Host</span><span class="info-value">${cleanHostname(currentTicket.hostname)}</span></div>
         <div class="info-row"><span class="info-label">Object</span><span class="info-value">${currentTicket.object || '-'}</span></div>
         <div class="info-row"><span class="info-label">Severity</span><span class="info-value">${currentTicket.severity || '-'}</span></div>
         <div class="info-row" style="border:none;"><span class="info-label">Message</span><span class="info-value">${currentTicket.message || '-'}</span></div>
     `;
     document.getElementById('modalStatus').value = currentTicket.status || 'OPEN';
     document.getElementById('modalNotes').value = currentTicket.notes || '';
+    document.getElementById('blackoutUntil').value = '';
 
     if (!ticketModal) ticketModal = new bootstrap.Modal(document.getElementById('ticketModal'));
     ticketModal.show();
 }
+
+document.getElementById('addBlackout').addEventListener('click', async () => {
+    if (!currentTicket) return;
+    const until = document.getElementById('blackoutUntil').value;
+    if (!until) return alert('請選擇解除時間');
+    
+    const btn = document.getElementById('addBlackout');
+    btn.disabled = true;
+    btn.textContent = '處理中...';
+    
+    await setBlackout(currentTicket.hostname, until);
+    
+    btn.disabled = false;
+    btn.textContent = '屏蔽';
+    alert(`已屏蔽 ${cleanHostname(currentTicket.hostname)}\n直到 ${new Date(until).toLocaleString('zh-HK')}`);
+    ticketModal.hide();
+    loadTickets();
+});
 
 document.getElementById('saveModal').addEventListener('click', async () => {
     if (!currentTicket) return;
