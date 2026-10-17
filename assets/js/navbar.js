@@ -14,19 +14,19 @@
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
         <div class="d-flex flex-wrap align-items-center gap-2">
           <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https://mail.21cn.net/", "_blank")'>
-  📧 Webmail
-</button>
+            📧 Webmail
+          </button>
 
           <div class="dropdown">
             <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🚨 Alerts</button>
-                        <ul class="dropdown-menu">
+            <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="tickets.html">🎫 Tickets</a></li>
               <li><a class="dropdown-item" href="warns.html">⚠️ Warns</a></li>
             </ul>
           </div>
 
           <div class="dropdown">
-                <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🗄️ DBaaS</button>
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🗄️ DBaaS</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">⛏️ Server List</a></li>
               <li><a class="dropdown-item" href="DBaaS_Summary.html">📊 GCIS DBaaS Summary</a></li>
@@ -35,8 +35,8 @@
           </div>
 
           <div class="dropdown">
-              <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🔧 Tools</button>
-                        <ul class="dropdown-menu">
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🔧 Tools</button>
+            <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="analyzer.html">🔍 Troubleshooting</a></li>
               <li><a class="dropdown-item" href="Converter.html">⚡ Unit Converter</a></li>
             </ul>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="tab-pane fade" id="stake">
                           <div class="list-group">
-                          <a href="ca_info.html" class="list-group-item list-group-item-action list-group-item-success" target="_blank">CA Info</a>
+                            <a href="ca_info.html" class="list-group-item list-group-item-action list-group-item-success" target="_blank">CA Info</a>
                           </div>
                         </div>
                       </div>
@@ -109,6 +109,26 @@
   const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
   const SESSION_TIMEOUT = 60 * 60 * 1000;
+
+  function injectCustomStyles() {
+    if (document.getElementById('custom-btn-style')) return;
+    const style = document.createElement('style');
+    style.id = 'custom-btn-style';
+    style.textContent = `
+      .btn-outline-custom {
+        --bs-btn-color: #343a40;
+        --bs-btn-bg: #DCBFFF;
+        --bs-btn-border-color: #DCBFFF;
+        --bs-btn-hover-color: #343a40;
+        --bs-btn-hover-bg: #E5D4FF;
+        --bs-btn-hover-border-color: #E5D4FF;
+        --bs-btn-active-color: #343a40;
+        --bs-btn-active-bg: #E5D4FF;
+        --bs-btn-active-border-color: #E5D4FF;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   function loadSupabase(callback) {
     if (window.supabase) {
@@ -236,7 +256,6 @@
 
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
 
-    // ===== 新 INC 通知 =====
     let lastTicketCount = 0;
 
     async function checkNewTickets() {
@@ -251,7 +270,7 @@
       const count = data?.length || 0;
       if (lastTicketCount > 0 && count > lastTicketCount) {
         if (Notification.permission === 'granted') {
-            new Notification('🚨 新 CRITICAL INC', {
+          new Notification('🚨 新 CRITICAL INC', {
             body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
             icon: 'IMG_3755.jpg'
           });
@@ -260,7 +279,7 @@
       lastTicketCount = count;
     }
 
-    setInterval(checkNewTickets, 1000); // 每 1 秒檢查一次
+    setInterval(checkNewTickets, 1000);
     setTimeout(checkNewTickets, 1000);
 
     async function initChat() {
@@ -330,6 +349,7 @@
   }
 
   function injectNavbar() {
+    injectCustomStyles();
     const placeholder = document.getElementById("navbar-placeholder");
     if (!placeholder) return;
 
