@@ -1,4 +1,61 @@
 (function () {
+  const I18N = {
+    en: {
+      brand: "Database Administrator",
+      webmail: "📧 Webmail",
+      alerts: "🚨 Alerts",
+      tickets: "🎫 Tickets",
+      warns: "⚠️ Warns",
+      dbaas: "🗄️ DBaaS",
+      serverlist: "⛏️ Server List",
+      summary: "📊 GCIS DBaaS Summary",
+      bookmarks: "🔖 Bookmarks",
+      tools: "🔧 Tools",
+      troubleshooting: "🔍 Troubleshooting",
+      converter: "⚡ Unit Converter",
+      theme: "Theme",
+      language: "Language",
+      admin: "Admin",
+      signout: "Sign out"
+    },
+    "zh-TW": {
+      brand: "資料庫管理員",
+      webmail: "📧 網頁郵件",
+      alerts: "🚨 警報",
+      tickets: "🎫 事件單",
+      warns: "⚠️ 警告",
+      dbaas: "🗄️ DBaaS",
+      serverlist: "⛏️ 伺服器清單",
+      summary: "📊 GCIS DBaaS 統計",
+      bookmarks: "🔖 書籤",
+      tools: "🔧 工具",
+      troubleshooting: "🔍 故障排除",
+      converter: "⚡ 單位轉換",
+      theme: "主題",
+      language: "語言",
+      admin: "管理",
+      signout: "登出"
+    },
+    "zh-CN": {
+      brand: "数据库管理员",
+      webmail: "📧 网页邮件",
+      alerts: "🚨 警报",
+      tickets: "🎫 事件单",
+      warns: "⚠️ 警告",
+      dbaas: "🗄️ DBaaS",
+      serverlist: "⛏️ 服务器清单",
+      summary: "📊 GCIS DBaaS 统计",
+      bookmarks: "🔖 书签",
+      tools: "🔧 工具",
+      troubleshooting: "🔍 故障排除",
+      converter: "⚡ 单位转换",
+      theme: "主题",
+      language: "语言",
+      admin: "管理",
+      signout: "登出"
+    }
+  };
+
   const navbarHTML = `
 <header class="p-3 mb-3 border-bottom" style="background-color: #D0A2F7">
   <div class="container">
@@ -8,37 +65,37 @@
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><b><a href="home.html" class="nav-link px-2 link-body-emphasis">Database Administrator</a></b></li>
+        <li><b><a href="home.html" class="nav-link px-2 link-body-emphasis" data-i18n="brand">Database Administrator</a></b></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
         <div class="d-flex flex-wrap align-items-center gap-2">
-          <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https://mail.21cn.net/", "_blank")'>
+          <button type="button" class="btn btn-outline-custom position-relative" onclick='window.open("https://mail.21cn.net/", "_blank")' data-i18n="webmail">
             📧 Webmail
           </button>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🚨 Alerts</button>
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown" data-i18n="alerts">🚨 Alerts</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="tickets.html">🎫 Tickets</a></li>
-              <li><a class="dropdown-item" href="warns.html">⚠️ Warns</a></li>
+              <li><a class="dropdown-item" href="tickets.html" data-i18n="tickets">🎫 Tickets</a></li>
+              <li><a class="dropdown-item" href="warns.html" data-i18n="warns">⚠️ Warns</a></li>
             </ul>
           </div>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🗄️ DBaaS</button>
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown" data-i18n="dbaas">🗄️ DBaaS</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">⛏️ Server List</a></li>
-              <li><a class="dropdown-item" href="DBaaS_Summary.html">📊 GCIS DBaaS Summary</a></li>
-              <li><a class="dropdown-item" href="bookmark.html">🔖 Bookmarks</a></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-i18n="serverlist">⛏️ Server List</a></li>
+              <li><a class="dropdown-item" href="DBaaS_Summary.html" data-i18n="summary">📊 GCIS DBaaS Summary</a></li>
+              <li><a class="dropdown-item" href="bookmark.html" data-i18n="bookmarks">🔖 Bookmarks</a></li>
             </ul>
           </div>
 
           <div class="dropdown">
-            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown">🔧 Tools</button>
+            <button class="btn btn-outline-custom dropdown-toggle" type="button" data-bs-toggle="dropdown" data-i18n="tools">🔧 Tools</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="analyzer.html">🔍 Troubleshooting</a></li>
-              <li><a class="dropdown-item" href="Converter.html">⚡ Unit Converter</a></li>
+              <li><a class="dropdown-item" href="analyzer.html" data-i18n="troubleshooting">🔍 Troubleshooting</a></li>
+              <li><a class="dropdown-item" href="Converter.html" data-i18n="converter">⚡ Unit Converter</a></li>
             </ul>
           </div>
         </div>
@@ -47,7 +104,7 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel1">⛏️ Server List</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel1" data-i18n="serverlist">⛏️ Server List</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -97,7 +154,7 @@
         </a>
         <ul class="dropdown-menu text-small">
           <li class="px-3 py-2">
-            <div class="small text-muted mb-1">Theme</div>
+            <div class="small text-muted mb-1" data-i18n="theme">Theme</div>
             <select id="themeSelect" class="form-select form-select-sm">
               <option value="system">System</option>
               <option value="light">Light</option>
@@ -105,7 +162,7 @@
             </select>
           </li>
           <li class="px-3 py-2">
-            <div class="small text-muted mb-1">Language</div>
+            <div class="small text-muted mb-1" data-i18n="language">Language</div>
             <select id="langSelect" class="form-select form-select-sm">
               <option value="en">ENG</option>
               <option value="zh-TW">繁</option>
@@ -113,9 +170,9 @@
             </select>
           </li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="Admin.html">Admin</a></li>
+          <li><a class="dropdown-item" href="Admin.html" data-i18n="admin">Admin</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#" onclick="logout(); return false;">Sign out</a></li>
+          <li><a class="dropdown-item" href="#" onclick="logout(); return false;" data-i18n="signout">Sign out</a></li>
         </ul>
       </div>
     </div>
@@ -127,6 +184,11 @@
   function getTheme() { return localStorage.getItem("theme") || "system"; }
 
   function applyLang(lang) {
+    const dict = I18N[lang] || I18N.en;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
     document.documentElement.lang = lang === "zh-CN" ? "zh-CN" : lang === "zh-TW" ? "zh-HK" : "en";
     localStorage.setItem("lang", lang);
   }
@@ -160,9 +222,47 @@
         --bs-btn-active-bg: #E5D4FF;
         --bs-btn-active-border-color: #E5D4FF;
       }
-      :root, [data-theme="light"] { --bg: #f8fafc; --card: #fff; --text: #0f172a; }
-      [data-theme="dark"] { --bg: #0f1117; --card: #181b23; --text: #e8eaed; }
-      body { background: var(--bg) !important; color: var(--text); }
+      :root, [data-theme="light"] { 
+        --bg: #f8fafc; 
+        --card: #fff; 
+        --text: #0f172a; 
+        --muted: #64748b;
+        --border: #e2e8f0;
+      }
+      [data-theme="dark"] { 
+        --bg: #0f1117; 
+        --card: #181b23; 
+        --text: #e8eaed; 
+        --muted: #8b93a7;
+        --border: #2a2e3a;
+      }
+      body { background: var(--bg) !important; color: var(--text) !important; }
+      [data-theme="dark"] .card,
+      [data-theme="dark"] .modal-content,
+      [data-theme="dark"] .dropdown-menu,
+      [data-theme="dark"] .list-group-item,
+      [data-theme="dark"] .form-control,
+      [data-theme="dark"] .form-select {
+        background: var(--card) !important;
+        color: var(--text) !important;
+        border-color: var(--border) !important;
+      }
+      [data-theme="dark"] .text-muted,
+      [data-theme="dark"] .small {
+        color: var(--muted) !important;
+      }
+      [data-theme="dark"] .nav-link,
+      [data-theme="dark"] .dropdown-item,
+      [data-theme="dark"] .btn-outline-custom {
+        color: var(--text) !important;
+      }
+      [data-theme="dark"] .table {
+        color: var(--text);
+      }
+      [data-theme="dark"] .table th,
+      [data-theme="dark"] .table td {
+        border-color: var(--border);
+      }
     `;
     document.head.appendChild(style);
   }
