@@ -42,19 +42,15 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 40px 36px;
+            padding: 32px 28px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
         .logo {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--accent), #c4b5fd);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 24px;
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            margin: 0 auto 16px;
+            display: block;
         }
         h1 { font-size: 1.4rem; font-weight: 600; text-align: center; margin-bottom: 6px; }
         .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
@@ -93,7 +89,7 @@
 <body>
 
 <div class="login-card">
-    <img src="ctg.jpg" alt="CTG Logo">
+    <img src="ctg.jpg" alt="CTG Logo" class="logo">
     <h1 data-i18n="brand">DBA Portal</h1>
     <p class="subtitle" id="formTitle" data-i18n="login.subtitle">Sign in to continue</p>
 
