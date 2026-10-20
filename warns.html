@@ -8,51 +8,20 @@
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --accent: #7c3aed;
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .page-header { margin-bottom: 20px; }
-        .page-header h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-        .toolbar .form-control {
-            border-radius: 8px;
-            border-color: var(--border);
-            font-size: 0.875rem;
-        }
-        .toolbar .form-control:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-        .btn-soft {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.8rem;
-            padding: 6px 12px;
-        }
-        .btn-soft:hover { background: #f8fafc; }
+        body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; }
         .warn-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-left: 3px solid #f59e0b;
-            border-radius: 12px;
-            padding: 16px 18px;
-            margin-bottom: 8px;
-            transition: all 0.12s;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            transition: box-shadow 0.15s;
         }
-        .warn-card:hover { border-color: #fcd34d; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
-        .badge-warn { background: #fef3c7; color: #d97706; font-weight: 600; font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; }
-        .host-link { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
-        .host-link:hover { color: var(--accent); }
-        .message-preview { color: var(--muted); font-size: 0.85rem; line-height: 1.5; margin-top: 6px; }
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-        .stats { color: var(--muted); font-size: 0.85rem; }
+        .warn-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .badge-warn { background: #fef3c7; color: #d97706; font-weight: 600; }
+        .host-link { color: #64748b; }
+        .host-link:hover { color: #7c3aed; }
+        .message-preview { color: #64748b; line-height: 1.5; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -61,14 +30,14 @@
 <script src="./assets/js/navbar.js"></script>
 
 <div class="container py-4">
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <h1>WARN Alerts</h1>
-        <button class="btn-soft" onclick="loadWarns()">Refresh</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">WARN Alerts</h4>
+        <button class="btn btn-sm btn-outline-secondary" onclick="loadWarns()">重新載入</button>
     </div>
 
-    <div class="toolbar">
-        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:260px" placeholder="Search INC, host, message...">
-        <span id="stats" class="stats ms-auto">Loading...</span>
+    <div class="d-flex gap-2 flex-wrap mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:280px" placeholder="搜尋 INC / Host / Message...">
+        <span id="stats" class="small text-muted align-self-center ms-auto">載入中...</span>
     </div>
 
     <div id="warnList"></div>
@@ -97,10 +66,14 @@ function formatTime(dt) {
 }
 
 async function loadWarns() {
-    document.getElementById('stats').textContent = 'Loading...';
-    const { data, error } = await supabaseClient.from('warns').select('*').order('occurred_at', { ascending: false });
+    document.getElementById('stats').textContent = '載入中...';
+    const { data, error } = await supabaseClient
+        .from('warns')
+        .select('*')
+        .order('occurred_at', { ascending: false });
+
     if (error) {
-        document.getElementById('stats').textContent = 'Failed';
+        document.getElementById('stats').textContent = '載入失敗';
         return;
     }
     allWarns = data || [];
@@ -109,38 +82,52 @@ async function loadWarns() {
 
 function renderWarns() {
     const q = document.getElementById('searchInput').value.toLowerCase();
+
     const filtered = allWarns.filter(t => {
         const text = `${t.inc_number} ${t.hostname} ${t.message} ${t.title}`.toLowerCase();
-        return !q || text.includes(q);
+        if (q && !text.includes(q)) return false;
+        return true;
     });
+
     document.getElementById('stats').textContent = `${filtered.length} / ${allWarns.length}`;
+
     if (filtered.length === 0) {
-        document.getElementById('warnList').innerHTML = '<div class="empty-state"><div class="fs-1 mb-2">⚠️</div><div>No matching alerts</div></div>';
+        document.getElementById('warnList').innerHTML = `
+            <div class="empty-state">
+                <div class="fs-1 mb-2">⚠️</div>
+                <div>沒有符合的資料</div>
+            </div>`;
         return;
     }
-    document.getElementById('warnList').innerHTML = filtered.map(t => {
+
+    const html = filtered.map(t => {
         const time = formatTime(t.occurred_at);
         const cleanHost = cleanHostname(t.hostname);
         return `
-        <div class="warn-card">
-            <div class="d-flex justify-content-between align-items-start">
+        <div class="warn-card p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="d-flex align-items-center gap-2">
-                    <strong>${t.inc_number || '-'}</strong>
-                    <span class="badge-warn">WARN</span>
+                    <strong class="text-dark">${t.inc_number || '-'}</strong>
+                    <span class="badge badge-warn">WARN</span>
                 </div>
                 <small class="text-muted">${time}</small>
             </div>
-            <div class="mt-2">
-                <a href="dbaas_list.html?host=${encodeURIComponent(cleanHost)}" class="host-link">${cleanHost}</a>
+            <div class="mb-1">
+                <a href="dbaas_list.html?host=${encodeURIComponent(cleanHostname(t.hostname))}" class="host-link text-decoration-none small">
+                    ${cleanHost}
+                </a>
             </div>
-            <div class="message-preview">${t.message || ''}</div>
+            <div class="small text-muted mb-2">${time}</div>
+            <div class="message-preview small">${t.message || ''}</div>
         </div>`;
     }).join('');
+
+    document.getElementById('warnList').innerHTML = html;
 }
 
 document.getElementById('searchInput').addEventListener('input', renderWarns);
 loadWarns();
-setInterval(loadWarns, 30000);
+setInterval(loadWarns, 1000);
 </script>
 </body>
 </html>

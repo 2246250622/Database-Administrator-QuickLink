@@ -8,44 +8,28 @@
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root, [data-theme="light"] {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --accent: #7c3aed;
+        body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; }
+        .ticket-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: box-shadow 0.15s, transform 0.15s;
         }
-        [data-theme="dark"] {
-            --bg: #0f1117;
-            --card: #181b23;
-            --border: #2a2e3a;
-            --text: #e8eaed;
-            --muted: #8b93a7;
-            --accent: #a78bfa;
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; transition: background 0.2s, color 0.2s; }
-        .page-header h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; align-items: center; }
-        .toolbar .form-control, .toolbar .form-select { border-radius: 8px; border-color: var(--border); background: var(--card); color: var(--text); font-size: 0.875rem; }
-        .toolbar .form-control:focus, .toolbar .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1); }
-        .btn-soft { background: var(--card); border: 1px solid var(--border); border-radius: 8px; font-size: 0.8rem; padding: 6px 12px; color: var(--text); }
-        .btn-soft:hover { filter: brightness(0.97); }
-        .ticket-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid #ef4444; border-radius: 12px; padding: 16px 18px; margin-bottom: 8px; cursor: pointer; transition: all 0.12s; }
-        .ticket-card:hover { border-color: #c4b5fd; }
+        .ticket-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
         .ticket-card.resolved { border-left-color: #22c55e; }
-        .badge-critical { background: #fef2f2; color: #dc2626; font-weight: 600; font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; }
-        .badge-open { background: #eff6ff; color: #2563eb; font-weight: 500; font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; }
-        .badge-resolved { background: #f0fdf4; color: #16a34a; font-weight: 500; font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; }
-        .host-link { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
-        .host-link:hover { color: var(--accent); }
-        .message-preview { color: var(--muted); font-size: 0.85rem; line-height: 1.5; margin-top: 6px; }
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-        .modal-content { background: var(--card); color: var(--text); border-radius: 14px; border: 1px solid var(--border); }
-        .modal-header { border-bottom: 1px solid var(--border); }
-        .info-row { display: flex; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        .info-label { width: 80px; color: var(--muted); }
-        .stats { color: var(--muted); font-size: 0.85rem; }
+        .badge-critical { background: #fef2f2; color: #dc2626; font-weight: 600; }
+        .badge-open { background: #eff6ff; color: #2563eb; font-weight: 500; }
+        .badge-resolved { background: #f0fdf4; color: #16a34a; font-weight: 500; }
+        .host-link { color: #64748b; }
+        .host-link:hover { color: #7c3aed; }
+        .message-preview { color: #64748b; line-height: 1.5; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
+        .modal-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .info-row { display: flex; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
+        .info-label { width: 90px; color: #64748b; font-size: 0.85rem; }
+        .info-value { flex: 1; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -54,39 +38,45 @@
 <script src="./assets/js/navbar.js"></script>
 
 <div class="container py-4">
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <h1 data-i18n="tickets.title">INC Tickets</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">INC Tickets</h4>
         <div class="d-flex gap-2">
-            <button class="btn-soft" data-bs-toggle="modal" data-bs-target="#blackoutModal" data-i18n="tickets.blackouts">Blackouts</button>
-            <button class="btn-soft" onclick="loadTickets()" data-i18n="tickets.refresh">Refresh</button>
+            <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#blackoutModal">Blackouts</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="loadTickets()">重新載入</button>
         </div>
     </div>
 
-    <div class="toolbar">
-        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:260px" data-i18n-placeholder="tickets.search" placeholder="Search INC, host, message...">
+    <div class="d-flex gap-2 flex-wrap mb-3">
+        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:280px" placeholder="搜尋 INC / Host / Message...">
         <select id="statusFilter" class="form-select form-select-sm" style="max-width:140px">
-            <option value="" data-i18n="tickets.allStatus">All status</option>
+            <option value="">全部 Status</option>
             <option value="OPEN">OPEN</option>
             <option value="RESOLVED">RESOLVED</option>
         </select>
-        <span id="stats" class="stats ms-auto">Loading...</span>
+        <span id="stats" class="small text-muted align-self-center ms-auto">載入中...</span>
     </div>
 
     <div id="ticketList"></div>
 </div>
 
+
+
+<!-- Modal -->
 <div class="modal fade" id="blackoutModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Active Blackouts</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="blackoutList"><div class="text-muted">Loading...</div></div>
-        </div>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Active Blackouts</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="blackoutList">
+        <div class="text-muted">載入中...</div>
+      </div>
     </div>
+  </div>
 </div>
 
+<!-- Modal -->
 <div class="modal fade" id="ticketModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -108,21 +98,21 @@
                         </select>
                     </div>
                     <div class="col-md-8">
-                        <label class="form-label small text-muted">Blackout host</label>
+                        <label class="form-label small text-muted">Blackout 此 Host</label>
                         <div class="input-group">
                             <input type="datetime-local" id="blackoutUntil" class="form-control">
-                            <button class="btn btn-outline-warning" id="addBlackout">Blackout</button>
+                            <button class="btn btn-outline-warning" id="addBlackout">屏蔽</button>
                         </div>
                     </div>
                 </div>
                 <div class="mt-3">
-                    <label class="form-label small text-muted">Notes</label>
-                    <textarea id="modalNotes" class="form-control" rows="6" placeholder="Add notes..."></textarea>
+                    <label class="form-label small text-muted">備註</label>
+                    <textarea id="modalNotes" class="form-control" rows="8" placeholder="輸入處理備註..."></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="saveModal">Save</button>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveModal">儲存變更</button>
             </div>
         </div>
     </div>
@@ -141,50 +131,89 @@ let blackoutHosts = new Set();
 
 function cleanHostname(host) {
     if (!host) return '-';
-    return host.replace(/\.dbaas\.gcisdctr\.hksarg$/i, '').replace(/\.mgt\.gcisdctr\.hksarg$/i, '').replace(/\.dbaas\.gcis\.hksarg$/i, '').replace(/\.mgt\.gcis\.hksarg$/i, '');
+    return host
+        .replace(/\.dbaas\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.mgt\.gcisdctr\.hksarg$/i, '')
+        .replace(/\.dbaas\.gcis\.hksarg$/i, '')
+        .replace(/\.mgt\.gcis\.hksarg$/i, '');
 }
 
 function formatTime(dt) {
     if (!dt) return '-';
-    return new Date(dt).toLocaleString(document.documentElement.lang, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return new Date(dt).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
+
 
 async function loadBlackoutList() {
-    const { data } = await supabaseClient.from('blackouts').select('*').gt('until', new Date().toISOString()).order('until', { ascending: true });
-    const list = document.getElementById('blackoutList');
-    if (!data || data.length === 0) { list.innerHTML = '<div class="text-muted">No active blackouts</div>'; return; }
-    list.innerHTML = data.map(b => `
-        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-            <div><strong>${cleanHostname(b.hostname)}</strong><div class="small text-muted">Until ${new Date(b.until).toLocaleString(document.documentElement.lang)}</div></div>
-            <button class="btn btn-sm btn-outline-danger release-btn" data-host="${b.hostname}">Release</button>
-        </div>
-    `).join('');
-    document.querySelectorAll('.release-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            if (!confirm(`Release blackout for ${cleanHostname(btn.dataset.host)}?`)) return;
-            await supabaseClient.from('blackouts').delete().eq('hostname', btn.dataset.host);
-            loadBlackoutList(); loadTickets();
-        });
+  const { data } = await supabaseClient
+    .from('blackouts')
+    .select('*')
+    .gt('until', new Date().toISOString())
+    .order('until', { ascending: true });
+
+  const list = document.getElementById('blackoutList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="text-muted">目前沒有 blackout</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(b => `
+    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+      <div>
+        <strong>${cleanHostname(b.hostname)}</strong>
+        <div class="small text-muted">直到 ${new Date(b.until).toLocaleString('zh-HK')}</div>
+      </div>
+      <button class="btn btn-sm btn-outline-danger release-btn" data-host="${b.hostname}">解除</button>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('.release-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(`解除 ${cleanHostname(btn.dataset.host)} 的 blackout？`)) return;
+      await supabaseClient.from('blackouts').delete().eq('hostname', btn.dataset.host);
+      loadBlackoutList();
+      loadTickets();
     });
+  });
 }
+
 document.getElementById('blackoutModal').addEventListener('show.bs.modal', loadBlackoutList);
 
+
+
 async function loadBlackouts() {
-    const { data } = await supabaseClient.from('blackouts').select('hostname').gt('until', new Date().toISOString());
+    const { data } = await supabaseClient
+        .from('blackouts')
+        .select('hostname')
+        .gt('until', new Date().toISOString());
     blackoutHosts = new Set((data || []).map(b => b.hostname));
 }
 
 async function setBlackout(host, until) {
-    const { error } = await supabaseClient.from('blackouts').upsert({ hostname: host, until: new Date(until).toISOString() }, { onConflict: 'hostname' });
-    if (error) { alert('Blackout failed: ' + error.message); return false; }
+    const { error } = await supabaseClient
+        .from('blackouts')
+        .upsert({ hostname: host, until: new Date(until).toISOString() }, { onConflict: 'hostname' });
+    
+    if (error) {
+        alert('Blackout 失敗：' + error.message);
+        console.error(error);
+        return false;
+    }
     return true;
 }
 
 async function loadTickets() {
-    document.getElementById('stats').textContent = 'Loading...';
+    document.getElementById('stats').textContent = '載入中...';
     await loadBlackouts();
-    const { data, error } = await supabaseClient.from('tickets').select('*').order('occurred_at', { ascending: false });
-    if (error) { document.getElementById('stats').textContent = 'Failed'; return; }
+    const { data, error } = await supabaseClient
+        .from('tickets')
+        .select('*')
+        .order('occurred_at', { ascending: false });
+
+    if (error) {
+        document.getElementById('stats').textContent = '載入失敗';
+        return;
+    }
     allTickets = data || [];
     renderTickets();
 }
@@ -192,6 +221,7 @@ async function loadTickets() {
 function renderTickets() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const st = document.getElementById('statusFilter').value;
+
     const filtered = allTickets.filter(t => {
         if (blackoutHosts.has(t.hostname)) return false;
         const text = `${t.inc_number} ${t.hostname} ${t.message} ${t.title}`.toLowerCase();
@@ -199,48 +229,66 @@ function renderTickets() {
         if (st && t.status !== st) return false;
         return true;
     });
+
     document.getElementById('stats').textContent = `${filtered.length} / ${allTickets.length}`;
-    const emptyText = document.documentElement.lang.startsWith("zh") ? "沒有符合的資料" : "No matching tickets";
+
     if (filtered.length === 0) {
-        document.getElementById('ticketList').innerHTML = `<div class="empty-state"><div class="fs-1 mb-2">📋</div><div>${emptyText}</div></div>`;
+        document.getElementById('ticketList').innerHTML = `
+            <div class="empty-state">
+                <div class="fs-1 mb-2">📋</div>
+                <div>沒有符合的資料</div>
+            </div>`;
         return;
     }
-    document.getElementById('ticketList').innerHTML = filtered.map(t => {
+
+    const html = filtered.map(t => {
         const isResolved = t.status === 'RESOLVED';
         const time = formatTime(t.occurred_at);
         const cleanHost = cleanHostname(t.hostname);
         return `
-        <div class="ticket-card ${isResolved ? 'resolved' : ''}" data-id="${t.id}">
-            <div class="d-flex justify-content-between align-items-start">
+        <div class="ticket-card p-3 mb-2 ${isResolved ? 'resolved' : ''}" data-id="${t.id}">
+            <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="d-flex align-items-center gap-2">
-                    <strong>${t.inc_number || '-'}</strong>
-                    <span class="badge-critical">CRITICAL</span>
+                    <strong class="text-dark">${t.inc_number || '-'}</strong>
+                    <span class="badge badge-critical">CRITICAL</span>
                     <span class="badge ${isResolved ? 'badge-resolved' : 'badge-open'}">${t.status || 'OPEN'}</span>
                 </div>
                 <small class="text-muted">${time}</small>
             </div>
-            <div class="mt-2"><a href="dbaas_list.html?host=${encodeURIComponent(cleanHost)}" class="host-link" onclick="event.stopPropagation()">${cleanHost}</a></div>
-            <div class="message-preview">${(t.message || '').slice(0, 140)}${(t.message || '').length > 140 ? '...' : ''}</div>
+            <div class="mb-1">
+                <a href="dbaas_list.html?host=${encodeURIComponent(cleanHostname(t.hostname))}" class="host-link text-decoration-none small" onclick="event.stopPropagation()">
+                    ${cleanHost}
+                </a>
+            </div>
+            <div class="small text-muted mb-2">${time}</div>
+            <div class="message-preview small">${(t.message || '').slice(0, 120)}${(t.message || '').length > 120 ? '...' : ''}</div>
         </div>`;
     }).join('');
-    document.querySelectorAll('.ticket-card').forEach(card => card.addEventListener('click', () => openModal(card.dataset.id)));
+
+    document.getElementById('ticketList').innerHTML = html;
+
+    document.querySelectorAll('.ticket-card').forEach(card => {
+        card.addEventListener('click', () => openModal(card.dataset.id));
+    });
 }
 
 function openModal(id) {
     currentTicket = allTickets.find(t => t.id === id);
     if (!currentTicket) return;
-    const time = currentTicket.occurred_at ? new Date(currentTicket.occurred_at).toLocaleString(document.documentElement.lang) : '-';
+
+    const time = currentTicket.occurred_at ? new Date(currentTicket.occurred_at).toLocaleString('zh-HK') : '-';
     document.getElementById('modalTitle').textContent = currentTicket.inc_number;
     document.getElementById('modalTime').textContent = time;
     document.getElementById('modalInfo').innerHTML = `
-        <div class="info-row"><span class="info-label">Time</span><span>${time}</span></div>
-        <div class="info-row"><span class="info-label">Host</span><span>${cleanHostname(currentTicket.hostname)}</span></div>
-        <div class="info-row"><span class="info-label">Severity</span><span>${currentTicket.severity || '-'}</span></div>
-        <div class="info-row" style="border:none;"><span class="info-label">Message</span><span>${currentTicket.message || '-'}</span></div>
+        <div class="info-row"><span class="info-label">Time</span><span class="info-value">${time}</span></div>
+        <div class="info-row"><span class="info-label">Host</span><span class="info-value">${cleanHostname(currentTicket.hostname)}</span></div>
+        <div class="info-row"><span class="info-label">Severity</span><span class="info-value">${currentTicket.severity || '-'}</span></div>
+        <div class="info-row" style="border:none;"><span class="info-label">Message</span><span class="info-value">${currentTicket.message || '-'}</span></div>
     `;
     document.getElementById('modalStatus').value = currentTicket.status || 'OPEN';
     document.getElementById('modalNotes').value = currentTicket.notes || '';
     document.getElementById('blackoutUntil').value = '';
+
     if (!ticketModal) ticketModal = new bootstrap.Modal(document.getElementById('ticketModal'));
     ticketModal.show();
 }
@@ -248,31 +296,53 @@ function openModal(id) {
 document.getElementById('addBlackout').addEventListener('click', async () => {
     if (!currentTicket) return;
     const until = document.getElementById('blackoutUntil').value;
-    if (!until) return alert('Please select a time');
+    if (!until) return alert('請選擇解除時間');
+    
     const btn = document.getElementById('addBlackout');
-    btn.disabled = true; btn.textContent = 'Saving...';
+    btn.disabled = true;
+    btn.textContent = '處理中...';
+    
     const ok = await setBlackout(currentTicket.hostname, until);
-    btn.disabled = false; btn.textContent = 'Blackout';
-    if (ok) { ticketModal.hide(); loadTickets(); }
+    
+    btn.disabled = false;
+    btn.textContent = '屏蔽';
+    
+    if (ok) {
+        alert(`已屏蔽 ${cleanHostname(currentTicket.hostname)}\n直到 ${new Date(until).toLocaleString('zh-HK')}`);
+        ticketModal.hide();
+        loadTickets();
+    }
 });
 
 document.getElementById('saveModal').addEventListener('click', async () => {
     if (!currentTicket) return;
     const btn = document.getElementById('saveModal');
-    btn.disabled = true; btn.textContent = 'Saving...';
-    const { error } = await supabaseClient.from('tickets').update({
-        status: document.getElementById('modalStatus').value,
-        notes: document.getElementById('modalNotes').value
-    }).eq('id', currentTicket.id);
-    btn.disabled = false; btn.textContent = 'Save';
-    if (error) alert(error.message);
-    else { ticketModal.hide(); loadTickets(); }
+    btn.disabled = true;
+    btn.textContent = '儲存中...';
+
+    const { error } = await supabaseClient
+        .from('tickets')
+        .update({
+            status: document.getElementById('modalStatus').value,
+            notes: document.getElementById('modalNotes').value
+        })
+        .eq('id', currentTicket.id);
+
+    btn.disabled = false;
+    btn.textContent = '儲存變更';
+
+    if (error) {
+        alert(error.message);
+    } else {
+        ticketModal.hide();
+        loadTickets();
+    }
 });
 
 document.getElementById('searchInput').addEventListener('input', renderTickets);
 document.getElementById('statusFilter').addEventListener('change', renderTickets);
 loadTickets();
-setInterval(loadTickets, 30000);
+setInterval(loadTickets, 1000);
 </script>
 </body>
 </html>

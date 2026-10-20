@@ -3,45 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inventory</title>
+    <title>Inventory List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --accent: #7c3aed;
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .page-header { margin-bottom: 8px; }
-        .page-header h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .page-header p { color: var(--muted); font-size: 0.85rem; margin: 4px 0 0; }
-        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
-        .toolbar .form-control, .toolbar .form-select {
-            border-radius: 8px;
-            border-color: var(--border);
-            font-size: 0.85rem;
-        }
-        .toolbar .form-control:focus, .toolbar .form-select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-        .inv-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-left: 3px solid #86efac;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            transition: all 0.12s;
-        }
-        .inv-item:hover { border-color: #4ade80; background: #f0fdf4; }
-        .badge-soft { font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; font-weight: 500; }
-        .stats { color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+        body { background: #f8fafc; }
+        .list-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
+        .inv-item { border-left: 4px solid #86efac; }
+        .inv-item:hover { background: #f0fdf4; }
+        .search-box { max-width: 280px; }
+        .filter-select { max-width: 180px; }
     </style>
 </head>
 <body>
@@ -50,97 +22,143 @@
 <script src="./assets/js/navbar.js"></script>
 
 <div class="container py-4">
-    <div class="page-header">
-        <h1>Inventory</h1>
-        <p>Auto-loaded from Inventory.xlsx</p>
-    </div>
+    <div class="list-card p-4 mb-4">
+        <h4 class="mb-1">Inventory List</h4>
+        <p class="text-muted small mb-3">自動載入 Inventory.xlsx</p>
 
-    <div class="toolbar">
-        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:260px" placeholder="Search VM / IP / Purpose...">
-        <select id="envFilter" class="form-select form-select-sm" style="max-width:150px">
-            <option value="">All Environment</option>
-            <option value="Testing">Testing</option>
-            <option value="Production">Production</option>
-        </select>
-        <select id="groupFilter" class="form-select form-select-sm" style="max-width:150px">
-            <option value="">All Group</option>
-            <option value="Group 1">Group 1</option>
-            <option value="Group 2">Group 2</option>
-            <option value="Group 3">Group 3</option>
-            <option value="Group 4">Group 4</option>
-            <option value="Group 5">Group 5</option>
-            <option value="Group 6">Group 6</option>
-            <option value="Group 7">Group 7</option>
-            <option value="Group 8">Group 8</option>
-        </select>
-        <select id="purposeFilter" class="form-select form-select-sm" style="max-width:180px">
-            <option value="">All Purpose</option>
-        </select>
-    </div>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+            <input type="text" id="searchInput" class="form-control form-control-sm search-box" placeholder="搜尋 VM / IP / Purpose...">
 
-    <div id="stats" class="stats">Loading...</div>
-    <div id="invList"></div>
+            <select id="envFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部環境</option>
+                <option value="Testing">Testing</option>
+                <option value="Production">Production</option>
+            </select>
+
+            <select id="groupFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部 Group</option>
+                <option value="Group 1">Group 1</option>
+                <option value="Group 2">Group 2</option>
+                <option value="Group 3">Group 3</option>
+                <option value="Group 4">Group 4</option>
+                <option value="Group 5">Group 5</option>
+                <option value="Group 6">Group 6</option>
+                <option value="Group 7">Group 7</option>
+                <option value="Group 8">Group 8</option>
+            </select>
+
+            <select id="purposeFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部 Purpose</option>
+            </select>
+        </div>
+
+        <div id="stats" class="small text-muted mb-2">載入中...</div>
+        <div id="invList" class="list-group"></div>
+    </div>
 </div>
 
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 let allRows = [];
 
 async function autoLoad() {
-    const paths = ['./Inventory.xlsx', './assets/Inventory.xlsx', 'Inventory.xlsx'];
+    const paths = [
+        './Inventory.xlsx',
+        './assets/Inventory.xlsx',
+        'Inventory.xlsx'
+    ];
+
     let buf = null;
+    let usedPath = '';
+
     for (const p of paths) {
         try {
+            console.log('[Inventory] Trying:', p);
             const res = await fetch(p);
-            if (res.ok) { buf = await res.arrayBuffer(); break; }
-        } catch {}
+            if (res.ok) {
+                buf = await res.arrayBuffer();
+                usedPath = p;
+                console.log('[Inventory] Loaded from:', p);
+                break;
+            } else {
+                console.warn('[Inventory] HTTP', res.status, p);
+            }
+        } catch (e) {
+            console.warn('[Inventory] Error:', p, e.message);
+        }
     }
+
     if (!buf) {
-        document.getElementById('stats').textContent = 'Inventory.xlsx not found';
+        document.getElementById('stats').textContent = '找不到 Inventory.xlsx（已嘗試根目錄與 assets/）';
         return;
     }
+
     try {
         const wb = XLSX.read(buf, { type: 'array' });
+        console.log('[Inventory] Sheets:', wb.SheetNames);
         allRows = [];
+
         wb.SheetNames.forEach(name => {
             const sheet = wb.Sheets[name];
             const json = XLSX.utils.sheet_to_json(sheet, { defval: '', header: 1, raw: false });
+
             let headerIdx = -1;
             for (let i = 0; i < Math.min(json.length, 25); i++) {
                 const row = (json[i] || []).map(c => String(c || '').trim().toLowerCase());
-                if (row.some(c => c.includes('purpose')) && row.some(c => c === 'vm' || c.includes('vm'))) {
+                const hasPurpose = row.some(c => c.includes('purpose'));
+                const hasVM = row.some(c => c === 'vm' || c.includes('vm'));
+                if (hasPurpose && hasVM) {
                     headerIdx = i;
                     break;
                 }
             }
-            if (headerIdx === -1) return;
+
+            if (headerIdx === -1) {
+                console.warn(`[Inventory] Sheet "${name}" 找不到 header`);
+                return;
+            }
+
             const headers = json[headerIdx].map(h => String(h || '').trim());
             const env = /prd|prod/i.test(name) ? 'Production' : 'Testing';
+
             for (let i = headerIdx + 1; i < json.length; i++) {
                 const row = json[i] || [];
                 if (!row.some(c => String(c || '').trim())) continue;
+
                 const obj = { Environment: env };
-                headers.forEach((h, idx) => { if (h) obj[h] = row[idx] !== undefined ? String(row[idx]).trim() : ''; });
+                headers.forEach((h, idx) => {
+                    if (h) obj[h] = row[idx] !== undefined ? String(row[idx]).trim() : '';
+                });
+
                 obj.Purpose = obj.Purpose || '';
                 obj.VM = obj.VM || '';
                 obj.IP = obj['IP Address (eth0)'] || '';
                 obj.MgtIP = obj['IP Address (eth1) MGT NIC'] || '';
                 obj.Group = obj['NSX-T T1 Gateway Group'] || '';
                 obj.Site = obj.Site || '';
-                if (obj.VM || obj.Purpose) allRows.push(obj);
+
+                if (obj.VM || obj.Purpose) {
+                    allRows.push(obj);
+                }
             }
         });
+
+        console.log('[Inventory] Total rows:', allRows.length);
         populatePurpose();
-        document.getElementById('stats').textContent = `Loaded ${allRows.length} rows`;
+        document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
         renderList();
+
     } catch (e) {
-        document.getElementById('stats').textContent = 'Parse failed: ' + e.message;
+        document.getElementById('stats').textContent = '解析失敗：' + e.message;
+        console.error(e);
     }
 }
 
 function populatePurpose() {
     const purposes = [...new Set(allRows.map(r => r.Purpose).filter(Boolean))].sort();
-    document.getElementById('purposeFilter').innerHTML = `<option value="">All Purpose</option>` +
+    const sel = document.getElementById('purposeFilter');
+    sel.innerHTML = `<option value="">全部 Purpose</option>` +
         purposes.map(p => `<option value="${p}">${p}</option>`).join('');
 }
 
@@ -149,6 +167,7 @@ function renderList() {
     const env = document.getElementById('envFilter').value;
     const group = document.getElementById('groupFilter').value;
     const purpose = document.getElementById('purposeFilter').value;
+
     const filtered = allRows.filter(r => {
         const text = `${r.Purpose} ${r.VM} ${r.IP} ${r.MgtIP} ${r.Site}`.toLowerCase();
         if (q && !text.includes(q)) return false;
@@ -157,29 +176,33 @@ function renderList() {
         if (purpose && r.Purpose !== purpose) return false;
         return true;
     });
-    document.getElementById('stats').textContent = `Showing ${filtered.length} / ${allRows.length}`;
-    document.getElementById('invList').innerHTML = filtered.map(r => `
-        <div class="inv-item">
+
+    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allRows.length} 筆`;
+
+    const html = filtered.map(r => `
+        <div class="list-group-item inv-item">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <strong>${r.VM || '-'}</strong>
                     <span class="text-muted"> · ${r.Purpose || '-'}</span>
-                    <div class="mt-2">
-                        <span class="badge bg-secondary-subtle text-secondary badge-soft">${r.Environment}</span>
-                        ${r.Site ? `<span class="badge bg-dark-subtle text-dark badge-soft">${r.Site}</span>` : ''}
-                        ${r.Group ? `<span class="badge bg-info-subtle text-info badge-soft">${r.Group}</span>` : ''}
+                    <div class="small mt-1">
+                        <span class="badge bg-secondary">${r.Environment}</span>
+                        ${r.Site ? `<span class="badge bg-dark">${r.Site}</span>` : ''}
+                        ${r.Group ? `<span class="badge bg-info text-dark">${r.Group}</span>` : ''}
                     </div>
                 </div>
-                <div class="text-end small text-muted">
+                <div class="text-end small">
                     <div>eth0: ${r.IP || '-'}</div>
                     <div>Mgt: ${r.MgtIP && r.MgtIP !== 'n/a' ? r.MgtIP : '-'}</div>
                 </div>
             </div>
         </div>
-    `).join('') || '<div class="text-muted p-3">No matching items</div>';
+    `).join('');
+
+    document.getElementById('invList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
 }
 
-['searchInput','envFilter','groupFilter','purposeFilter'].forEach(id => {
+['searchInput', 'envFilter', 'groupFilter', 'purposeFilter'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
         el.addEventListener('input', renderList);

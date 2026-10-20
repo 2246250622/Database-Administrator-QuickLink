@@ -8,40 +8,13 @@
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --accent: #7c3aed;
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-        .page-header { margin-bottom: 8px; }
-        .page-header h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .page-header p { color: var(--muted); font-size: 0.85rem; margin: 4px 0 0; }
-        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
-        .toolbar .form-control, .toolbar .form-select {
-            border-radius: 8px;
-            border-color: var(--border);
-            font-size: 0.85rem;
-        }
-        .toolbar .form-control:focus, .toolbar .form-select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-        .server-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-left: 3px solid #c4b5fd;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            transition: all 0.12s;
-        }
-        .server-item:hover { border-color: #a78bfa; background: #faf5ff; }
-        .badge-soft { font-size: 0.7rem; padding: 2px 7px; border-radius: 5px; font-weight: 500; }
-        .stats { color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+        body { background: #f8fafc; }
+        .list-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
+        .server-item { border-left: 4px solid #c4b5fd; }
+        .server-item:hover { background: #faf5ff; }
+        .badge-site { font-size: 0.75rem; }
+        .search-box { max-width: 260px; }
+        .filter-select { max-width: 170px; }
     </style>
 </head>
 <body>
@@ -50,45 +23,65 @@
 <script src="./assets/js/navbar.js"></script>
 
 <div class="container py-4">
-    <div class="page-header">
-        <h1>Server List</h1>
-        <p>Auto-loaded from GCIS DBaaS Summary2.xls</p>
-    </div>
+    <div class="list-card p-4 mb-4">
+        <h4 class="mb-1">Server List</h4>
+        <p class="text-muted small mb-3">自動載入 GCIS DBaaS Summary2.xls</p>
 
-    <div class="toolbar">
-        <input type="text" id="searchInput" class="form-control form-control-sm" style="max-width:240px" placeholder="Search VM / IP...">
-        <select id="gcisFilter" class="form-select form-select-sm" style="max-width:160px"><option value="">All GCISID</option></select>
-        <select id="groupFilter" class="form-select form-select-sm" style="max-width:150px"><option value="">All Group</option></select>
-        <select id="dbFilter" class="form-select form-select-sm" style="max-width:160px"><option value="">All DB Name</option></select>
-        <select id="siteFilter" class="form-select form-select-sm" style="max-width:110px">
-            <option value="">All Site</option>
-            <option value="P1">P1</option>
-            <option value="P2">P2</option>
-            <option value="T1">T1</option>
-            <option value="T2">T2</option>
-        </select>
-        <select id="typeFilter" class="form-select form-select-sm" style="max-width:140px">
-            <option value="">All Type</option>
-            <option value="Active-Active">Active-Active</option>
-            <option value="Active-Passive">Active-Passive</option>
-        </select>
-        <select id="statusFilter" class="form-select form-select-sm" style="max-width:130px">
-            <option value="InUse" selected>InUse</option>
-            <option value="Decommission">Decommission</option>
-            <option value="">All Status</option>
-        </select>
-    </div>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+            <input type="text" id="searchInput" class="form-control form-control-sm search-box" placeholder="搜尋 VM / IP...">
 
-    <div id="stats" class="stats">Loading...</div>
-    <div id="serverList"></div>
+            <select id="gcisFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部 GCISID</option>
+            </select>
+
+            <select id="groupFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部 Group</option>
+            </select>
+
+            <select id="dbFilter" class="form-select form-select-sm filter-select">
+                <option value="">全部 DB Name</option>
+            </select>
+
+            <select id="siteFilter" class="form-select form-select-sm" style="max-width:110px">
+                <option value="">全部 Site</option>
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+                <option value="T1">T1</option>
+                <option value="T2">T2</option>
+            </select>
+
+            <select id="typeFilter" class="form-select form-select-sm" style="max-width:150px">
+                <option value="">全部 Type</option>
+                <option value="Active-Active">Active-Active</option>
+                <option value="Active-Passive">Active-Passive</option>
+            </select>
+
+            <select id="statusFilter" class="form-select form-select-sm" style="max-width:140px">
+                <option value="InUse" selected>InUse</option>
+                <option value="Decommission">Decommission</option>
+                <option value="">全部 Status</option>
+            </select>
+        </div>
+
+        <div id="stats" class="small text-muted mb-2">載入中...</div>
+        <div id="serverList" class="list-group"></div>
+    </div>
 </div>
 
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 let allRows = [];
+
 const GROUP_MAP = {
-    'GPA': 'Group 1', 'GPB': 'Group 2', 'GPC': 'Group 3', 'GPD': 'Group 4',
-    'GPE': 'Group 5', 'GPF': 'Group 6', 'GPG': 'Group 7', 'GPH': 'Group 8'
+    'GPA': 'Group 1',
+    'GPB': 'Group 2',
+    'GPC': 'Group 3',
+    'GPD': 'Group 4',
+    'GPE': 'Group 5',
+    'GPF': 'Group 6',
+    'GPG': 'Group 7',
+    'GPH': 'Group 8'
 };
 
 async function autoLoad() {
@@ -99,9 +92,12 @@ async function autoLoad() {
         const wb = XLSX.read(buf, { type: 'array' });
         const sheet = wb.Sheets[wb.SheetNames[0]];
         allRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
         populateDropdowns();
-        document.getElementById('stats').textContent = `Loaded ${allRows.length} rows`;
+        document.getElementById('stats').textContent = `已自動載入 ${allRows.length} 筆`;
         renderList();
+
+        // 載入完成後檢查 URL 參數
         const params = new URLSearchParams(location.search);
         const hostParam = params.get('host');
         if (hostParam) {
@@ -109,7 +105,7 @@ async function autoLoad() {
             renderList();
         }
     } catch (e) {
-        document.getElementById('stats').textContent = 'Failed to load GCIS DBaaS Summary2.xls';
+        document.getElementById('stats').textContent = '載入失敗，請確認 GCIS DBaaS Summary2.xls 在根目錄';
         console.error(e);
     }
 }
@@ -121,14 +117,20 @@ function uniqueSorted(arr) {
 function populateDropdowns() {
     const gcis = uniqueSorted(allRows.map(r => r.GCISID));
     const dbs = uniqueSorted(allRows.map(r => r.CloudServiceName));
-    const groupOptions = Object.entries(GROUP_MAP).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
-    document.getElementById('groupFilter').innerHTML = `<option value="">All Group</option>` + groupOptions;
-    fillSelect('gcisFilter', gcis, 'All GCISID');
-    fillSelect('dbFilter', dbs, 'All DB Name');
+
+    const groupOptions = Object.entries(GROUP_MAP).map(([key, label]) =>
+        `<option value="${key}">${label}</option>`
+    ).join('');
+    document.getElementById('groupFilter').innerHTML =
+        `<option value="">全部 Group</option>` + groupOptions;
+
+    fillSelect('gcisFilter', gcis, '全部 GCISID');
+    fillSelect('dbFilter', dbs, '全部 DB Name');
 }
 
 function fillSelect(id, items, defaultText) {
-    document.getElementById(id).innerHTML = `<option value="">${defaultText}</option>` +
+    const sel = document.getElementById(id);
+    sel.innerHTML = `<option value="">${defaultText}</option>` +
         items.map(v => `<option value="${v}">${v}</option>`).join('');
 }
 
@@ -153,41 +155,45 @@ function renderList() {
         return true;
     });
 
-    document.getElementById('stats').textContent = `Showing ${filtered.length} / ${allRows.length}`;
-    document.getElementById('serverList').innerHTML = filtered.map(r => {
+    document.getElementById('stats').textContent = `顯示 ${filtered.length} 筆 / 總共 ${allRows.length} 筆`;
+
+    const html = filtered.map(r => {
         const nsx = r['NSX-T group'] || '';
         const groupKey = nsx.slice(-3);
         const groupLabel = GROUP_MAP[groupKey] || nsx;
-        const statusClass = r.DBaaSStatus === 'InUse' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning';
+
         return `
-        <div class="server-item">
+        <div class="list-group-item server-item">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <strong>${r.GCISID || '-'}</strong>
                     <span class="text-muted"> / ${r.CloudServiceName || '-'}</span>
-                    <div class="mt-2">
-                        <span class="badge bg-secondary-subtle text-secondary badge-soft">${r.Site || '-'}</span>
-                        <span class="badge bg-light text-dark border badge-soft">${r.DBaaSType || '-'}</span>
-                        <span class="badge bg-info-subtle text-info badge-soft">${groupLabel}</span>
-                        <span class="badge ${statusClass} badge-soft">${r.DBaaSStatus || '-'}</span>
-                        <span class="text-muted small ms-1">${r.VMName || ''}</span>
+                    <div class="small mt-1">
+                        <span class="badge bg-secondary badge-site">${r.Site || '-'}</span>
+                        <span class="badge bg-light text-dark border">${r.DBaaSType || '-'}</span>
+                        <span class="badge bg-info text-dark">${groupLabel}</span>
+                        <span class="badge ${r.DBaaSStatus === 'InUse' ? 'bg-success' : 'bg-warning text-dark'}">${r.DBaaSStatus || '-'}</span>
+                        <span class="text-muted">${r.VMName || ''}</span>
                     </div>
                 </div>
-                <div class="text-end small text-muted">
+                <div class="text-end small">
                     <div>Host: ${r['HostIP of VM'] || '-'}</div>
                     <div>Service: ${r['ServiceIP of VM'] || '-'}</div>
                     <div>Mgt: ${r['MgtIP of VM'] || '-'}</div>
                 </div>
             </div>
         </div>`;
-    }).join('') || '<div class="text-muted p-3">No matching servers</div>';
+    }).join('');
+
+    document.getElementById('serverList').innerHTML = html || '<div class="text-muted p-3">沒有符合的資料</div>';
 }
 
-['searchInput','gcisFilter','groupFilter','dbFilter','siteFilter','typeFilter','statusFilter'].forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener('input', renderList);
-    el.addEventListener('change', renderList);
+['searchInput', 'gcisFilter', 'groupFilter', 'dbFilter', 'siteFilter', 'typeFilter', 'statusFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderList);
+    document.getElementById(id).addEventListener('change', renderList);
 });
+
+
 
 autoLoad();
 </script>
