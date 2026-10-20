@@ -141,6 +141,44 @@ function formatTime(dt) {
     return new Date(dt).toLocaleString('zh-HK', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
+
+async function loadBlackoutList() {
+  const { data } = await supabaseClient
+    .from('blackouts')
+    .select('*')
+    .gt('until', new Date().toISOString())
+    .order('until', { ascending: true });
+
+  const list = document.getElementById('blackoutList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div class="text-muted">目前沒有 blackout</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(b => `
+    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+      <div>
+        <strong>${cleanHostname(b.hostname)}</strong>
+        <div class="small text-muted">直到 ${new Date(b.until).toLocaleString('zh-HK')}</div>
+      </div>
+      <button class="btn btn-sm btn-outline-danger release-btn" data-host="${b.hostname}">解除</button>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('.release-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(`解除 ${cleanHostname(btn.dataset.host)} 的 blackout？`)) return;
+      await supabaseClient.from('blackouts').delete().eq('hostname', btn.dataset.host);
+      loadBlackoutList();
+      loadTickets();
+    });
+  });
+}
+
+document.getElementById('blackoutModal').addEventListener('show.bs.modal', loadBlackoutList);
+
+
+
 async function loadBlackouts() {
     const { data } = await supabaseClient
         .from('blackouts')
