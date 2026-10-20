@@ -41,18 +41,6 @@
               <li><a class="dropdown-item" href="Converter.html">⚡ Unit Converter</a></li>
             </ul>
           </div>
-
-          <select id="themeSelect" class="form-select form-select-sm" style="width:auto;" title="Theme">
-            <option value="system">System</option>
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
-
-          <select id="langSelect" class="form-select form-select-sm" style="width:auto;" title="Language">
-            <option value="en">ENG</option>
-            <option value="zh-TW">繁</option>
-            <option value="zh-CN">簡</option>
-          </select>
         </div>
 
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
@@ -108,6 +96,23 @@
           <img src="IMG_3755.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small">
+          <li class="px-3 py-2">
+            <div class="small text-muted mb-1">Theme</div>
+            <select id="themeSelect" class="form-select form-select-sm">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </li>
+          <li class="px-3 py-2">
+            <div class="small text-muted mb-1">Language</div>
+            <select id="langSelect" class="form-select form-select-sm">
+              <option value="en">ENG</option>
+              <option value="zh-TW">繁</option>
+              <option value="zh-CN">簡</option>
+            </select>
+          </li>
+          <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="Admin.html">Admin</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="#" onclick="logout(); return false;">Sign out</a></li>
@@ -117,12 +122,6 @@
   </div>
 </header>
   `;
-
-  const I18N = {
-    en: { brand: "DBA Portal" },
-    "zh-TW": { brand: "DBA 入口" },
-    "zh-CN": { brand: "DBA 入口" }
-  };
 
   function getLang() { return localStorage.getItem("lang") || "en"; }
   function getTheme() { return localStorage.getItem("theme") || "system"; }
