@@ -40,6 +40,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">INC Tickets</h4>
+        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#blackoutModal">Blackouts</button>
         <button class="btn btn-sm btn-outline-secondary" onclick="loadTickets()">重新載入</button>
     </div>
 
@@ -54,6 +55,23 @@
     </div>
 
     <div id="ticketList"></div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="blackoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Active Blackouts</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="blackoutList">
+        <div class="text-muted">載入中...</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->
