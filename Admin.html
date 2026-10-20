@@ -6,8 +6,22 @@
     <title>Admin - User Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f8fafc; }
-        .card { max-width: 900px; margin: 40px auto; }
+        :root, [data-theme="light"] {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+        }
+        [data-theme="dark"] {
+            --bg: #0f1117;
+            --card: #181b23;
+            --border: #2a2e3a;
+            --text: #e8eaed;
+            --muted: #8b93a7;
+        }
+        body { background: var(--bg); color: var(--text); }
+        .card { max-width: 900px; margin: 40px auto; background: var(--card); border-color: var(--border); }
         .badge-pending { background: #fef3c7; color: #92400e; }
         .badge-approved { background: #dcfce7; color: #166534; }
         .badge-banned { background: #fee2e2; color: #991b1b; }
@@ -20,7 +34,7 @@
 
 <div class="container" id="mainContent" style="display:none;">
     <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
             <div>
                 <h5 class="mb-0">User Management</h5>
                 <small class="text-muted">Manage pending / approved / banned accounts</small>
@@ -44,18 +58,17 @@
     <p class="text-muted">Only the owner can access this page.</p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
 const APPROVE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/approve-user";
-
-// ← 改成你的 owner email
+const BAN_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/ban-user";
+const DELETE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user";
 const OWNER_EMAIL = "a23200710104@gmail.com";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let allUsers = [];
 
 async function checkOwner() {
     const { data } = await supabaseClient.auth.getSession();
@@ -72,27 +85,14 @@ async function loadUsers() {
     const status = document.getElementById('statusFilter').value;
     let query = supabaseClient.from('pending_user').select('*').order('created_at', { ascending: false });
     if (status) query = query.eq('status', status);
-
     const { data, error } = await query;
     const listEl = document.getElementById('list');
     const loadingEl = document.getElementById('loading');
-
-    if (error) {
-        loadingEl.textContent = 'Error: ' + error.message;
-        return;
-    }
-
-    allUsers = data || [];
+    if (error) { loadingEl.textContent = 'Error: ' + error.message; return; }
     loadingEl.style.display = 'none';
-
-    if (allUsers.length === 0) {
-        listEl.innerHTML = '<div class="text-muted">No users found.</div>';
-        return;
-    }
-
-    listEl.innerHTML = allUsers.map(u => {
-        const badgeClass = u.status === 'approved' ? 'badge-approved' :
-                           u.status === 'banned' ? 'badge-banned' : 'badge-pending';
+    if (!data || data.length === 0) { listEl.innerHTML = '<div class="text-muted">No users found.</div>'; return; }
+    listEl.innerHTML = data.map(u => {
+        const badgeClass = u.status === 'approved' ? 'badge-approved' : u.status === 'banned' ? 'badge-banned' : 'badge-pending';
         return `
         <div class="d-flex justify-content-between align-items-center border-bottom py-3">
             <div>
@@ -108,25 +108,19 @@ async function loadUsers() {
             </div>
         </div>`;
     }).join('');
-
     bindButtons();
 }
 
 function bindButtons() {
-    // Approve
     document.querySelectorAll('.approve-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const email = btn.dataset.email;
             const password = btn.dataset.password;
-            btn.disabled = true;
-            btn.textContent = 'Approving...';
+            btn.disabled = true; btn.textContent = 'Approving...';
             try {
                 const res = await fetch(APPROVE_FUNCTION_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                     body: JSON.stringify({ email, password })
                 });
                 const result = await res.json();
@@ -134,25 +128,16 @@ function bindButtons() {
                 loadUsers();
             } catch (e) {
                 alert('Approve failed: ' + e.message);
-                btn.disabled = false;
-                btn.textContent = 'Approve';
+                btn.disabled = false; btn.textContent = 'Approve';
             }
         });
     });
-
-    // Ban / Unban
-    const BAN_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/ban-user";
-
-    // Ban
     document.querySelectorAll('.ban-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             if (!confirm(`Ban ${btn.dataset.email}?`)) return;
             const res = await fetch(BAN_FUNCTION_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                 body: JSON.stringify({ email: btn.dataset.email, ban: true })
             });
             const result = await res.json();
@@ -160,16 +145,11 @@ function bindButtons() {
             else loadUsers();
         });
     });
-
-    // Unban
     document.querySelectorAll('.unban-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const res = await fetch(BAN_FUNCTION_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                 body: JSON.stringify({ email: btn.dataset.email, ban: false })
             });
             const result = await res.json();
@@ -177,35 +157,22 @@ function bindButtons() {
             else loadUsers();
         });
     });
-
-    // Delete
-    const DELETE_FUNCTION_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co/functions/v1/delete-user";
-
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-            if (!confirm(`Permanently delete ${btn.dataset.email}? This cannot be undone.`)) return;
-
-            btn.disabled = true;
-            btn.textContent = 'Deleting...';
-
+            if (!confirm(`Permanently delete ${btn.dataset.email}?`)) return;
+            btn.disabled = true; btn.textContent = 'Deleting...';
             try {
                 const res = await fetch(DELETE_FUNCTION_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                     body: JSON.stringify({ email: btn.dataset.email })
                 });
-
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error || 'Delete failed');
-
                 loadUsers();
             } catch (e) {
                 alert(e.message);
-                btn.disabled = false;
-                btn.textContent = 'Delete';
+                btn.disabled = false; btn.textContent = 'Delete';
             }
         });
     });
