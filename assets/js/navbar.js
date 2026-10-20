@@ -41,6 +41,18 @@
               <li><a class="dropdown-item" href="Converter.html">⚡ Unit Converter</a></li>
             </ul>
           </div>
+
+          <select id="themeSelect" class="form-select form-select-sm" style="width:auto;" title="Theme">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+
+          <select id="langSelect" class="form-select form-select-sm" style="width:auto;" title="Language">
+            <option value="en">ENG</option>
+            <option value="zh-TW">繁</option>
+            <option value="zh-CN">簡</option>
+          </select>
         </div>
 
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
@@ -106,6 +118,29 @@
 </header>
   `;
 
+  const I18N = {
+    en: { brand: "DBA Portal" },
+    "zh-TW": { brand: "DBA 入口" },
+    "zh-CN": { brand: "DBA 入口" }
+  };
+
+  function getLang() { return localStorage.getItem("lang") || "en"; }
+  function getTheme() { return localStorage.getItem("theme") || "system"; }
+
+  function applyLang(lang) {
+    document.documentElement.lang = lang === "zh-CN" ? "zh-CN" : lang === "zh-TW" ? "zh-HK" : "en";
+    localStorage.setItem("lang", lang);
+  }
+
+  function applyTheme(theme) {
+    let effective = theme;
+    if (theme === "system") {
+      effective = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", effective);
+    localStorage.setItem("theme", theme);
+  }
+
   const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
   const SESSION_TIMEOUT = 60 * 60 * 1000;
@@ -126,15 +161,15 @@
         --bs-btn-active-bg: #E5D4FF;
         --bs-btn-active-border-color: #E5D4FF;
       }
+      :root, [data-theme="light"] { --bg: #f8fafc; --card: #fff; --text: #0f172a; }
+      [data-theme="dark"] { --bg: #0f1117; --card: #181b23; --text: #e8eaed; }
+      body { background: var(--bg) !important; color: var(--text); }
     `;
     document.head.appendChild(style);
   }
 
   function loadSupabase(callback) {
-    if (window.supabase) {
-      callback();
-      return;
-    }
+    if (window.supabase) { callback(); return; }
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
     script.onload = callback;
@@ -150,7 +185,6 @@
   async function checkAuth() {
     const path = location.pathname;
     if (path.endsWith("index.html") || path.endsWith("/")) return;
-
     const { data } = await window.supabaseClient.auth.getSession();
     if (!data.session) {
       localStorage.removeItem("isLoggedIn");
@@ -164,13 +198,10 @@
   }
 
   function setupActivityTracker() {
-    function updateActivity() {
-      localStorage.setItem("lastActivity", Date.now().toString());
-    }
+    function updateActivity() { localStorage.setItem("lastActivity", Date.now().toString()); }
     ["click", "keydown", "mousemove", "scroll"].forEach(evt => {
       document.addEventListener(evt, updateActivity, { passive: true });
     });
-
     setInterval(async () => {
       const last = localStorage.getItem("lastActivity");
       if (last && Date.now() - parseInt(last) > SESSION_TIMEOUT) {
@@ -184,9 +215,7 @@
   }
 
   window.logout = async function () {
-    if (window.supabaseClient) {
-      await window.supabaseClient.auth.signOut();
-    }
+    if (window.supabaseClient) await window.supabaseClient.auth.signOut();
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("lastActivity");
     location.href = "index.html";
@@ -194,7 +223,6 @@
 
   function injectChatWidget() {
     if (document.getElementById('chatWidget')) return;
-
     const widget = document.createElement('div');
     widget.innerHTML = `
       <div id="chatWidget" style="position:fixed; bottom:20px; right:20px; z-index:9999;">
@@ -257,28 +285,18 @@
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
 
     let lastTicketCount = 0;
-
     async function checkNewTickets() {
       if (!window.supabaseClient) return;
-      if (Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-      const { data } = await window.supabaseClient
-        .from('tickets')
-        .select('id')
-        .eq('status', 'OPEN');
+      if (Notification.permission === 'default') Notification.requestPermission();
+      const { data } = await window.supabaseClient.from('tickets').select('id').eq('status', 'OPEN');
       const count = data?.length || 0;
       if (lastTicketCount > 0 && count > lastTicketCount) {
         if (Notification.permission === 'granted') {
-          new Notification('🚨 新 CRITICAL INC', {
-            body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`,
-            icon: 'IMG_3755.jpg'
-          });
+          new Notification('🚨 新 CRITICAL INC', { body: `有 ${count - lastTicketCount} 筆新的 OPEN ticket`, icon: 'IMG_3755.jpg' });
         }
       }
       lastTicketCount = count;
     }
-
     setInterval(checkNewTickets, 1000);
     setTimeout(checkNewTickets, 1000);
 
@@ -286,30 +304,12 @@
       try {
         const { data } = await window.supabaseClient.auth.getSession();
         if (data?.session) myEmail = data.session.user.email;
-
-        const { data: msgs, error } = await window.supabaseClient
-          .from('messages')
-          .select('*')
-          .order('created_at', { ascending: true })
-          .limit(80);
-
+        const { data: msgs, error } = await window.supabaseClient.from('messages').select('*').order('created_at', { ascending: true }).limit(80);
         messagesDiv.innerHTML = '';
-        if (error) {
-          messagesDiv.innerHTML = `<div class="text-danger small">Load Failed: ${error.message}</div>`;
-          return;
-        }
-        if (!msgs || msgs.length === 0) {
-          messagesDiv.innerHTML = '<div class="text-muted small">No messages yet</div>';
-        } else {
-          msgs.forEach(msg => renderMsg(msg, false));
-        }
-
-        window.supabaseClient
-          .channel('chat-widget')
-          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-            renderMsg(payload.new, true);
-          })
-          .subscribe();
+        if (error) { messagesDiv.innerHTML = `<div class="text-danger small">Load Failed: ${error.message}</div>`; return; }
+        if (!msgs || msgs.length === 0) messagesDiv.innerHTML = '<div class="text-muted small">No messages yet</div>';
+        else msgs.forEach(msg => renderMsg(msg, false));
+        window.supabaseClient.channel('chat-widget').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => { renderMsg(payload.new, true); }).subscribe();
       } catch (e) {
         messagesDiv.innerHTML = `<div class="text-danger small">錯誤：${e.message}</div>`;
       }
@@ -320,17 +320,10 @@
       const time = new Date(msg.created_at).toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
       const div = document.createElement('div');
       div.className = 'mb-2' + (isMine ? ' text-end' : '');
-      div.innerHTML = `
-        <div class="small text-muted">${(msg.user_email || '').split('@')[0]} · ${time}</div>
-        <span class="badge ${isMine ? 'bg-primary' : 'bg-light text-dark border'}">${escapeHtml(msg.content)}</span>
-      `;
+      div.innerHTML = `<div class="small text-muted">${(msg.user_email || '').split('@')[0]} · ${time}</div><span class="badge ${isMine ? 'bg-primary' : 'bg-light text-dark border'}">${escapeHtml(msg.content)}</span>`;
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      if (isNew && panel.style.display === 'none' && !isMine) {
-        unreadCount++;
-        updateBadge();
-      }
+      if (isNew && panel.style.display === 'none' && !isMine) { unreadCount++; updateBadge(); }
     }
 
     function escapeHtml(t) {
@@ -352,24 +345,26 @@
     injectCustomStyles();
     const placeholder = document.getElementById("navbar-placeholder");
     if (!placeholder) return;
-
     placeholder.outerHTML = navbarHTML;
 
-    const currentPage = location.pathname.split("/").pop() || "home.html";
-    document.querySelectorAll("[data-page]").forEach(btn => {
-      if (btn.getAttribute("data-page") === currentPage) {
-        btn.classList.add("active");
-      }
-      btn.addEventListener("click", () => {
-        location.href = btn.getAttribute("data-page");
-      });
+    const themeSelect = document.getElementById("themeSelect");
+    const langSelect = document.getElementById("langSelect");
+    if (themeSelect) {
+      themeSelect.value = getTheme();
+      themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));
+    }
+    if (langSelect) {
+      langSelect.value = getLang();
+      langSelect.addEventListener("change", () => applyLang(langSelect.value));
+    }
+    applyTheme(getTheme());
+    applyLang(getLang());
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+      if (getTheme() === "system") applyTheme("system");
     });
 
     function initModal() {
-      if (typeof bootstrap === "undefined") {
-        setTimeout(initModal, 50);
-        return;
-      }
+      if (typeof bootstrap === "undefined") { setTimeout(initModal, 50); return; }
       const modalEl = document.getElementById("staticBackdrop");
       if (!modalEl) return;
       const modal = new bootstrap.Modal(modalEl);
@@ -386,7 +381,6 @@
   }
 
   loadSupabase(initAuth);
-
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", injectNavbar);
   } else {
