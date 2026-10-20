@@ -188,9 +188,16 @@ async function loadBlackouts() {
 }
 
 async function setBlackout(host, until) {
-    await supabaseClient
+    const { error } = await supabaseClient
         .from('blackouts')
         .upsert({ hostname: host, until: new Date(until).toISOString() }, { onConflict: 'hostname' });
+    
+    if (error) {
+        alert('Blackout 失敗：' + error.message);
+        console.error(error);
+        return false;
+    }
+    return true;
 }
 
 async function loadTickets() {
