@@ -3,73 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - DBA Bookmarks</title>
+    <title>DBA Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMG_3755.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background-color: #f8f9fa; }
-        .login-container {
+        :root, [data-theme="light"] {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #7c3aed;
+            --input: #ffffff;
+        }
+        [data-theme="dark"] {
+            --bg: #0f1117;
+            --card: #181b23;
+            --border: #2a2e3a;
+            --text: #e8eaed;
+            --muted: #8b93a7;
+            --accent: #a78bfa;
+            --input: #0f1117;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            transition: background 0.2s, color 0.2s;
+        }
+        .login-card {
+            width: 100%;
             max-width: 400px;
-            margin: 80px auto;
-            padding: 30px;
-            background: white;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 36px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), #c4b5fd);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+        h1 { font-size: 1.4rem; font-weight: 600; text-align: center; margin-bottom: 6px; }
+        .subtitle { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
+        .form-label { color: var(--muted); font-size: 0.8rem; font-weight: 500; margin-bottom: 6px; }
+        .form-control {
+            background: var(--input);
+            border: 1px solid var(--border);
+            color: var(--text);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 12px 14px;
         }
-        .btn-custom {
-            background-color: #D0A2F7;
-            border-color: #D0A2F7;
-            color: white;
+        .form-control:focus {
+            background: var(--input);
+            border-color: var(--accent);
+            color: var(--text);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
         }
-        .btn-custom:hover { background-color: #C08AE0; }
-        .extra-links { font-size: 0.9rem; }
+        .btn-login {
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 8px;
+            color: #fff;
+        }
+        .btn-login:hover { filter: brightness(1.05); }
+        .links { text-align: center; margin-top: 20px; font-size: 0.85rem; }
+        .links a { color: var(--accent); text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+        .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+        #errorMsg, #successMsg { font-size: 0.85rem; text-align: center; margin-top: 12px; }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h3 class="text-center mb-4">Database Administrator</h3>
-    <p class="text-center text-muted mb-4" id="formTitle">Please enter your credentials to log in</p>
-    
+<div class="login-card">
+    <div class="logo">⚡</div>
+    <h1 data-i18n="brand">DBA Portal</h1>
+    <p class="subtitle" id="formTitle" data-i18n="login.subtitle">Sign in to continue</p>
+
     <form id="loginForm">
         <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+            <label class="form-label" data-i18n="login.email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="you@company.com" required>
         </div>
         <div class="mb-3" id="passwordGroup">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+            <label class="form-label" data-i18n="login.password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="••••••••" required>
         </div>
         <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="rememberMe" checked>
-        <label class="form-check-label" for="rememberMe">Remember me</label>
-    </div>
-        <button type="submit" class="btn btn-custom w-100" id="submitBtn">Login</button>
+            <input type="checkbox" class="form-check-input" id="rememberMe" checked>
+            <label class="form-check-label" for="rememberMe" style="color: var(--muted); font-size: 0.85rem;" data-i18n="login.remember">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-login" id="submitBtn" data-i18n="login.signin">Sign in</button>
     </form>
 
-    <div class="text-center mt-3 extra-links">
-        <a href="#" id="toggleSignup" class="text-decoration-none">Create Account</a>
-        <span class="mx-2 text-muted">|</span>
-        <a href="#" id="forgotPassword" class="text-decoration-none">Forgot Password</a>
+    <div class="links">
+        <a href="#" id="toggleSignup" data-i18n="login.create">Create account</a>
+        <span style="color: var(--border); margin: 0 8px;">·</span>
+        <a href="#" id="forgotPassword" data-i18n="login.forgot">Forgot password</a>
     </div>
 
-    <p class="text-center mt-3 text-danger" id="errorMsg" style="display:none;"></p>
-    <p class="text-center mt-3 text-success" id="successMsg" style="display:none;"></p>
+    <p class="text-danger" id="errorMsg" style="display:none;"></p>
+    <p class="text-success" id="successMsg" style="display:none;"></p>
 </div>
 
 <script>
 const SUPABASE_URL = "https://fyrzooerrrmkwrbjapoa.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YvzQbyBUN4ex7WLgLV5HFA_n2ctfmu0";
-
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let isSignupMode = false;
-
 const form = document.getElementById("loginForm");
 const formTitle = document.getElementById("formTitle");
 const submitBtn = document.getElementById("submitBtn");
-const passwordGroup = document.getElementById("passwordGroup");
 const toggleSignup = document.getElementById("toggleSignup");
 const forgotPassword = document.getElementById("forgotPassword");
 const errorMsg = document.getElementById("errorMsg");
@@ -81,7 +143,6 @@ function showError(msg) {
     successMsg.style.display = "none";
     setTimeout(() => errorMsg.style.display = "none", 5000);
 }
-
 function showSuccess(msg) {
     successMsg.textContent = msg;
     successMsg.style.display = "block";
@@ -89,70 +150,53 @@ function showSuccess(msg) {
     setTimeout(() => successMsg.style.display = "none", 5000);
 }
 
-// 切換 Login / Signup
 toggleSignup.addEventListener("click", function(e) {
     e.preventDefault();
     isSignupMode = !isSignupMode;
     if (isSignupMode) {
-        formTitle.textContent = "Create a new account";
-        submitBtn.textContent = "Submit Request";
-        toggleSignup.textContent = "Already have an account? Login";
+        formTitle.textContent = document.documentElement.lang.startsWith("zh") ? "申請帳號" : "Request access";
+        submitBtn.textContent = document.documentElement.lang.startsWith("zh") ? "送出申請" : "Submit request";
+        toggleSignup.textContent = document.documentElement.lang.startsWith("zh") ? "返回登入" : "Back to sign in";
     } else {
-        formTitle.textContent = "Please enter your credentials to log in";
-        submitBtn.textContent = "Login";
-        toggleSignup.textContent = "Create Account";
+        formTitle.textContent = document.documentElement.lang.startsWith("zh") ? "請登入以繼續" : "Sign in to continue";
+        submitBtn.textContent = document.documentElement.lang.startsWith("zh") ? "登入" : "Sign in";
+        toggleSignup.textContent = document.documentElement.lang.startsWith("zh") ? "建立帳號" : "Create account";
     }
 });
 
-// Forgot Password
 forgotPassword.addEventListener("click", async function(e) {
     e.preventDefault();
     const email = document.getElementById("email").value.trim();
-    if (!email) {
-        showError("Please enter your email first");
-        return;
-    }
+    if (!email) return showError(document.documentElement.lang.startsWith("zh") ? "請先輸入電郵" : "Please enter your email first");
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + "/index.html"
     });
-    if (error) {
-        showError(error.message);
-    } else {
-        showSuccess("Password reset email sent. Please check your inbox.");
-    }
+    if (error) showError(error.message);
+    else showSuccess(document.documentElement.lang.startsWith("zh") ? "重設密碼郵件已寄出" : "Password reset email sent.");
 });
 
-// Login / Signup
 form.addEventListener("submit", async function(e) {
     e.preventDefault();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     if (isSignupMode) {
-        // 寫入 pending_users，不直接建立帳號
-        const { error } = await supabaseClient
-            .from('pending_user')
-            .insert({ email, password, status: 'pending' });
-
-        if (error) {
-            showError(error.message);
-        } else {
-            showSuccess("申請已送出，請等待管理員批准。");
-            // 自動切回登入模式
+        const { error } = await supabaseClient.from('pending_user').insert({ email, password, status: 'pending' });
+        if (error) showError(error.message);
+        else {
+            showSuccess(document.documentElement.lang.startsWith("zh") ? "申請已送出，請等待批准" : "Request submitted. Waiting for approval.");
             setTimeout(() => {
                 isSignupMode = false;
-                formTitle.textContent = "Please enter your credentials to log in";
-                submitBtn.textContent = "Login";
-                toggleSignup.textContent = "Create Account";
+                formTitle.textContent = document.documentElement.lang.startsWith("zh") ? "請登入以繼續" : "Sign in to continue";
+                submitBtn.textContent = document.documentElement.lang.startsWith("zh") ? "登入" : "Sign in";
+                toggleSignup.textContent = document.documentElement.lang.startsWith("zh") ? "建立帳號" : "Create account";
                 document.getElementById("password").value = "";
             }, 2500);
         }
     } else {
-        // Login
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) {
-            showError(error.message);
-            } else {
+        if (error) showError(error.message);
+        else {
             const remember = document.getElementById("rememberMe").checked;
             if (remember) {
                 localStorage.setItem("savedEmail", email);
@@ -168,7 +212,6 @@ form.addEventListener("submit", async function(e) {
     }
 });
 
-// 已登入就跳轉
 supabaseClient.auth.getSession().then(({ data }) => {
     if (data.session) {
         localStorage.setItem("isLoggedIn", "true");
@@ -176,10 +219,6 @@ supabaseClient.auth.getSession().then(({ data }) => {
     }
 });
 
-
-
-
-// 頁面載入時自動填入
 window.addEventListener('DOMContentLoaded', () => {
     const savedEmail = localStorage.getItem('savedEmail');
     const savedPassword = localStorage.getItem('savedPassword');
@@ -187,12 +226,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('email').value = savedEmail;
         document.getElementById('rememberMe').checked = true;
     }
-    if (savedPassword) {
-        document.getElementById('password').value = savedPassword;
-    }
+    if (savedPassword) document.getElementById('password').value = savedPassword;
 });
-
-
 </script>
 </body>
 </html>
